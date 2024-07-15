@@ -6,7 +6,9 @@ export async function fetchHomepageGallery() {
         description,
         photos[]->{
           title,
-          "imageUrl": image.asset->url
+          "imageUrl": image.asset->url,
+           x,
+        y
         }
       }`;
 
