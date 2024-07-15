@@ -37,7 +37,7 @@
     }
   
     .photo-image {
-      max-width: 320px;
+      max-width: 275px;
       width: 100%;
       height: auto;
       object-fit: contain;

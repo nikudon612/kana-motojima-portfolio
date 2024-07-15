@@ -2,7 +2,7 @@
     import '../app.css';
   </script>
   
-  <nav class="fixed bottom-0 left-0 w-full flex justify-between p-4 text-black bg-transparent">
+  <nav class="fixed bottom-0 left-0 w-full flex justify-between px-4 py-10 text-black bg-transparent">
     <div class="flex flex-col ml-8 text-[1.125rem]">
       <a href="/work" class="mb-2">work</a>
       <a href="/contact">contact</a>
