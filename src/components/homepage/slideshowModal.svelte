@@ -91,6 +91,7 @@
       position: fixed;
       top: 10px;
       right: 10px;
+      margin-right: 2rem;
       background: none;
       border: none;
       font-size: 24px;
