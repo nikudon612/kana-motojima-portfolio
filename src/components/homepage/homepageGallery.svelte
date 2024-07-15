@@ -1,5 +1,5 @@
 <script>
-    import SlideshowModal from './SlideshowModal.svelte';
+    import SlideshowModal from './slideshowModal.svelte';
     export let data;
     let showModal = false;
     let currentIndex = 0;
