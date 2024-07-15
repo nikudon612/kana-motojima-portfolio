@@ -1,39 +1,18 @@
-import sanityClient from './sanityClient';
-
-export async function fetchPhotographer() {
-  const query = `*[_type == "photographer"]{
-    name,
-    bio,
-    "profileImage": profileImage.asset->url,
-    contactInfo
-  }`;
-  return await sanityClient.fetch(query);
-}
+import sanityClient from "./sanityClient";
 
 export async function fetchHomepageGallery() {
   const query = `*[_type == "homepageGallery"]{
-    title,
-    description,
-    photos[]->{
-      title,
-      "imageUrl": image.asset->url
-    }
-  }`;
-  return await sanityClient.fetch(query);
-}
+        title,
+        description,
+        photos[]->{
+          title,
+          "imageUrl": image.asset->url,
+           x,
+        y
+        }
+      }`;
 
-export async function fetchProjects() {
-  const query = `*[_type == "project"]{
-    title,
-    description,
-    photos[]->{
-      title,
-      "imageUrl": image.asset->url
-    },
-    homepageGallery->{
-      title,
-      description
-    }
-  }`;
-  return await sanityClient.fetch(query);
+  const data = await sanityClient.fetch(query);
+  console.log("Fetched Homepage Gallery:", data); // Add this line for debugging
+  return data[0]; // Ensure it returns a single object if that's expected
 }
