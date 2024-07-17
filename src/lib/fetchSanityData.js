@@ -20,10 +20,13 @@ export async function fetchHomepageGallery() {
 export async function fetchProjects() {
   const query = `*[_type == "project"]{
     title,
-    "photos": photos[].asset->url
+    "photos": photos[]->{
+      "url": image.asset->url
+    }
   }`;
 
   const data = await sanityClient.fetch(query);
-  console.log("Fetched Projects:", data); // Add this line for debugging
+  console.log("data:", data);
+  console.log("Fetched Projects:", JSON.stringify(data, null, 2)); // Add this line for debugging
   return data; // Return the array of projects
 }

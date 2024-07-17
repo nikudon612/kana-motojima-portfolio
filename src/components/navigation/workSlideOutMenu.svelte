@@ -16,7 +16,7 @@
     }
   
     function showPhotos(work) {
-      currentPhotos = work.photos;
+      currentPhotos = work.photo;
     }
   
     $: if (isOpen) {
