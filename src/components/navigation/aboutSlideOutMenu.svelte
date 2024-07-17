@@ -8,7 +8,7 @@
       <p>Kana Motojima is a visual artist based in New York. Born and raised in Honolulu and studied photography in Tokyo. Her work focuses on the subtle details of intimacy and relationship through photo or video.</p>
       <p>Bilingual in Japanese and English.</p>
       <p>For all inquiries please email: motojimakana@gmail.com</p>
-      <p class="font-bold">Selected clients:</p>
+      <p class="font-bold mb-0">Selected clients:</p>
       <ul>
         <li>New York Times Magazine</li>
         <li>New York Times</li>
