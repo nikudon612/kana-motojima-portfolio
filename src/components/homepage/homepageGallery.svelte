@@ -17,7 +17,7 @@
   </script>
   
   <div>
-    <div class="relative w-full h-screen">
+    <div class="w-full h-screen gallery">
       {#each images as { title, imageUrl, x, y }, index}
         <div class="photo" style="left: {x}px; top: {y}px;" on:click={() => handleImageClick(index)}>
           <img src={imageUrl} alt={title} class="photo-image" />
@@ -37,13 +37,14 @@
     }
   
     .photo-image {
-      max-width: 320px;
+      max-width: 275px;
       width: 100%;
       height: auto;
       object-fit: contain;
     }
   
-    .relative {
+    .gallery {
+      z-index: 1; /* Ensure this is lower than the navbar */
       position: relative;
     }
   </style>
