@@ -74,7 +74,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 1000;
+      z-index: 2001;
       cursor: none; /* Hide the default cursor */
     }
   
