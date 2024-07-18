@@ -73,6 +73,7 @@
       text-align: left;
       width: 100%;
       position: relative;
+      margin-left: 3rem;
     }
   
     .menu-content p {
