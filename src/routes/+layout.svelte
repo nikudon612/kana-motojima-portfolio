@@ -43,6 +43,15 @@
   });
 </script>
 
+<svelte:head>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+    rel="stylesheet"
+  />
+</svelte:head>
+
 <nav
   class="fixed bottom-0 left-0 w-full flex justify-between px-4 py-10 text-black bg-transparent"
   style="z-index: 2000;"
@@ -51,10 +60,13 @@
     <p
       class="mb-2 hover:cursor-pointer toggle-menu-btn"
       on:click={toggleWorkMenu}
+      class:opacity-50={aboutIsOpen}
     >
       work
     </p>
-    <p class="mb-2 hover:cursor-pointer">contact</p>
+    <p class="mb-2 hover:cursor-pointer" class:opacity-50={workIsOpen}>
+      contact
+    </p>
   </div>
   <div
     class="mr-8 flex flex-col items-start justify-end"
@@ -76,4 +88,7 @@
 
 <style>
   /* Any additional styles can go here */
+  .opacity-50 {
+    opacity: 0.5;
+  }
 </style>

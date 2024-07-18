@@ -120,7 +120,7 @@
       display: flex;
       align-items: center;
       pointer-events: none;
-      z-index: 1002;
+      z-index: 2002;
       transform: translate(-50%, -50%);
     }
   
