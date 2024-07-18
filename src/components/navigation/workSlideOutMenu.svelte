@@ -1,22 +1,23 @@
 <script>
-    import { onMount } from 'svelte';
-    import { fetchProjects } from '../../lib/fetchSanityData'; // Adjust the path accordingly
+    import { onMount } from "svelte";
+    import { fetchProjects } from "../../lib/fetchSanityData"; // Adjust the path accordingly
   
     export let isOpen = false;
     let works = [];
     let currentPhotos = [];
+    let galleryVisible = false;
   
     async function loadProjects() {
       try {
         works = await fetchProjects();
-        currentPhotos = works.length > 0 ? works[0].photos : [];
       } catch (error) {
-        console.error('Error fetching projects:', error);
+        console.error("Error fetching projects:", error);
       }
     }
   
     function showPhotos(work) {
-      currentPhotos = work.photo;
+      currentPhotos = work.photos;
+      galleryVisible = true;
     }
   
     $: if (isOpen) {
@@ -24,18 +25,20 @@
     }
   </script>
   
-  <div class="menu {isOpen ? 'open' : ''}">
+  <div class="menu {isOpen ? 'open' : ''} {galleryVisible ? 'expanded' : ''}">
     <div class="menu-content">
       {#each works as work}
-        <p on:mouseenter={() => showPhotos(work)}>{work.title}</p>
+        <p on:click={() => showPhotos(work)}>{work.title}</p>
       {/each}
     </div>
-  </div>
-  
-  <div class="photo-gallery">
-    <!-- {#each currentPhotos as photo}
-      <img src={photo} alt="" class="gallery-photo" />
-    {/each} -->
+    
+    {#if galleryVisible}
+      <div class="photo-gallery">
+        {#each currentPhotos as photo}
+          <img src={photo.url} alt="Project photo" class="gallery-photo" />
+        {/each}
+      </div>
+    {/if}
   </div>
   
   <style>
@@ -47,9 +50,10 @@
       height: 100%;
       background-color: white;
       box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
-      transition: left 0.3s ease-in-out;
+      transition: left 0.3s ease-in-out, width 0.3s ease-in-out;
       z-index: 1000;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
     }
@@ -58,9 +62,14 @@
       left: 0;
     }
   
+    .menu.expanded {
+      width: 100%;
+    }
+  
     .menu-content {
       padding: 20px;
       text-align: left;
+      width: 100%;
     }
   
     .menu-content p {
@@ -69,21 +78,15 @@
     }
   
     .photo-gallery {
-      position: fixed;
-      top: 0;
-      left: 50%;
-      width: 50%;
-      height: 100%;
-      background-color: white;
       display: flex;
       flex-wrap: wrap;
+      width: 100%;
       padding: 20px;
       overflow-y: auto;
-      z-index: 999;
     }
   
     .gallery-photo {
-      width: calc(50% - 20px);
+      width: calc(25% - 20px);
       margin: 10px;
       object-fit: cover;
     }
