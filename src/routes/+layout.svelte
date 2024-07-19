@@ -6,21 +6,47 @@
 
   let aboutIsOpen = false;
   let workIsOpen = false;
+  let aboutIsClosing = false;
+  let workIsClosing = false;
 
   function toggleAboutMenu(event) {
-    event.stopPropagation();
-    aboutIsOpen = !aboutIsOpen;
+    event?.stopPropagation(); // Ensure event is optional and handled
     if (aboutIsOpen) {
+      aboutIsClosing = true;
+      setTimeout(() => {
+        aboutIsOpen = false;
+        aboutIsClosing = false;
+      }, 300); // Delay to match the left menu close animation duration
+    } else {
+      aboutIsOpen = true;
       workIsOpen = false; // Close work menu if open
+      workIsClosing = false;
     }
   }
 
   function toggleWorkMenu(event) {
-    event.stopPropagation();
-    workIsOpen = !workIsOpen;
+    event?.stopPropagation(); // Ensure event is optional and handled
     if (workIsOpen) {
+      workIsClosing = true;
+      setTimeout(() => {
+        workIsOpen = false;
+        workIsClosing = false;
+      }, 300); // Delay to match the left menu close animation duration
+    } else {
+      workIsOpen = true;
       aboutIsOpen = false; // Close about menu if open
+      aboutIsClosing = false;
     }
+  }
+
+  function openAboutMenuFromContact(event) {
+    event?.stopPropagation(); // Ensure event is optional and handled
+    if (aboutIsOpen) {
+      toggleAboutMenu(event); // Close the about menu if it is open
+    }
+    aboutIsOpen = true;
+    workIsOpen = false; // Close work menu if open
+    workIsClosing = false;
   }
 
   onMount(() => {
@@ -30,8 +56,20 @@
         !event.target.closest(".menu") &&
         !event.target.closest(".toggle-menu-btn")
       ) {
-        aboutIsOpen = false;
-        workIsOpen = false;
+        if (aboutIsOpen) {
+          aboutIsClosing = true;
+          setTimeout(() => {
+            aboutIsOpen = false;
+            aboutIsClosing = false;
+          }, 300); // Delay to match the left menu close animation duration
+        }
+        if (workIsOpen) {
+          workIsClosing = true;
+          setTimeout(() => {
+            workIsOpen = false;
+            workIsClosing = false;
+          }, 300); // Delay to match the left menu close animation duration
+        }
       }
     };
 
@@ -64,7 +102,7 @@
     >
       work
     </p>
-    <p class="mb-2 hover:cursor-pointer" class:opacity-50={workIsOpen}>
+    <p class="mb-2 hover:cursor-pointer toggle-menu-btn" on:click={openAboutMenuFromContact} class:opacity-50={workIsOpen}>
       contact
     </p>
   </div>
@@ -72,22 +110,18 @@
     class="mr-8 flex flex-col items-start justify-end"
     style="z-index: 2001;"
   >
-    <p
-      class="text-[1.5rem] hover:cursor-pointer toggle-menu-btn"
-      on:click={toggleAboutMenu}
-    >
+    <a href="/" class="text-[1.5rem] hover:cursor-pointer toggle-menu-btn">
       Kana Motojima
-    </p>
+    </a>
   </div>
 </nav>
 
-<AboutSlideOutMenu isOpen={aboutIsOpen} />
-<WorkSlideOutMenu isOpen={workIsOpen} />
+<AboutSlideOutMenu isOpen={aboutIsOpen} isClosing={aboutIsClosing} toggleMenu={toggleAboutMenu} />
+<WorkSlideOutMenu isOpen={workIsOpen} isClosing={workIsClosing} toggleMenu={toggleWorkMenu} />
 
 <slot />
 
 <style>
-  /* Any additional styles can go here */
   .opacity-50 {
     opacity: 0.5;
   }
