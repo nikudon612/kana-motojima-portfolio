@@ -1,23 +1,51 @@
 <script>
   import { fade } from 'svelte/transition';
+  import SlideshowModal from './slideshow.svelte'; // Import the SlideshowModal component
 
   export let currentPhotos = [];
-  export let close;
+  export let close;  // Ensure this is passed as a prop
   export let isClosing = false;
+
+  let slideshowVisible = false;
+  let slideshowImages = [];
+  let currentIndex = 0;
 
   function handleClose(event) {
     event.stopPropagation(); // Prevent click from closing menu
-    close(); // Emit close event to parent
+    if (typeof close === 'function') {
+      close(); // Emit close event to parent
+    }
+  }
+
+  function openSlideshow(index) {
+    slideshowImages = currentPhotos.map(photo => ({ imageUrl: photo.url, title: '' }));
+    currentIndex = index;
+    slideshowVisible = true;
+  }
+
+  function closeSlideshow() {
+    slideshowVisible = false;
   }
 </script>
 
 <div class="modal-overlay {isClosing ? 'fade-out' : ''}" on:click={handleClose}>
   <div class="modal-content">
     {#each currentPhotos as photo, index}
-      <img src={photo.url} alt="Project photo" class="gallery-photo" style="top: {photo.Work_Y}%; left: {photo.Work_X}%" transition:fade />
+      <img 
+        src={photo.url} 
+        alt="Project photo" 
+        class="gallery-photo" 
+        style="top: {photo.Work_Y}%; left: {photo.Work_X}%" 
+        transition:fade 
+        on:click={() => openSlideshow(index)} 
+      />
     {/each}
   </div>
 </div>
+
+{#if slideshowVisible}
+  <SlideshowModal {slideshowImages} {currentIndex} on:close={closeSlideshow} />
+{/if}
 
 <style>
   .modal-overlay {
@@ -52,5 +80,6 @@
     max-width: 250px; /* Maximum width of 250px */
     width: 100%; /* Ensure images resize correctly within the max width */
     pointer-events: auto; /* Allow interaction with the images */
+    cursor: pointer;
   }
 </style>
