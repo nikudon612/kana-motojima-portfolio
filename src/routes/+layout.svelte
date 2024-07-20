@@ -92,7 +92,7 @@
 
 <nav
   class="fixed bottom-0 left-0 w-full flex justify-between px-4 py-10 text-black bg-transparent"
-  style="z-index: 2000;"
+  style="z-index: 2001;"
 >
   <div class="flex flex-col ml-8 text-[1.125rem]" style="z-index: 2001;">
     <p

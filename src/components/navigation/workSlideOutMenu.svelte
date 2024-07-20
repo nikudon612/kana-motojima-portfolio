@@ -21,14 +21,18 @@
     }
   
     function showPhotos(work) {
+        if (isTransitioning) return;
         isTransitioning = true;
-        selectedWork = work.title;
         setTimeout(() => {
-            isWhiteBackground = true;
-            isTransitioning = false;
+            selectedWork = work.title;
             currentPhotos = work.photos;
-            galleryVisible = true;
-        }, 300); // Adjust the timeout to match the transition duration
+            isWhiteBackground = true;
+            galleryVisible = false;
+            setTimeout(() => {
+                galleryVisible = true;
+                isTransitioning = false;
+            }, 300); // Adjust the timeout to match the fade-out transition duration
+        }, 300); // Adjust the timeout to match the fade-out transition duration
     }
   
     function closeMenu() {
@@ -41,7 +45,7 @@
                 isOpen = false;
                 selectedWork = null; // Reset selected work
                 currentPhotos = []; // Clear current photos
-            }, 300); // Adjust the timeout to match the transition duration
+            }, 600); // Adjust the timeout to match the transition duration
         } else {
             isOpen = false;
         }
@@ -70,7 +74,7 @@
   </div>
   
   {#if galleryVisible}
-    <PhotoGalleryModal {currentPhotos} on:close={() => (galleryVisible = false)} />
+    <PhotoGalleryModal {currentPhotos} projectTitle={selectedWork} isClosing={isClosing} on:close={() => (galleryVisible = false)} />
   {/if}
   
   <style>
