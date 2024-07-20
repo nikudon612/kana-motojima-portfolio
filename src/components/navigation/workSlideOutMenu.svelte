@@ -146,6 +146,7 @@
         margin-bottom: 1em;
         cursor: pointer;
         transition: color 0.3s ease-in-out;
+        color: grey;
     }
   
     .menu-content p.selected {
@@ -153,8 +154,8 @@
         font-weight: bold;
     }
   
-    .menu-content p:not(.selected) {
-        color: grey;
+    .menu-content p:hover {
+        color: black;
     }
   </style>
   
