@@ -1,6 +1,9 @@
 <script>
+  import { fade } from 'svelte/transition';
+
   export let currentPhotos = [];
   export let close;
+  export let isClosing = false;
 
   function handleClose(event) {
     event.stopPropagation(); // Prevent click from closing menu
@@ -8,10 +11,10 @@
   }
 </script>
 
-<div class="modal-overlay" on:click={handleClose}>
+<div class="modal-overlay {isClosing ? 'fade-out' : ''}" on:click={handleClose}>
   <div class="modal-content">
     {#each currentPhotos as photo, index}
-      <img src={photo.url} alt="Project photo" class="gallery-photo" style="top: {photo.Work_Y}%; left: {photo.Work_X}%" />
+      <img src={photo.url} alt="Project photo" class="gallery-photo" style="top: {photo.Work_Y}%; left: {photo.Work_X}%" transition:fade />
     {/each}
   </div>
 </div>
@@ -26,6 +29,12 @@
     background-color: transparent;
     z-index: 1000;
     pointer-events: none; /* Ensure the overlay does not block clicks */
+    transition: opacity 0.3s ease-in-out;
+    opacity: 1;
+  }
+
+  .modal-overlay.fade-out {
+    opacity: 0;
   }
 
   .modal-content {
