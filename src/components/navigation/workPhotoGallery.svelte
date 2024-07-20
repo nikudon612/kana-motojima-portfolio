@@ -2,6 +2,8 @@
   import { fade } from 'svelte/transition';
   import SlideshowModal from './slideshow.svelte'; // Import the SlideshowModal component
 
+  export let projectTitle;
+  console.log("projectTitle", projectTitle);
   export let currentPhotos = [];
   export let close;  // Ensure this is passed as a prop
   export let isClosing = false;
@@ -44,7 +46,7 @@
 </div>
 
 {#if slideshowVisible}
-  <SlideshowModal {slideshowImages} {currentIndex} on:close={closeSlideshow} />
+  <SlideshowModal {slideshowImages} {projectTitle} {currentIndex} on:close={closeSlideshow} />
 {/if}
 
 <style>

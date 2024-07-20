@@ -3,6 +3,7 @@
   
     export let slideshowImages = []; // Ensure this is passed as a prop
     export let currentIndex = 0;
+    export let projectTitle;
     const dispatch = createEventDispatcher();
     let cursor;
     let cursorText;
@@ -52,29 +53,33 @@
         close();
       }}>✕</button
     >
-  
-    <div class="slideshow" on:click|stopPropagation>
-      {#if slideshowImages.length > 0}
-        <img
-          src={slideshowImages[currentIndex].imageUrl}
-          alt={slideshowImages[currentIndex].title}
-          class="slideshow-image"
-        />
-        <!-- <div class="image-count">{currentIndex + 1}/{slideshowImages.length}</div> -->
-      {/if}
-    </div>
-    <div class="nav-zone prev" on:click|stopPropagation={previousImage}></div>
-    <div class="nav-zone next" on:click|stopPropagation={nextImage}></div>
-    <div class="nav-dots">
-      {#each slideshowImages as _, index}
-        <div
-          class="nav-dot {index === currentIndex ? 'active' : ''}"
-          on:click={() => {
-            currentIndex = index;
-            updateCursorText();
-          }}
-        ></div>
-      {/each}
+    <div class="content">
+      <div class="title-container px-[3rem]">{projectTitle}</div>
+      <div class="slideshow-container">
+        <div class="slideshow" on:click|stopPropagation>
+          {#if slideshowImages.length > 0}
+            <img
+              src={slideshowImages[currentIndex].imageUrl}
+              alt={slideshowImages[currentIndex].title}
+              class="slideshow-image"
+            />
+            <!-- <div class="image-count">{currentIndex + 1}/{slideshowImages.length}</div> -->
+          {/if}
+        </div>
+        <div class="nav-zone prev" on:click|stopPropagation={previousImage}></div>
+        <div class="nav-zone next" on:click|stopPropagation={nextImage}></div>
+      </div>
+      <div class="nav-dots">
+        {#each slideshowImages as _, index}
+          <div
+            class="nav-dot {index === currentIndex ? 'active' : ''}"
+            on:click={() => {
+              currentIndex = index;
+              updateCursorText();
+            }}
+          ></div>
+        {/each}
+      </div>
     </div>
   </div>
   
@@ -98,16 +103,36 @@
       cursor: none; /* Hide the default cursor */
     }
   
+    .content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+  
+    .title-container {
+      width: 100%;
+      text-align: left;
+      font-size: 1rem;
+      padding-bottom: 2rem;
+    }
+  
+    .slideshow-container {
+      position: relative;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding-top: 2rem;
+      padding-bottom: 6rem;
+    }
+  
     .slideshow {
       position: relative;
-      top: var(--navbar-height); /* Start below the navbar */
-      height: calc(100% - var(--navbar-height)); /* Full height minus navbar */
-      z-index: 2001; /* Ensure content is above modal background */
       display: flex;
       align-items: center;
       justify-content: center;
-      padding-bottom: 6rem;
-      padding-top: 2rem;
+      z-index: 2001; /* Ensure content is above modal background */
     }
   
     .slideshow-image {
@@ -131,6 +156,7 @@
       top: 0;
       bottom: 0;
       width: 50%;
+      cursor: pointer;
     }
   
     .prev {
@@ -154,7 +180,7 @@
   
     .nav-dots {
       position: absolute;
-      bottom: 150px;
+      bottom: 125px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;

@@ -74,7 +74,7 @@
   </div>
   
   {#if galleryVisible}
-    <PhotoGalleryModal {currentPhotos} isClosing={isClosing} on:close={() => (galleryVisible = false)} />
+    <PhotoGalleryModal {currentPhotos} projectTitle={selectedWork} isClosing={isClosing} on:close={() => (galleryVisible = false)} />
   {/if}
   
   <style>
