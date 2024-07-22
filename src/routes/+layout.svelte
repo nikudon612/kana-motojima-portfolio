@@ -91,33 +91,51 @@
 </svelte:head>
 
 <nav
-  class="fixed bottom-0 left-0 w-full flex justify-between px-4 py-10 text-black bg-transparent"
+  class="mobile:h-[100px] fixed bottom-0 left-0 w-full flex justify-between px-4 py-10 text-black bg-transparent mobile:fixed mobile:top-0 mobile:left-0 mobile:w-full mobile:flex mobile:justify-between mobile:items-center mobile:px-4 mobile:py-2 mobile:bg-white"
   style="z-index: 2001;"
 >
-  <div class="flex flex-col ml-8 text-[1.125rem]" style="z-index: 2001;">
+  <div
+    class="flex flex-col ml-8 text-[1.125rem] mobile:flex-row mobile:space-x-8 mobile:ml-0 mobile:text-[1rem]"
+    style="z-index: 2001;"
+  >
     <p
-      class="mb-2 hover:cursor-pointer toggle-menu-btn"
+      class="mb-2 hover:cursor-pointer toggle-menu-btn desktop:mb-0 mobile:mb-0"
       on:click={toggleWorkMenu}
       class:opacity-50={aboutIsOpen}
     >
       work
     </p>
-    <p class="mb-2 hover:cursor-pointer toggle-menu-btn" on:click={openAboutMenuFromContact} class:opacity-50={workIsOpen}>
+    <p
+      class="mb-2 hover:cursor-pointer toggle-menu-btn desktop:mb-0 mobile:mb-0"
+      on:click={openAboutMenuFromContact}
+      class:opacity-50={workIsOpen}
+    >
       contact
     </p>
   </div>
   <div
-    class="mr-8 flex flex-col items-start justify-end"
+    class="mr-8 flex flex-col items-start justify-end mobile:flex-row mobile:items-center mobile:mr-0"
     style="z-index: 2001;"
   >
-    <a href="/" class="text-[1.5rem] hover:cursor-pointer toggle-menu-btn">
+    <a
+      href="/"
+      class="text-[1.5rem] hover:cursor-pointer toggle-menu-btn mobile:text-lg mobile:font-bold"
+    >
       Kana Motojima
     </a>
   </div>
 </nav>
 
-<AboutSlideOutMenu isOpen={aboutIsOpen} isClosing={aboutIsClosing} toggleMenu={toggleAboutMenu} />
-<WorkSlideOutMenu isOpen={workIsOpen} isClosing={workIsClosing} toggleMenu={toggleWorkMenu} />
+<AboutSlideOutMenu
+  isOpen={aboutIsOpen}
+  isClosing={aboutIsClosing}
+  toggleMenu={toggleAboutMenu}
+/>
+<WorkSlideOutMenu
+  isOpen={workIsOpen}
+  isClosing={workIsClosing}
+  toggleMenu={toggleWorkMenu}
+/>
 
 <slot />
 
