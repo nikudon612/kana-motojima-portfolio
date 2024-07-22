@@ -4,7 +4,13 @@ export default {
     './src/**/*.{html,js,svelte,ts}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      screens: {
+        'mobile': {'max': '768px'},
+        'tablet': {'min': '769px', 'max': '1024px'},
+        'desktop': {'min': '1025px'},
+      },
+    },
   },
   plugins: [],
 };
