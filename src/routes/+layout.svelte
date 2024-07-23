@@ -99,14 +99,14 @@
     style="z-index: 2001;"
   >
     <p
-      class="mb-2 hover:cursor-pointer toggle-menu-btn desktop:mb-0 mobile:mb-0"
+      class="mb-2 hover:cursor-pointer toggle-menu-btn desktop:mb-2 mobile:mb-0"
       on:click={toggleWorkMenu}
       class:opacity-50={aboutIsOpen}
     >
       work
     </p>
     <p
-      class="mb-2 hover:cursor-pointer toggle-menu-btn desktop:mb-0 mobile:mb-0"
+      class="mb-2 hover:cursor-pointer toggle-menu-btn desktop:mb-2 mobile:mb-0"
       on:click={openAboutMenuFromContact}
       class:opacity-50={workIsOpen}
     >
