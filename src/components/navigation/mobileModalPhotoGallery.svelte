@@ -33,7 +33,7 @@
   }
 </script>
 
-<div class={`fixed top-[6rem] inset-0 bg-black bg-opacity-80 z-50 ${isClosing ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`} on:click={handleClose}>
+<div class={`fixed top-[6rem] inset-0 bg-white z-50 ${isClosing ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`} on:click={handleClose}>
   <div class="relative w-full h-full max-h-full bg-white overflow-hidden px-[2rem] box-border pt-20 pb-20 flex flex-col justify-between" on:click|stopPropagation>
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-m font-bold">{projectTitle}</h2>
