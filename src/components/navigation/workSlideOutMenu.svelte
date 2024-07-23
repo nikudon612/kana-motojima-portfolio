@@ -2,6 +2,7 @@
     import { onMount } from "svelte";
     import { fetchProjects } from "../../lib/fetchSanityData"; // Adjust the path accordingly
     import PhotoGalleryModal from "../navigation/workPhotoGallery.svelte"; // Import the new modal component
+    import MobilePhotoGalleryModal from "../navigation/mobileModalPhotoGallery.svelte"; // Import the new mobile modal component
   
     export let isOpen = false;
     let works = [];
@@ -36,45 +37,43 @@
     }
   
     function closeMenu() {
-        if (galleryVisible || isWhiteBackground) {
-            isClosing = true;
-            setTimeout(() => {
-                isWhiteBackground = false;
-                galleryVisible = false;
-                isClosing = false;
-                isOpen = false;
-                selectedWork = null; // Reset selected work
-                currentPhotos = []; // Clear current photos
-            }, 600); // Adjust the timeout to match the transition duration
-        } else {
+        isClosing = true;
+        setTimeout(() => {
+            isWhiteBackground = false;
+            galleryVisible = false;
+            isClosing = false;
             isOpen = false;
-        }
+            selectedWork = null; // Reset selected work
+            currentPhotos = []; // Clear current photos
+        }, 600); // Adjust the timeout to match the transition duration
     }
   
     $: if (isOpen) {
         loadProjects();
     }
-    
-    $: if (!isOpen && (galleryVisible || isWhiteBackground)) {
-        closeMenu();
-    }
 </script>
   
-<div class="fixed top-0 left-0 w-full h-full flex transform transition-transform duration-300 z-50 {isOpen ? 'translate-x-0' : '-translate-x-full'}">
+<div class={`fixed top-0 left-0 w-full h-full flex transform transition-transform duration-300 z-50 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
     <div class="flex-1 bg-white flex flex-col items-center justify-center z-50 mobile:w-full">
         <div class="p-5 text-left w-full relative ml-12 mobile:ml-0">
             {#each works as work}
-                <p on:click={() => showPhotos(work)} class="mb-4 cursor-pointer transition-colors duration-300 {selectedWork === work.title ? 'text-black font-bold' : 'text-gray-500'}">{work.title}</p>
+                <p on:click={() => showPhotos(work)} class="mb-4 cursor-pointer transition-colors duration-300 ${selectedWork === work.title ? 'text-black font-bold' : 'text-gray-500'}">{work.title}</p>
             {/each}
         </div>
     </div>
-    <div class="flex-1 transition-colors duration-300 z-40 {isOpen ? 'bg-black bg-opacity-60' : ''} {isTransitioning ? 'bg-white' : ''} {isWhiteBackground ? 'bg-white' : ''} {isClosing ? 'bg-opacity-0' : ''} mobile:hidden">
+    <div class={`flex-1 transition-colors duration-300 z-40 ${isOpen ? 'bg-black bg-opacity-60' : ''} ${isTransitioning ? 'bg-white' : ''} ${isWhiteBackground ? 'bg-white' : ''} ${isClosing ? 'bg-opacity-0' : ''} mobile:hidden`}>
         <!-- Right side content -->
     </div>
 </div>
   
 {#if galleryVisible}
-    <PhotoGalleryModal {currentPhotos} projectTitle={selectedWork} isClosing={isClosing} on:close={() => (galleryVisible = false)} />
+    <!-- Use MobilePhotoGalleryModal on mobile, and PhotoGalleryModal on larger screens -->
+    <div class="hidden mobile:block">
+        <MobilePhotoGalleryModal {currentPhotos} projectTitle={selectedWork} close={closeMenu} isClosing={isClosing} />
+    </div>
+    <div class="block mobile:hidden">
+        <PhotoGalleryModal {currentPhotos} projectTitle={selectedWork} close={closeMenu} isClosing={isClosing} />
+    </div>
 {/if}
 
 <style>
@@ -95,6 +94,19 @@
 
     .mobile\:hidden {
         display: none;
+    }
+
+    .mobile\:block {
+        display: block;
+    }
+
+    /* Additional mobile-specific styles */
+    .modal-content {
+      padding: 1rem;
+    }
+
+    .gallery-photo {
+      max-width: 100%;
     }
   }
 </style>

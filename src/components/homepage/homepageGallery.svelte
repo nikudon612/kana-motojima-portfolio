@@ -30,11 +30,11 @@
       />
     </div>
   {/each}
-  <div
+  <!-- <div
     class="kana-text hidden mobile:block fixed right-[-3rem] bottom-[6rem] text-lg font-bold z-2001 -rotate-90"
   >
     <a href="/" class="">Kana Motojima</a>
-  </div>
+  </div> -->
 </div>
 
 {#if showModal}

@@ -124,6 +124,11 @@
       Kana Motojima
     </a>
   </div>
+  <div
+    class="kana-text hidden mobile:block fixed right-[-3rem] bottom-[6rem] text-lg font-bold z-2005 -rotate-90"
+  >
+    <a href="/" class="">Kana Motojima</a>
+  </div>
 </nav>
 
 <AboutSlideOutMenu
@@ -142,5 +147,13 @@
 <style>
   .opacity-50 {
     opacity: 0.5;
+  }
+  .kana-text a {
+    color: black; /* Set initial color to white */
+    mix-blend-mode: difference; /* This will invert the color based on the background */
+    background: transparent; /* Ensure background is transparent */
+    padding: 0.5rem; /* Optional: add padding for better visibility */
+    border-radius: 5px; /* Optional: add border radius for aesthetics */
+    white-space: nowrap; /* Ensure the text doesn't wrap */
   }
 </style>
