@@ -16,14 +16,24 @@
   }
 </script>
 
-<div class="w-full h-screen relative mobile:flex mobile:flex-col mobile:items-center">
+<div class="w-full h-screen relative mobile:flex mobile:flex-col mobile:items-center mobile:gap-0 mobile:px-0">
   {#each images as { title, imageUrl, x, y }, index}
-    <div class="absolute mobile:static cursor-pointer w-full" style="left: {x}px; top: {y}px;" on:click={() => handleImageClick(index)}>
-      <img src={imageUrl} alt={title} class="w-full h-auto object-cover" />
+    <div
+      class="absolute mobile:static cursor-pointer"
+      style="left: {x}px; top: {y}px;"
+      on:click={() => handleImageClick(index)}
+    >
+      <img
+        src={imageUrl}
+        alt={title}
+        class="desktop:max-w-[275px] w-full h-auto object-contain"
+      />
     </div>
   {/each}
-  <div class="hidden mobile:block fixed right-[-3rem] bottom-[6rem] text-lg font-bold z-2001 -rotate-90 kana-text">
-    <a href="/">Kana Motojima</a>
+  <div
+    class="kana-text hidden mobile:block fixed right-[-3rem] bottom-[6rem] text-lg font-bold z-2001 -rotate-90"
+  >
+    <a href="/" class="">Kana Motojima</a>
   </div>
 </div>
 
@@ -32,17 +42,9 @@
 {/if}
 
 <style>
-  .mobile\:gap-0 {
-    gap: 0 !important;
-  }
-  .mobile\:px-0 {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-
   .kana-text a {
-    color: rgb(238, 238, 238); /* Set initial color to white */
-    mix-blend-mode: exclusion; /* This will invert the color based on the background */
+    color: black; /* Set initial color to white */
+    mix-blend-mode: difference; /* This will invert the color based on the background */
     background: transparent; /* Ensure background is transparent */
     padding: 0.5rem; /* Optional: add padding for better visibility */
     border-radius: 5px; /* Optional: add border radius for aesthetics */
