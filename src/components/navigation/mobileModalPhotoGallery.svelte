@@ -43,7 +43,7 @@
       <img 
         src={currentPhotos[currentIndex].url} 
         alt="Project photo" 
-        class="max-w-full max-h-full object-contain transition-opacity duration-300" 
+        class="max-w-[65vw] max-h-full object-contain transition-opacity duration-300" 
         transition:fade 
       />
     </div>
