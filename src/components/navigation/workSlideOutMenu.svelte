@@ -58,104 +58,43 @@
     $: if (!isOpen && (galleryVisible || isWhiteBackground)) {
         closeMenu();
     }
-  </script>
+</script>
   
-  <div class="menu {isOpen ? 'open' : ''} {isOpen && !isClosing ? 'menu-open' : 'menu-close'}">
-    <div class="menu-left">
-        <div class="menu-content">
+<div class="fixed top-0 left-0 w-full h-full flex transform transition-transform duration-300 z-50 {isOpen ? 'translate-x-0' : '-translate-x-full'}">
+    <div class="flex-1 bg-white flex flex-col items-center justify-center z-50 mobile:w-full">
+        <div class="p-5 text-left w-full relative ml-12 mobile:ml-0">
             {#each works as work}
-                <p on:click={() => showPhotos(work)} class:selected={selectedWork === work.title}>{work.title}</p>
+                <p on:click={() => showPhotos(work)} class="mb-4 cursor-pointer transition-colors duration-300 {selectedWork === work.title ? 'text-black font-bold' : 'text-gray-500'}">{work.title}</p>
             {/each}
         </div>
     </div>
-    <div class="menu-right {isOpen ? 'fade-in' : ''} {isTransitioning ? 'fade-to-white' : ''} {isWhiteBackground ? 'white-bg' : ''} {isClosing ? 'fade-out' : ''}">
+    <div class="flex-1 transition-colors duration-300 z-40 {isOpen ? 'bg-black bg-opacity-60' : ''} {isTransitioning ? 'bg-white' : ''} {isWhiteBackground ? 'bg-white' : ''} {isClosing ? 'bg-opacity-0' : ''} mobile:hidden">
         <!-- Right side content -->
     </div>
-  </div>
+</div>
   
-  {#if galleryVisible}
+{#if galleryVisible}
     <PhotoGalleryModal {currentPhotos} projectTitle={selectedWork} isClosing={isClosing} on:close={() => (galleryVisible = false)} />
-  {/if}
-  
-  <style>
-    .menu {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        transition: transform 0.3s ease-in-out;
-        transform: translateX(-100%);
-        z-index: 1000;
-    }
-  
-    .menu.menu-open {
-        transform: translateX(0);
-    }
-  
-    .menu.menu-close {
-        transform: translateX(-100%);
-    }
-  
-    .menu-left {
-        flex: 1;
-        background-color: white;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        z-index: 1001;
-    }
-  
-    .menu-right {
-        flex: 1;
-        background-color: rgba(0, 0, 0, 0);
-        transition: background-color 0.3s ease-in-out;
-        z-index: 1000;
-    }
-  
-    .menu-right.fade-in {
-        background-color: rgba(0, 0, 0, 0.6);
-        transition-delay: 0.3s;
-    }
-  
-    .menu-right.fade-to-white {
-        background-color: white;
-        transition: background-color 0.3s ease-in-out;
-    }
-  
-    .menu-right.white-bg {
-        background-color: white;
-    }
-  
-    .menu-right.fade-out {
-        background-color: rgba(0, 0, 0, 0);
-        transition: background-color 0.3s ease-in-out;
-    }
-  
-    .menu-content {
-        padding: 20px;
-        text-align: left;
-        width: 100%;
-        position: relative;
+{/if}
+
+<style>
+  @media (min-width: 1024px) {
+    .desktop\:ml-12 {
         margin-left: 3rem;
     }
-  
-    .menu-content p {
-        margin-bottom: 1em;
-        cursor: pointer;
-        transition: color 0.3s ease-in-out;
-        color: grey;
+  }
+
+  @media (max-width: 640px) {
+    .mobile\:w-full {
+        width: 100%;
     }
-  
-    .menu-content p.selected {
-        color: black;
-        font-weight: bold;
+
+    .mobile\:ml-0 {
+        margin-left: 0;
     }
-  
-    .menu-content p:hover {
-        color: black;
+
+    .mobile\:hidden {
+        display: none;
     }
-  </style>
-  
+  }
+</style>
