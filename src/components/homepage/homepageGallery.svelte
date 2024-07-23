@@ -41,7 +41,7 @@
   }
 
   .kana-text a {
-    color: rgb(47, 47, 47); /* Set initial color to white */
+    color: rgb(238, 238, 238); /* Set initial color to white */
     mix-blend-mode: exclusion; /* This will invert the color based on the background */
     background: transparent; /* Ensure background is transparent */
     padding: 0.5rem; /* Optional: add padding for better visibility */
