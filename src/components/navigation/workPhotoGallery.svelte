@@ -3,7 +3,6 @@
   import SlideshowModal from './slideshow.svelte'; // Import the SlideshowModal component
 
   export let projectTitle;
-  console.log("projectTitle", projectTitle);
   export let currentPhotos = [];
   export let close;  // Ensure this is passed as a prop
   export let isClosing = false;
@@ -57,8 +56,8 @@
     width: 100%;
     height: 100%;
     background-color: transparent;
-    z-index: 1000;
-    pointer-events: none; /* Ensure the overlay does not block clicks */
+    z-index: 2000;
+    pointer-events: auto; /* Allow interaction with the overlay */
     transition: opacity 0.3s ease-in-out;
     opacity: 1;
   }

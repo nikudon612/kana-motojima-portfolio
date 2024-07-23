@@ -15,7 +15,7 @@ export async function fetchHomepageGallery() {
   }`;
 
   const data = await sanityClient.fetch(query);
-  console.log("Fetched Homepage Gallery:", data); // Add this line for debugging
+  // console.log("Fetched Homepage Gallery:", data); // Add this line for debugging
   return data[0]; // Ensure it returns a single object if that's expected
 }
 
@@ -30,7 +30,7 @@ export async function fetchProjects() {
   }`;
 
   const data = await sanityClient.fetch(query);
-  console.log("data:", data);
-  console.log("Fetched Projects:", JSON.stringify(data, null, 2)); // Add this line for debugging
+  // console.log("data:", data);
+  // console.log("Fetched Projects:", JSON.stringify(data, null, 2)); // Add this line for debugging
   return data; // Return the array of projects
 }

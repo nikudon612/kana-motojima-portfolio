@@ -99,14 +99,14 @@
     style="z-index: 2001;"
   >
     <p
-      class="mb-2 hover:cursor-pointer toggle-menu-btn desktop:mb-0 mobile:mb-0"
+      class="mb-2 hover:cursor-pointer toggle-menu-btn desktop:mb-2 mobile:mb-0"
       on:click={toggleWorkMenu}
       class:opacity-50={aboutIsOpen}
     >
       work
     </p>
     <p
-      class="mb-2 hover:cursor-pointer toggle-menu-btn desktop:mb-0 mobile:mb-0"
+      class="mb-2 hover:cursor-pointer toggle-menu-btn desktop:mb-2 mobile:mb-0"
       on:click={openAboutMenuFromContact}
       class:opacity-50={workIsOpen}
     >
@@ -123,6 +123,11 @@
     >
       Kana Motojima
     </a>
+  </div>
+  <div
+    class="kana-text hidden mobile:block fixed right-[-3rem] bottom-[6rem] text-lg font-bold z-2005 -rotate-90"
+  >
+    <a href="/" class="">Kana Motojima</a>
   </div>
 </nav>
 
@@ -142,5 +147,13 @@
 <style>
   .opacity-50 {
     opacity: 0.5;
+  }
+  .kana-text a {
+    color: black; /* Set initial color to white */
+    mix-blend-mode: difference; /* This will invert the color based on the background */
+    background: transparent; /* Ensure background is transparent */
+    padding: 0.5rem; /* Optional: add padding for better visibility */
+    border-radius: 5px; /* Optional: add border radius for aesthetics */
+    white-space: nowrap; /* Ensure the text doesn't wrap */
   }
 </style>
