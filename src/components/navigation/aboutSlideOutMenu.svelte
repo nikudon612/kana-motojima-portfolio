@@ -1,4 +1,5 @@
 <script>
+  import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
   export let isOpen = false;
   export let isClosing = false;
@@ -24,20 +25,26 @@
     }, 300);
   }
 
-  // Watch for changes to isOpen and update body style
-  $: {
-    if (isOpen) {
+  // Use onMount to ensure this runs only in the browser
+  onMount(() => {
+    $: if (isOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
     }
+  });
+
+  // Watch for changes to isOpen and update body style in browser
+  $: if (typeof window !== 'undefined' && isOpen) {
+    document.body.style.overflow = 'hidden';
+  } else if (typeof window !== 'undefined' && !isOpen) {
+    document.body.style.overflow = '';
   }
 </script>
 
 <div class={`fixed top-0 left-0 w-full h-full flex z-[1000] transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : 'translate-x-full'} ${isClosing ? 'transition-delay-[300ms]' : ''}`}>
   {#if menuLeftVisible}
-    <div
-      class={`flex-1 bg-transparent transition-colors duration-300 cursor-pointer ${isOpen ? 'bg-black/60 transition-delay-[300ms]' : 'bg-transparent'} hidden md:block`}
+    <div class={`flex-1 bg-transparent transition-colors duration-300 cursor-pointer ${isOpen ? 'bg-black/60 transition-delay-[300ms]' : 'bg-transparent'} hidden md:block`}
       on:click={handleMenuLeftClick}
       transition:fade={{ duration: 300 }}
       on:out={handleLeftFadeOut}
