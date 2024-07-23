@@ -37,7 +37,7 @@
   <div class="relative w-full h-full max-h-full bg-white overflow-hidden px-[2rem] box-border pt-20 pb-20 flex flex-col justify-between" on:click|stopPropagation>
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-m font-bold">{projectTitle}</h2>
-      <!-- <button on:click={handleClose} class="text-lg">Close</button> -->
+      <button class="text-2xl" on:click={handleClose}>&times;</button>
     </div>
     <div class="flex-1 flex items-center justify-center" on:click={handlePhotoClick}>
       <img 
