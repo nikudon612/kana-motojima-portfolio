@@ -91,11 +91,11 @@
 </svelte:head>
 
 <nav
-  class="mobile:h-[100px] fixed bottom-0 left-0 w-full flex justify-between px-4 py-10 text-black bg-transparent mobile:fixed mobile:top-0 mobile:left-0 mobile:w-full mobile:flex mobile:justify-between mobile:items-center mobile:px-[1.5rem] mobile:py-[4rem] mobile:bg-white"
+  class="mobile:h-[100px] fixed bottom-0 left-0 w-full flex justify-between px-[3rem] py-10 text-black bg-transparent mobile:fixed mobile:top-0 mobile:left-0 mobile:w-full mobile:flex mobile:justify-between mobile:items-center mobile:px-[1.5rem] mobile:py-[4rem] mobile:bg-white"
   style="z-index: 2001;"
 >
   <div
-    class="flex flex-col ml-8 text-[1.125rem] mobile:flex-col mobile:ml-0 mobile:text-[1rem] mobile:gap-4"
+    class="flex flex-col text-[1.125rem] mobile:flex-col mobile:ml-0 mobile:text-[1rem] mobile:gap-4"
     style="z-index: 2001;"
   >
     <p
