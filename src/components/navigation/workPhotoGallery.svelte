@@ -1,5 +1,5 @@
 <script>
-  import { fade } from "svelte/transition";
+  import { onMount, afterUpdate } from "svelte";
   import SlideshowModal from "./slideshow.svelte";
 
   export let currentPhotos = [];
@@ -34,6 +34,23 @@
     slideshowVisible = false;
     console.log("Slideshow closed:", slideshowVisible);
   }
+
+  function fadeInPhotos() {
+    const photos = document.querySelectorAll('.gallery-photo');
+    photos.forEach(photo => {
+      photo.style.opacity = '0'; // Ensure starting opacity is 0
+    });
+    setTimeout(() => {
+      photos.forEach(photo => {
+        console.log('Changing opacity to 1 for:', photo);
+        photo.style.opacity = '1';
+      });
+    }, 300); // Delay before changing the opacity
+  }
+
+  // Run fadeInPhotos on mount and after each update
+  onMount(fadeInPhotos);
+  afterUpdate(fadeInPhotos);
 </script>
 
 <div class="modal-overlay {isClosing ? 'fade-out' : ''}" on:click={handleClose}>
@@ -43,8 +60,7 @@
         src={photo.url}
         alt="Project photo"
         class="gallery-photo"
-        style="top: {photo.Work_Y}%; left: {photo.Work_X}%"
-        transition:fade
+        style="top: {photo.Work_Y}%; left: {photo.Work_X}%;"
         on:click={() => openSlideshow(index)}
       />
     {/each}
@@ -63,8 +79,8 @@
     width: 100%;
     height: 100%;
     background-color: transparent;
-    z-index: 1000; /* Adjust z-index to ensure it does not block the project items */
-    pointer-events: none; /* Ensure the overlay does not block clicks */
+    z-index: 1000;
+    pointer-events: none;
     transition: opacity 0.3s ease-in-out;
     opacity: 1;
   }
@@ -78,15 +94,17 @@
     width: 100%;
     height: 100%;
     background-color: transparent;
-    pointer-events: none; /* Ensure the modal content does not block clicks */
+    pointer-events: none;
   }
 
   .gallery-photo {
     position: absolute;
     object-fit: cover;
-    transform: translate(-50%, -50%); /* Center the images at the given coordinates */
-    max-width: 250px; /* Maximum width of 250px */
-    width: 100%; /* Ensure images resize correctly within the max width */
-    pointer-events: auto; /* Allow interaction with the images */
+    transform: translate(-50%, -50%);
+    max-width: 250px;
+    width: 100%;
+    pointer-events: auto;
+    opacity: 0; /* Start with opacity 0 */
+    transition: opacity 1s ease-in-out;
   }
 </style>

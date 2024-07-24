@@ -1,9 +1,11 @@
 <script>
   import SlideshowModal from "./slideshowModal.svelte";
+
   export let data;
   let showModal = false;
   let currentIndex = 0;
   let images = data.props.data.photos;
+  let delayIncrement = 0.1; // seconds
 
   function handleImageClick(index) {
     currentIndex = index;
@@ -16,11 +18,13 @@
   }
 </script>
 
-<div class="w-full h-screen relative mobile:flex mobile:flex-col mobile:items-center mobile:gap-0 mobile:px-0">
+<div
+  class="w-full h-screen relative mobile:flex mobile:flex-col mobile:items-center mobile:gap-0 mobile:px-0"
+>
   {#each images as { title, imageUrl, x, y }, index}
     <div
-      class="absolute mobile:static cursor-pointer"
-      style="left: {x}px; top: {y}px;"
+      class="absolute mobile:static cursor-pointer fade-in image-container"
+      style="--delay: {index * delayIncrement}s; left: {x}px; top: {y}px;"
       on:click={() => handleImageClick(index)}
     >
       <img
@@ -42,12 +46,27 @@
 {/if}
 
 <style>
+  .fade-in {
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+  }
+
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
+
+  .image-container {
+    animation-delay: var(--delay);
+  }
+
   .kana-text a {
-    color: black; /* Set initial color to white */
-    mix-blend-mode: difference; /* This will invert the color based on the background */
-    background: transparent; /* Ensure background is transparent */
-    padding: 0.5rem; /* Optional: add padding for better visibility */
-    border-radius: 5px; /* Optional: add border radius for aesthetics */
-    white-space: nowrap; /* Ensure the text doesn't wrap */
+    color: black;
+    mix-blend-mode: difference;
+    background: transparent;
+    padding: 0.5rem;
+    border-radius: 5px;
+    white-space: nowrap;
   }
 </style>
