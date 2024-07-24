@@ -1,23 +1,59 @@
 <script>
-  import { fade } from 'svelte/transition';
+  import { fade } from "svelte/transition";
+  import SlideshowModal from "./slideshow.svelte";
 
   export let currentPhotos = [];
   export let close;
   export let isClosing = false;
+  export let projectTitle;
+  let slideshowVisible = false;
+  let slideshowImages = [];
+  let currentIndex = 0;
 
   function handleClose(event) {
     event.stopPropagation(); // Prevent click from closing menu
-    close(); // Emit close event to parent
+    if (!slideshowVisible) {
+      console.log("Handle close called");
+      close(); // Emit close event to parent
+    }
+  }
+
+  function openSlideshow(index) {
+    console.log("Opening slideshow");
+    slideshowImages = currentPhotos.map((photo) => ({
+      imageUrl: photo.url,
+      title: "",
+    }));
+    currentIndex = index;
+    slideshowVisible = true;
+    console.log("Slideshow opened:", slideshowVisible, currentIndex);
+  }
+
+  function closeSlideshow() {
+    console.log("Closing slideshow");
+    slideshowVisible = false;
+    console.log("Slideshow closed:", slideshowVisible);
   }
 </script>
 
 <div class="modal-overlay {isClosing ? 'fade-out' : ''}" on:click={handleClose}>
   <div class="modal-content">
     {#each currentPhotos as photo, index}
-      <img src={photo.url} alt="Project photo" class="gallery-photo" style="top: {photo.Work_Y}%; left: {photo.Work_X}%" transition:fade />
+      <img
+        src={photo.url}
+        alt="Project photo"
+        class="gallery-photo"
+        style="top: {photo.Work_Y}%; left: {photo.Work_X}%"
+        transition:fade
+        on:click={() => openSlideshow(index)}
+      />
     {/each}
   </div>
 </div>
+
+{#if slideshowVisible}
+  <SlideshowModal {slideshowImages} {projectTitle} {currentIndex} on:close={closeSlideshow} />
+{/if}
 
 <style>
   .modal-overlay {
