@@ -62,17 +62,17 @@
         {/each}
       </div>
     </div>
-    <div class="menu-right {isOpen ? 'fade-in' : ''} {isTransitioning ? 'fade-to-white' : ''} {isWhiteBackground ? 'white-bg' : ''} {isClosing ? 'fade-out' : ''}">
+    <div class="menu-right mobile:hidden {isOpen ? 'fade-in' : ''} {isTransitioning ? 'fade-to-white' : ''} {isWhiteBackground ? 'white-bg' : ''} {isClosing ? 'fade-out' : ''}">
       <!-- Right side content -->
     </div>
   </div>
   
   {#if galleryVisible}
     <!-- Use MobilePhotoGalleryModal on mobile, and PhotoGalleryModal on larger screens -->
-    <div class="hidden mobile:block">
+    <div class="mobile:block desktop:hidden">
       <MobilePhotoGalleryModal {currentPhotos} projectTitle={selectedWork} close={() => (galleryVisible = false)} isClosing={isClosing} />
     </div>
-    <div class="block mobile:hidden">
+    <div class="desktop:block mobile:hidden">
       <PhotoGalleryModal {currentPhotos} projectTitle={selectedWork} close={() => (galleryVisible = false)} isClosing={isClosing} />
     </div>
   {/if}
