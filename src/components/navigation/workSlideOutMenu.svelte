@@ -140,6 +140,7 @@
       width: 100%;
       position: relative;
       margin-left: 3rem;
+      margin-right: 20px;
     }
   
     .menu-content p {

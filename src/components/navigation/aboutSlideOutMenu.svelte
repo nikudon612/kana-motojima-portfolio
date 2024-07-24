@@ -49,7 +49,7 @@
     ></div>
   {/if}
   <div class="flex-1 bg-white flex items-center justify-center w-full desktop:w-auto">
-    <div class="p-5 text-left max-w-[90%] desktop:max-w-[60%]">
+    <div class="text-left mobile:px-[1.5rem] px-[3rem] desktop:max-w-[60%]">
       <p class="mb-4 leading-6">
         Kana Motojima is a visual artist based in New York. Born and raised in
         Honolulu and studied photography in Tokyo. Her work focuses on the
