@@ -9,6 +9,8 @@
   let aboutIsClosing = false;
   let workIsClosing = false;
 
+  console.log("web development by Nick Bechtel (https://nickbechtel.com)");
+
   function toggleAboutMenu(event) {
     event?.stopPropagation(); // Ensure event is optional and handled
     if (aboutIsOpen) {
