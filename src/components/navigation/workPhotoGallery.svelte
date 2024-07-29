@@ -9,6 +9,7 @@
   let slideshowVisible = false;
   let slideshowImages = [];
   let currentIndex = 0;
+  let previousPhotos = [];
 
   function handleClose(event) {
     event.stopPropagation(); // Prevent click from closing menu
@@ -37,15 +38,18 @@
 
   function fadeInPhotos() {
     const photos = document.querySelectorAll('.gallery-photo');
-    photos.forEach(photo => {
-      photo.style.opacity = '0'; // Ensure starting opacity is 0
-    });
-    setTimeout(() => {
+    if (previousPhotos !== currentPhotos) {
       photos.forEach(photo => {
-        console.log('Changing opacity to 1 for:', photo);
-        photo.style.opacity = '1';
+        photo.style.opacity = '0'; // Ensure starting opacity is 0
       });
-    }, 300); // Delay before changing the opacity
+      setTimeout(() => {
+        photos.forEach(photo => {
+          console.log('Changing opacity to 1 for:', photo);
+          photo.style.opacity = '1';
+        });
+      }, 300); // Delay before changing the opacity
+    }
+    previousPhotos = currentPhotos;
   }
 
   // Run fadeInPhotos on mount and after each update

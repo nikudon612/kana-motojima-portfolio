@@ -34,3 +34,16 @@ export async function fetchProjects() {
   // console.log("Fetched Projects:", JSON.stringify(data, null, 2)); // Add this line for debugging
   return data; // Return the array of projects
 }
+
+export async function fetchAbout() {
+  const query = `*[_type == "about"]{
+    name,
+    bio,
+    "profileImageUrl": profileImage.asset->url,
+    contactInfo,
+    selectClients,
+  }`;
+
+  const data = await sanityClient.fetch(query);
+  return data[0]; // Ensure it returns a single object if that's expected
+}
