@@ -62,7 +62,7 @@
   <div class="menu-left">
     <div class="menu-content">
       {#each works as work}
-        <p
+        <p class="hover:!text-black/100"
           on:click={() => showPhotos(work)}
           class:selected={selectedWork === work.title}
         >
