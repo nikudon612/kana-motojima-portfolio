@@ -14,26 +14,26 @@
   function handleClose(event) {
     event.stopPropagation(); // Prevent click from closing menu
     if (!slideshowVisible) {
-      console.log("Handle close called");
+      // console.log("Handle close called");
       close(); // Emit close event to parent
     }
   }
 
   function openSlideshow(index) {
-    console.log("Opening slideshow");
+    // console.log("Opening slideshow");
     slideshowImages = currentPhotos.map((photo) => ({
       imageUrl: photo.url,
       title: "",
     }));
     currentIndex = index;
     slideshowVisible = true;
-    console.log("Slideshow opened:", slideshowVisible, currentIndex);
+    // console.log("Slideshow opened:", slideshowVisible, currentIndex);
   }
 
   function closeSlideshow() {
-    console.log("Closing slideshow");
+    // console.log("Closing slideshow");
     slideshowVisible = false;
-    console.log("Slideshow closed:", slideshowVisible);
+    // console.log("Slideshow closed:", slideshowVisible);
   }
 
   function fadeInPhotos() {
@@ -44,7 +44,7 @@
       });
       setTimeout(() => {
         photos.forEach(photo => {
-          console.log('Changing opacity to 1 for:', photo);
+          // console.log('Changing opacity to 1 for:', photo);
           photo.style.opacity = '1';
         });
       }, 300); // Delay before changing the opacity

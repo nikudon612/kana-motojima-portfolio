@@ -2,7 +2,7 @@
   import { fade } from "svelte/transition";
 
   export let projectTitle;
-  console.log(projectTitle);
+  // console.log(projectTitle);
   export let currentPhotos = [];
 
   export let close; // Ensure this is passed as a prop

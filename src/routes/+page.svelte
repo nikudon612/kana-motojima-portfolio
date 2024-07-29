@@ -3,7 +3,7 @@
 
   export let data;
   export let error;
-  console.log("homepageGallery in script:", data); // Debugging log
+  // console.log("homepageGallery in script:", data); // Debugging log
 </script>
 
 <svelte:head>

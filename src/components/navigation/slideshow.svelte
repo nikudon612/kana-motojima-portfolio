@@ -9,7 +9,7 @@
   let cursorText;
 
   function close() {
-    console.log("Closing slideshow modal");
+    // console.log("Closing slideshow modal");
     dispatch("close");
   }
 
