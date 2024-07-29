@@ -140,7 +140,6 @@
 />
 <WorkSlideOutMenu
   isOpen={workIsOpen}
-  isClosing={workIsClosing}
   toggleMenu={toggleWorkMenu}
 />
 
