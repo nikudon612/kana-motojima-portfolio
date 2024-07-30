@@ -6,6 +6,7 @@
 
   export let isOpen = false;
   export let toggleMenu;
+  export let isFadingOut = false; // New prop for fading out state
   let works = [];
   let currentPhotos = [];
   let galleryVisible = false;
@@ -27,14 +28,30 @@
     isWhiteBackground = true;
   }
 
+  function closeMenu() {
+    isFadingOut = true; // Trigger fade out
+    setTimeout(() => {
+      isFadingOut = false;
+      isWhiteBackground = false; // Reset background color on close
+      galleryVisible = false; // Ensure gallery is closed
+      isOpen = false; // Close the menu
+      toggleMenu();
+    }, 300); // Delay to match the fade out transition duration
+  }
+
   $: if (isOpen) {
     loadProjects();
   }
 </script>
 
 <div class="menu-container {isOpen ? 'open' : ''}">
-  <div class="opacity-layer {isOpen ? 'fade-in' : ''}" on:click={toggleMenu}></div>
-  <div class="menu {isOpen ? 'menu-open' : 'menu-close'}">
+  {#if isOpen}
+    <div
+      class="opacity-layer {isOpen ? 'fade-in' : ''} {isFadingOut ? 'fade-out' : ''} {isWhiteBackground ? 'white-bg' : ''}"
+      on:click={closeMenu}
+    ></div>
+  {/if}
+  <div class="menu {isOpen ? 'menu-open' : 'menu-close'} {galleryVisible ? 'full-width' : ''}">
     <div class="menu-left">
       <div class="menu-content">
         {#each works as work}
@@ -57,6 +74,7 @@
           projectTitle={selectedWork}
           close={() => {
             galleryVisible = false;
+            isWhiteBackground = false; // Reset background color on close
           }}
         />
       </div>
@@ -66,6 +84,7 @@
           projectTitle={selectedWork}
           close={() => {
             galleryVisible = false;
+            isWhiteBackground = false; // Reset background color on close
           }}
         />
       </div>
@@ -100,6 +119,14 @@
     background-color: rgba(0, 0, 0, 0.6);
   }
 
+  .opacity-layer.fade-out {
+    background-color: rgba(0, 0, 0, 0);
+  }
+
+  .opacity-layer.white-bg {
+    background-color: white;
+  }
+
   .menu {
     position: relative;
     width: 50%;
@@ -107,11 +134,14 @@
     background-color: white;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    padding-left: 3rem;
-    transition: transform 0.3s ease-in-out;
+    padding-left: 3rem; /* Reverted padding */
+    transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
     z-index: 1; /* Ensure this is above the opacity layer */
+  }
+
+  .menu.full-width {
+    width: 100%;
   }
 
   .menu-open {
@@ -150,7 +180,7 @@
       padding: 0;
     }
     .menu-content {
-      padding: 1.5rem;
+      padding: 1.5rem; /* Reverted padding */
     }
     .mobile\:hidden {
       display: none;

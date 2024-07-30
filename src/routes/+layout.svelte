@@ -8,6 +8,7 @@
   let workIsOpen = false;
   let aboutIsClosing = false;
   let workIsClosing = false;
+  let isFadingOut = false;
 
   console.log("web development by Nick Bechtel (https://nickbechtel.com)");
 
@@ -29,16 +30,21 @@
   function toggleWorkMenu(event) {
     event?.stopPropagation(); // Ensure event is optional and handled
     if (workIsOpen) {
-      workIsClosing = true;
-      setTimeout(() => {
-        workIsOpen = false;
-        workIsClosing = false;
-      }, 300); // Delay to match the left menu close animation duration
+      closeMenu();
     } else {
       workIsOpen = true;
       aboutIsOpen = false; // Close about menu if open
       aboutIsClosing = false;
     }
+  }
+
+  function closeMenu() {
+    isFadingOut = true; // Trigger fade out
+    setTimeout(() => {
+      isFadingOut = false;
+      workIsOpen = false;
+      workIsClosing = false;
+    }, 300); // Delay to match the fade out transition duration
   }
 
   function openAboutMenuFromContact(event) {
@@ -66,11 +72,7 @@
           }, 300); // Delay to match the left menu close animation duration
         }
         if (workIsOpen) {
-          workIsClosing = true;
-          setTimeout(() => {
-            workIsOpen = false;
-            workIsClosing = false;
-          }, 300); // Delay to match the left menu close animation duration
+          closeMenu();
         }
       }
     };
@@ -140,7 +142,8 @@
 />
 <WorkSlideOutMenu
   isOpen={workIsOpen}
-  toggleMenu={toggleWorkMenu}
+  toggleMenu={closeMenu}
+  isFadingOut={isFadingOut}
 />
 
 <slot />
