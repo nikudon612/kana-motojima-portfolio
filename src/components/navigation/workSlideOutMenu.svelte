@@ -34,6 +34,8 @@
       isFadingOut = false;
       isWhiteBackground = false; // Reset background color on close
       galleryVisible = false; // Ensure gallery is closed
+      selectedWork = null; // Reset selected work
+      currentPhotos = []; // Clear current photos
       isOpen = false; // Close the menu
       toggleMenu();
     }, 300); // Delay to match the fade out transition duration
