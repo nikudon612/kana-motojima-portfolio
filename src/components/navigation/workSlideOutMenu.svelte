@@ -49,7 +49,7 @@
 <div class="menu-container {isOpen ? 'open' : ''}">
   {#if isOpen}
     <div
-      class="opacity-layer {isOpen ? 'fade-in' : ''} {isFadingOut ? 'fade-out' : ''} {isWhiteBackground ? 'white-bg' : ''}"
+      class="opacity-layer {isFadingOut ? 'fade-out' : 'fade-in'} {isWhiteBackground ? 'white-bg' : ''}"
       on:click={closeMenu}
     ></div>
   {/if}
@@ -112,7 +112,7 @@
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0);
-    transition: background-color 0.3s ease-in-out;
+    transition: background-color 0.5s ease-in-out; /* Increased duration */
     z-index: 0; /* Ensure this is below the menu */
     cursor: pointer;
   }
