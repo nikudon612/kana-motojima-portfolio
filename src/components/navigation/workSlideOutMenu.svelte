@@ -5,13 +5,13 @@
   import MobilePhotoGalleryModal from "../navigation/mobileModalPhotoGallery.svelte"; // Import the new mobile modal component
 
   export let isOpen = false;
+  export let toggleMenu;
+  export let isFadingOut = false; // New prop for fading out state
   let works = [];
   let currentPhotos = [];
   let galleryVisible = false;
   let selectedWork = null;
-  let isTransitioning = false;
   let isWhiteBackground = false;
-  let isClosing = false;
 
   async function loadProjects() {
     try {
@@ -22,7 +22,6 @@
   }
 
   function showPhotos(work) {
-    if (isTransitioning) return;
     selectedWork = work.title;
     currentPhotos = work.photos;
     galleryVisible = true;
@@ -30,132 +29,129 @@
   }
 
   function closeMenu() {
-    if (galleryVisible || isWhiteBackground) {
-      isClosing = true;
-      setTimeout(() => {
-        isWhiteBackground = false;
-        galleryVisible = false;
-        isClosing = false;
-        isOpen = false;
-        selectedWork = null; // Reset selected work
-        currentPhotos = []; // Clear current photos
-      }, 600); // Adjust the timeout to match the transition duration
-    } else {
-      isOpen = false;
-    }
+    isFadingOut = true; // Trigger fade out
+    setTimeout(() => {
+      isFadingOut = false;
+      isWhiteBackground = false; // Reset background color on close
+      galleryVisible = false; // Ensure gallery is closed
+      selectedWork = null; // Reset selected work
+      currentPhotos = []; // Clear current photos
+      isOpen = false; // Close the menu
+      toggleMenu();
+    }, 300); // Delay to match the fade out transition duration
   }
 
   $: if (isOpen) {
     loadProjects();
   }
-
-  $: if (!isOpen && (galleryVisible || isWhiteBackground)) {
-    closeMenu();
-  }
 </script>
 
-<div
-  class="menu {isOpen ? 'open' : ''} {isOpen && !isClosing
-    ? 'menu-open'
-    : 'menu-close'}"
->
-  <div class="menu-left">
-    <div class="menu-content">
-      {#each works as work}
-        <p class="hover:!text-black/100"
-          on:click={() => showPhotos(work)}
-          class:selected={selectedWork === work.title}
-        >
-          {work.title}
-        </p>
-      {/each}
+<div class="menu-container {isOpen ? 'open' : ''}">
+  {#if isOpen}
+    <div
+      class="opacity-layer {isFadingOut ? 'fade-out' : 'fade-in'} {isWhiteBackground ? 'white-bg' : ''}"
+      on:click={closeMenu}
+    ></div>
+  {/if}
+  <div class="menu {isOpen ? 'menu-open' : 'menu-close'} {galleryVisible ? 'full-width' : ''}">
+    <div class="menu-left">
+      <div class="menu-content">
+        {#each works as work}
+          <p
+            class="hover:!text-black/100"
+            on:click={() => showPhotos(work)}
+            class:selected={selectedWork === work.title}
+          >
+            {work.title}
+          </p>
+        {/each}
+      </div>
     </div>
-  </div>
-  <div
-    class="menu-right mobile:hidden {isOpen ? 'fade-in' : ''} {isTransitioning
-      ? 'fade-to-white'
-      : ''} {isWhiteBackground ? 'white-bg' : ''} {isClosing ? 'fade-out' : ''}"
-  >
-    <!-- Right side content -->
+
+    {#if galleryVisible}
+      <!-- Use MobilePhotoGalleryModal on mobile, and PhotoGalleryModal on larger screens -->
+      <div class="mobile:block desktop:hidden">
+        <MobilePhotoGalleryModal
+          {currentPhotos}
+          projectTitle={selectedWork}
+          close={() => {
+            galleryVisible = false;
+            isWhiteBackground = false; // Reset background color on close
+          }}
+        />
+      </div>
+      <div class="desktop:block mobile:hidden">
+        <PhotoGalleryModal
+          {currentPhotos}
+          projectTitle={selectedWork}
+          close={() => {
+            galleryVisible = false;
+            isWhiteBackground = false; // Reset background color on close
+          }}
+        />
+      </div>
+    {/if}
   </div>
 </div>
 
-{#if galleryVisible}
-  <!-- Use MobilePhotoGalleryModal on mobile, and PhotoGalleryModal on larger screens -->
-  <div class="mobile:block desktop:hidden">
-    <MobilePhotoGalleryModal
-      {currentPhotos}
-      projectTitle={selectedWork}
-      close={() => (galleryVisible = false)}
-      {isClosing}
-    />
-  </div>
-  <div class="desktop:block mobile:hidden">
-    <PhotoGalleryModal
-      {currentPhotos}
-      projectTitle={selectedWork}
-      close={() => (galleryVisible = false)}
-      {isClosing}
-    />
-  </div>
-{/if}
-
 <style>
-  .menu {
+  .menu-container {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     display: flex;
-    transition: transform 0.3s ease-in-out;
-    transform: translateX(-100%);
-    z-index: 1000;
+    z-index: 1000; /* Set this to ensure it covers the screen but is below the menu */
   }
 
-  .menu.menu-open {
-    transform: translateX(0);
+  .opacity-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0);
+    transition: background-color 0.5s ease-in-out; /* Increased duration */
+    z-index: 0; /* Ensure this is below the menu */
+    cursor: pointer;
   }
 
-  .menu.menu-close {
-    transform: translateX(-100%);
+  .opacity-layer.fade-in {
+    background-color: rgba(0, 0, 0, 0.6);
   }
 
-  .menu-left {
-    flex: 1;
+  .opacity-layer.fade-out {
+    background-color: rgba(0, 0, 0, 0);
+  }
+
+  .opacity-layer.white-bg {
+    background-color: white;
+  }
+
+  .menu {
+    position: relative;
+    width: 50%;
+    height: 100%;
     background-color: white;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    z-index: 1002;
-    padding-left: 3rem;
+    padding-left: 3rem; /* Reverted padding */
+    transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+    z-index: 1; /* Ensure this is above the opacity layer */
   }
 
-  .menu-right {
-    flex: 1;
-    background-color: rgba(0, 0, 0, 0);
-    transition: background-color 0.3s ease-in-out;
-    z-index: 1001;
+  .menu.full-width {
+    width: 100%;
   }
 
-  .menu-right.fade-in {
-    background-color: rgba(0, 0, 0, 0.6);
-    transition-delay: 0.3s;
+  .menu-open {
+    transform: translateX(0);
   }
 
-  .menu-right.fade-to-white {
-    background-color: white;
-    transition: background-color 0.3s ease-in-out;
-  }
-
-  .menu-right.white-bg {
-    background-color: white;
-  }
-
-  .menu-right.fade-out {
-    background-color: rgba(0, 0, 0, 0);
-    transition: background-color 0.3s ease-in-out;
+  .menu-close {
+    transform: translateX(-100%);
   }
 
   .menu-content {
@@ -181,13 +177,12 @@
 
   /* Mobile-specific styles */
   @media (max-width: 768px) {
-    .menu-left {
-      /* padding-left: 1.5rem; */
-      padding: 0;
+    .menu {
       width: 100%;
+      padding: 0;
     }
     .menu-content {
-      padding: 1.5rem;
+      padding: 1.5rem; /* Reverted padding */
     }
     .mobile\:hidden {
       display: none;
