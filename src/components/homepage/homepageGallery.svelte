@@ -5,7 +5,7 @@
   let showModal = false;
   let currentIndex = 0;
   let images = data.props.data.photos;
-  let delayIncrement = 0.1; // seconds
+  let delayIncrement = 0.1;
 
   function handleImageClick(index) {
     currentIndex = index;
@@ -18,27 +18,21 @@
   }
 </script>
 
-<div
-  class="w-full h-screen relative mobile:flex mobile:flex-col mobile:items-center mobile:gap-0 mobile:px-0"
->
+<div class="gallery-container">
   {#each images as { title, imageUrl, x, y }, index}
     <div
-      class="absolute mobile:static cursor-pointer fade-in image-container"
+      class="image-container"
       style="--delay: {index * delayIncrement}s; left: {x}px; top: {y}px;"
       on:click={() => handleImageClick(index)}
     >
       <img
         src={imageUrl}
         alt={title}
-        class="desktop:max-w-[275px] w-full h-auto object-contain"
+        class="image"
+        style="animation-delay: {index * delayIncrement}s;"
       />
     </div>
   {/each}
-  <!-- <div
-    class="kana-text hidden mobile:block fixed right-[-3rem] bottom-[6rem] text-lg font-bold z-2001 -rotate-90"
-  >
-    <a href="/" class="">Kana Motojima</a>
-  </div> -->
 </div>
 
 {#if showModal}
@@ -46,19 +40,34 @@
 {/if}
 
 <style>
-  .fade-in {
-    opacity: 0;
+  .gallery-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 1000;
+  }
+
+  .image-container {
+    position: absolute;
+    cursor: pointer;
+  }
+
+  .image {
+    max-width: 275px;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    opacity: 0; /* Initial opacity */
     animation: fadeIn 1s forwards;
   }
 
   @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
     to {
       opacity: 1;
     }
-  }
-
-  .image-container {
-    animation-delay: var(--delay);
   }
 
   .kana-text a {
@@ -67,6 +76,5 @@
     background: transparent;
     padding: 0.5rem;
     border-radius: 5px;
-    white-space: nowrap;
   }
 </style>
