@@ -46,42 +46,42 @@
   }
 </script>
 
-<div
-  class={`fixed top-0 left-0 w-full h-full flex z-[1000] ${isOpen ? "is-open" : "is-closing"}`}
->
-  <div
-    class={`opacity-layer transition-opacity duration-300 cursor-pointer ${showDarkLayer ? "fade-in" : "fade-out"}`}
-    on:click={handleMenuLeftClick}
-  ></div>
-  <div
-    class="bg-white h-full w-full flex items-center justify-center desktop:w-[50%] desktop:absolute desktop:right-0 transition-transform duration-300"
-    class:open={isOpen}
-    class:close={!isOpen}
-    on:click|stopPropagation
-  >
-    <div class="text-left mobile:px-[1.5rem] px-[3rem] desktop:max-w-[60%]">
-      {#if aboutData}
-        <div>
-          <p class="mb-4">{aboutData.bio}</p>
-          <p class="mb-4">Bilingual in Japanese and English.</p>
-          <p class="mb-4">
-            For all inquiries, please email {aboutData.contactInfo}
-          </p>
-        </div>
-        <div class="mt-16">
-          <h2 class="mobile:text-m desktop:text-lg">Select Clients:</h2>
-          <ul>
-            {#each aboutData.selectClients as client}
-              <li>{client}</li>
-            {/each}
-          </ul>
-        </div>
-      {:else}
-        <p>Loading...</p>
-      {/if}
+{#if isOpen || isClosing}
+  <div class={`fixed top-0 left-0 w-full h-full flex z-[3000] ${isOpen ? "is-open" : "is-closing"}`}>
+    <div
+      class={`opacity-layer transition-opacity duration-300 cursor-pointer ${showDarkLayer ? "fade-in" : "fade-out"}`}
+      on:click={handleMenuLeftClick}
+    ></div>
+    <div
+      class="bg-white h-full w-full flex items-center justify-center desktop:w-[50%] desktop:absolute desktop:right-0 transition-transform duration-300"
+      class:open={isOpen}
+      class:close={!isOpen && isClosing}
+      on:click|stopPropagation
+    >
+      <div class="text-left mobile:px-[1.5rem] px-[3rem] desktop:max-w-[60%]">
+        {#if aboutData}
+          <div>
+            <p class="mb-4">{aboutData.bio}</p>
+            <p class="mb-4">Bilingual in Japanese and English.</p>
+            <p class="mb-4">
+              For all inquiries, please email {aboutData.contactInfo}
+            </p>
+          </div>
+          <div class="mt-16">
+            <h2 class="mobile:text-m desktop:text-lg">Select Clients:</h2>
+            <ul>
+              {#each aboutData.selectClients as client}
+                <li>{client}</li>
+              {/each}
+            </ul>
+          </div>
+        {:else}
+          <p>Loading...</p>
+        {/if}
+      </div>
     </div>
   </div>
-</div>
+{/if}
 
 <style>
   .opacity-layer {
@@ -92,6 +92,7 @@
     width: 100%;
     height: 100%;
     transition: background-color 0.3s ease-in-out;
+    z-index: 2999; /* Ensure this is below the menu content */
   }
 
   .opacity-layer.fade-in {
@@ -104,6 +105,8 @@
 
   .bg-white {
     transform: translateX(100%);
+    z-index: 3000; /* Ensure this is above the opacity layer */
+    transition: transform 0.3s ease-in-out;
   }
 
   .bg-white.open {

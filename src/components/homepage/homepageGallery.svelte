@@ -29,6 +29,7 @@
         src={imageUrl}
         alt={title}
         class="image"
+        style="animation-delay: {index * delayIncrement}s;"
       />
     </div>
   {/each}
@@ -49,8 +50,6 @@
   .image-container {
     position: absolute;
     cursor: pointer;
-    animation: fadeIn 1s forwards;
-    animation-delay: var(--delay);
   }
 
   .image {
@@ -58,9 +57,14 @@
     width: 100%;
     height: auto;
     object-fit: contain;
+    opacity: 0; /* Initial opacity */
+    animation: fadeIn 1s forwards;
   }
 
   @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
     to {
       opacity: 1;
     }
