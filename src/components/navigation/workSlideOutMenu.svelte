@@ -1,19 +1,19 @@
 <script>
   import { onMount } from "svelte";
-  import { fetchProjects } from "../../lib/fetchSanityData"; // Adjust the path accordingly
-  import PhotoGalleryModal from "../navigation/workPhotoGallery.svelte"; // Import the new modal component
-  import MobilePhotoGalleryModal from "../navigation/mobileModalPhotoGallery.svelte"; // Import the new mobile modal component
+  import { fetchProjects } from "../../lib/fetchSanityData";
+  import PhotoGalleryModal from "../navigation/workPhotoGallery.svelte";
+  import MobilePhotoGalleryModal from "../navigation/mobileModalPhotoGallery.svelte";
 
   export let isOpen = false;
   export let toggleMenu;
-  export let isFadingOut = false; // New prop for fading out state
+  export let isFadingOut = false;
   let works = [];
   let currentPhotos = [];
   let galleryVisible = false;
   let selectedWork = null;
   let isWhiteBackground = false;
-
   let isMobile = false;
+  let fadeIn = false;
 
   onMount(() => {
     const checkScreenSize = () => {
@@ -51,77 +51,76 @@
   }
 
   function closeMenu() {
-    isFadingOut = true; // Trigger fade out
+    isFadingOut = true;
     setTimeout(() => {
       isFadingOut = false;
-      isWhiteBackground = false; // Reset background color on close
-      galleryVisible = false; // Ensure gallery is closed
-      selectedWork = null; // Reset selected work
-      currentPhotos = []; // Clear current photos
-      isOpen = false; // Close the menu
+      isWhiteBackground = false;
+      galleryVisible = false;
+      selectedWork = null;
+      currentPhotos = [];
+      isOpen = false;
       toggleMenu();
-    }, 300); // Delay to match the fade out transition duration
+    }, 300);
   }
 
   $: if (isOpen) {
+    fadeIn = false; // Reset fade-in state
     loadProjects();
+    setTimeout(() => {
+      fadeIn = true; // Apply fade-in after a delay
+    }, 0);
   }
 </script>
 
-<div class="menu-container {isOpen ? 'open' : ''}">
-  {#if isOpen}
+{#if isOpen || isFadingOut}
+  <div class="menu-container {isOpen ? 'open' : ''} {isFadingOut ? 'fade-out' : (fadeIn ? 'fade-in' : '')}">
     <div
-      class="opacity-layer {isFadingOut
-        ? 'fade-out'
-        : 'fade-in'} {isWhiteBackground ? 'white-bg' : ''}"
+      class="opacity-layer {isFadingOut ? 'fade-out' : (fadeIn ? 'fade-in' : '')} {isWhiteBackground ? 'white-bg' : ''}"
       on:click={closeMenu}
     ></div>
-  {/if}
-  <div
-    class="menu {isOpen ? 'menu-open' : 'menu-close'} {galleryVisible
-      ? 'full-width'
-      : ''}"
-  >
-    <div class="menu-left">
-      <div class="menu-content">
-        {#each works as work}
-          <p
-            class="hover:!text-black/100"
-            on:mouseover={!isMobile ? () => showPhotos(work) : null}
-            on:click={isMobile ? () => showPhotos(work) : null}
-            class:selected={selectedWork === work.title}
-          >
-            {work.title}
-          </p>
-        {/each}
+    <div
+      class="menu {isOpen ? 'menu-open' : 'menu-close'} {galleryVisible ? 'full-width' : ''}"
+    >
+      <div class="menu-left">
+        <div class="menu-content">
+          {#each works as work}
+            <p
+              class="hover:!text-black/100"
+              on:mouseover={!isMobile ? () => showPhotos(work) : null}
+              on:click={isMobile ? () => showPhotos(work) : null}
+              class:selected={selectedWork === work.title}
+            >
+              {work.title}
+            </p>
+          {/each}
+        </div>
       </div>
-    </div>
 
-    {#if galleryVisible}
-      <!-- Use MobilePhotoGalleryModal on mobile, and PhotoGalleryModal on larger screens -->
-      <div class="mobile:block desktop:hidden">
-        <MobilePhotoGalleryModal
-          {currentPhotos}
-          projectTitle={selectedWork}
-          close={() => {
-            galleryVisible = false;
-            isWhiteBackground = false; // Reset background color on close
-          }}
-        />
-      </div>
-      <div class="desktop:block mobile:hidden">
-        <PhotoGalleryModal
-          {currentPhotos}
-          projectTitle={selectedWork}
-          close={() => {
-            galleryVisible = false;
-            isWhiteBackground = false; // Reset background color on close
-          }}
-        />
-      </div>
-    {/if}
+      {#if galleryVisible}
+        <div class="mobile:block desktop:hidden">
+          <MobilePhotoGalleryModal
+            {currentPhotos}
+            projectTitle={selectedWork}
+            close={() => {
+              galleryVisible = false;
+              isWhiteBackground = false;
+            }}
+          />
+        </div>
+        <div class="desktop:block mobile:hidden">
+          <PhotoGalleryModal
+            {currentPhotos}
+            projectTitle={selectedWork}
+            close={() => {
+              galleryVisible = false;
+              isWhiteBackground = false;
+            }}
+          />
+        </div>
+      {/if}
+    </div>
   </div>
-</div>
+{/if}
 
 <style>
   .menu-container {
@@ -131,7 +130,17 @@
     width: 100%;
     height: 100%;
     display: flex;
-    z-index: 1000; /* Set this to ensure it covers the screen but is below the menu */
+    z-index: 2000;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .menu-container.fade-in {
+    opacity: 1;
+  }
+
+  .menu-container.fade-out {
+    opacity: 0;
   }
 
   .opacity-layer {
@@ -141,8 +150,8 @@
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0);
-    transition: background-color 0.5s ease-in-out; /* Increased duration */
-    z-index: 0; /* Ensure this is below the menu */
+    transition: background-color 0.3s ease-in-out;
+    z-index: 1999;
     cursor: pointer;
   }
 
@@ -166,11 +175,9 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding-left: 3rem; /* Reverted padding */
-    transition:
-      transform 0.3s ease-in-out,
-      width 0.3s ease-in-out;
-    z-index: 1; /* Ensure this is above the opacity layer */
+    padding-left: 3rem;
+    transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+    z-index: 2000;
   }
 
   .menu.full-width {
@@ -187,11 +194,14 @@
 
   .menu-content {
     text-align: left;
-    width: 100%;
-    position: relative;
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .menu-content p {
+    display: inline-block;
     margin-bottom: 1em;
     cursor: pointer;
     transition: color 0.3s ease-in-out;
@@ -206,14 +216,13 @@
     color: grey;
   }
 
-  /* Mobile-specific styles */
   @media (max-width: 768px) {
     .menu {
       width: 100%;
       padding: 0;
     }
     .menu-content {
-      padding: 1.5rem; /* Reverted padding */
+      padding: 1.5rem;
     }
     .mobile\:hidden {
       display: none;
