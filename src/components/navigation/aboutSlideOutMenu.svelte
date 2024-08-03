@@ -7,7 +7,9 @@
   export let toggleMenu;
 
   let aboutData = null;
+  let isFadingOut = false; // New state for fading out
   let showDarkLayer = false;
+  let zIndexClass = ""; // Dynamic class for z-index
 
   function handleMenuLeftClick(event) {
     event.stopPropagation();
@@ -16,14 +18,20 @@
     }
   }
 
+  function handleMenuRightClick(event) {
+    event.stopPropagation();
+  }
+
   function closeMenu() {
-    isClosing = true;
+    isFadingOut = true; // Trigger fade out
     setTimeout(() => {
+      isFadingOut = false;
       isClosing = false;
       isOpen = false;
       showDarkLayer = false;
       toggleMenu();
-    }, 300); // Delay to match the fade-out transition duration
+      zIndexClass = ""; // Reset z-index class
+    }, 300); // Delay to match the fade out transition duration
   }
 
   onMount(async () => {
@@ -39,6 +47,7 @@
     document.body.style.overflow = "hidden";
     setTimeout(() => {
       showDarkLayer = true;
+      zIndexClass = "z-index-top"; // Apply z-index class when menu opens
     }, 0); // Adjust delay as needed
   } else if (typeof window !== "undefined" && !isOpen) {
     document.body.style.overflow = "";
@@ -46,86 +55,47 @@
   }
 </script>
 
-{#if isOpen || isClosing}
-  <div class={`fixed top-0 left-0 w-full h-full flex z-[3000] ${isOpen ? "is-open" : "is-closing"}`}>
+<div
+  class={`fixed top-0 left-0 w-full h-full flex ${isOpen ? "" : "is-closing"} ${zIndexClass}`}
+>
+  {#if showDarkLayer || isFadingOut}
     <div
-      class={`opacity-layer transition-opacity duration-300 cursor-pointer ${showDarkLayer ? "fade-in" : "fade-out"}`}
+      class={`opacity-layer transition-opacity duration-300 cursor-pointer ${showDarkLayer && !isFadingOut ? "fade-in" : ""} ${isFadingOut ? "fade-out" : ""}`}
       on:click={handleMenuLeftClick}
     ></div>
-    <div
-      class="bg-white h-full w-full flex items-center justify-center desktop:w-[50%] desktop:absolute desktop:right-0 transition-transform duration-300"
-      class:open={isOpen}
-      class:close={!isOpen && isClosing}
-      on:click|stopPropagation
-    >
-      <div class="text-left mobile:px-[1.5rem] px-[3rem] desktop:max-w-[60%]">
-        {#if aboutData}
-          <div>
-            <p class="mb-4">{aboutData.bio}</p>
-            <p class="mb-4">Bilingual in Japanese and English.</p>
-            <p class="mb-4">
-              For all inquiries, please email {aboutData.contactInfo}
-            </p>
-          </div>
-          <div class="mt-16">
-            <h2 class="mobile:text-m desktop:text-lg">Select Clients:</h2>
-            <ul>
-              {#each aboutData.selectClients as client}
-                <li>{client}</li>
-              {/each}
-            </ul>
-          </div>
-        {:else}
-          <p>Loading...</p>
-        {/if}
-      </div>
+  {/if}
+  <div
+    class="bg-white h-full flex items-center justify-center w-full desktop:w-[50%] desktop:absolute desktop:right-0 transform transition-transform duration-300"
+    class:isOpen={isOpen}
+    class:isClosing={isClosing}
+    on:click|stopPropagation={handleMenuRightClick}
+  >
+    <div class="text-left mobile:px-[1.5rem] px-[3rem] desktop:max-w-[60%]">
+      {#if aboutData}
+        <div>
+          <p class="mb-4">{aboutData.bio}</p>
+          <p class="mb-4">Bilingual in Japanese and English.</p>
+          <p class="mb-4">
+            For all inquiries, please email {aboutData.contactInfo}
+          </p>
+        </div>
+        <div class="mt-16">
+          <h2 class="mobile:text-m desktop:text-lg">Select Clients:</h2>
+          <ul>
+            {#each aboutData.selectClients as client}
+              <li>{client}</li>
+            {/each}
+          </ul>
+        </div>
+      {:else}
+        <p>Loading...</p>
+      {/if}
     </div>
   </div>
-{/if}
+</div>
 
 <style>
-  .opacity-layer {
-    background-color: rgba(0, 0, 0, 0);
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    transition: background-color 0.3s ease-in-out;
-    z-index: 2999; /* Ensure this is below the menu content */
-  }
-
-  .opacity-layer.fade-in {
-    background-color: rgba(0, 0, 0, 0.6);
-  }
-
-  .opacity-layer.fade-out {
-    background-color: rgba(0, 0, 0, 0);
-  }
-
-  .bg-white {
-    transform: translateX(100%);
-    z-index: 3000; /* Ensure this is above the opacity layer */
-    transition: transform 0.3s ease-in-out;
-  }
-
-  .bg-white.open {
-    transform: translateX(0);
-  }
-
-  .bg-white.close {
-    transform: translateX(100%);
-  }
-
-  .is-open {
-    transition: transform 0.3s ease-in-out;
-  }
-
-  .is-closing {
-    transition: transform 0.3s ease-in-out;
-  }
-
-  @media (max-width: 768px) {
+  @media (max-width: 767px) {
     .menu-left {
       display: none;
     }
@@ -143,18 +113,70 @@
     }
   }
 
-  .menu-content p {
-    margin-bottom: 1em;
-    cursor: pointer;
-    transition: color 0.3s ease-in-out;
+  .opacity-layer {
+    background-color: rgba(0, 0, 0, 0);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
   }
 
-  .menu-content p.selected {
-    color: black;
-    font-weight: bold;
+  .opacity-layer.fade-in {
+    animation: fadeIn 0.3s forwards; /* Synchronize with transition duration */
   }
 
-  .menu-content p:not(.selected) {
-    color: grey;
+  .opacity-layer.fade-out {
+    animation: fadeOut 0.3s forwards; /* Synchronize with transition duration */
+  }
+
+  .transition-opacity {
+    transition: background-color 0.3s ease-in-out; /* Ensure this matches the animation duration */
+  }
+
+  .is-closing .opacity-layer {
+    display: none;
+  }
+
+  .isOpen {
+    transform: translateX(0);
+  }
+
+  .isClosing {
+    transform: translateX(100%);
+  }
+
+  .bg-white {
+    transform: translateX(100%);
+  }
+
+  .bg-white.isOpen {
+    transform: translateX(0);
+  }
+
+  .bg-white.isClosing {
+    transform: translateX(100%);
+  }
+
+  .z-index-top {
+    z-index: 10001; /* Higher z-index to ensure it appears above other elements */
+  }
+
+  @keyframes fadeIn {
+    from {
+      background-color: rgba(0, 0, 0, 0);
+    }
+    to {
+      background-color: rgba(0, 0, 0, 0.6);
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      background-color: rgba(0, 0, 0, 0.6);
+    }
+    to {
+      background-color: rgba(0, 0, 0, 0);
+    }
   }
 </style>
