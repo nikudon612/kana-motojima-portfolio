@@ -13,6 +13,21 @@
   let selectedWork = null;
   let isWhiteBackground = false;
 
+  let isMobile = false;
+
+  onMount(() => {
+    const checkScreenSize = () => {
+      isMobile = window.innerWidth <= 768;
+    };
+
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+
+    return () => {
+      window.removeEventListener("resize", checkScreenSize);
+    };
+  });
+
   async function loadProjects() {
     try {
       works = await fetchProjects();
@@ -22,10 +37,17 @@
   }
 
   function showPhotos(work) {
-    selectedWork = work.title;
-    currentPhotos = work.photos;
-    galleryVisible = true;
-    isWhiteBackground = true;
+    if (work.photos && work.photos.length > 0) {
+      selectedWork = work.title;
+      currentPhotos = work.photos;
+      galleryVisible = true;
+      isWhiteBackground = true;
+    } else {
+      galleryVisible = false;
+      isWhiteBackground = false;
+      selectedWork = null;
+      currentPhotos = [];
+    }
   }
 
   function closeMenu() {
@@ -49,17 +71,24 @@
 <div class="menu-container {isOpen ? 'open' : ''}">
   {#if isOpen}
     <div
-      class="opacity-layer {isFadingOut ? 'fade-out' : 'fade-in'} {isWhiteBackground ? 'white-bg' : ''}"
+      class="opacity-layer {isFadingOut
+        ? 'fade-out'
+        : 'fade-in'} {isWhiteBackground ? 'white-bg' : ''}"
       on:click={closeMenu}
     ></div>
   {/if}
-  <div class="menu {isOpen ? 'menu-open' : 'menu-close'} {galleryVisible ? 'full-width' : ''}">
+  <div
+    class="menu {isOpen ? 'menu-open' : 'menu-close'} {galleryVisible
+      ? 'full-width'
+      : ''}"
+  >
     <div class="menu-left">
       <div class="menu-content">
         {#each works as work}
           <p
             class="hover:!text-black/100"
-            on:click={() => showPhotos(work)}
+            on:mouseover={!isMobile ? () => showPhotos(work) : null}
+            on:click={isMobile ? () => showPhotos(work) : null}
             class:selected={selectedWork === work.title}
           >
             {work.title}
@@ -138,7 +167,9 @@
     flex-direction: column;
     justify-content: center;
     padding-left: 3rem; /* Reverted padding */
-    transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+    transition:
+      transform 0.3s ease-in-out,
+      width 0.3s ease-in-out;
     z-index: 1; /* Ensure this is above the opacity layer */
   }
 

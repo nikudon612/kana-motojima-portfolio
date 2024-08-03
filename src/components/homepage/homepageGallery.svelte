@@ -19,7 +19,7 @@
 </script>
 
 <div
-  class="w-full h-screen relative mobile:flex mobile:flex-col mobile:items-center mobile:gap-0 mobile:px-0"
+  class="w-full h-screen relative mobile:flex mobile:flex-col mobile:items-center mobile:gap-0 mobile:px-0 z-[999]"
 >
   {#each images as { title, imageUrl, x, y }, index}
     <div
