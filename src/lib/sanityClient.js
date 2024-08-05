@@ -6,4 +6,5 @@ export default createClient({
   useCdn: true, // Use the CDN for fast, cacheable responses
   apiVersion: "2024-07-08",
   token: import.meta.env.VITE_SANITY_API_TOKEN,
+  ignoreBrowserTokenWarning: true,
 });
