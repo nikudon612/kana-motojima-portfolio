@@ -19,8 +19,7 @@
   }
 
   function previousImage() {
-    currentIndex =
-      (currentIndex - 1 + slideshowImages.length) % slideshowImages.length;
+    currentIndex = (currentIndex - 1 + slideshowImages.length) % slideshowImages.length;
     updateCursorText();
   }
 
@@ -44,11 +43,21 @@
       cursor.style.top = `${e.clientY}px`;
     }
   }
+
+  function handleMouseEnterClose() {
+    cursor.style.display = 'none';
+  }
+
+  function handleMouseLeaveClose() {
+    cursor.style.display = 'flex';
+  }
 </script>
 
 <div class="modal z-[2100]" on:click={(e) => { e.stopPropagation(); close(); }}>
   <button
     class="close-btn z-[2102]"
+    on:mouseenter={handleMouseEnterClose}
+    on:mouseleave={handleMouseLeaveClose}
     on:click={(e) => {
       e.stopPropagation();
       close();
@@ -148,7 +157,14 @@
     background: none;
     border: none;
     font-size: 24px;
+    opacity: 0.5; /* Set initial opacity to 50% */
     z-index: 2102;
+    transition: opacity 0.3s ease; /* Smooth transition */
+    padding: 0.5rem;
+  }
+
+  .close-btn:hover {
+    opacity: 1; /* Fully visible on hover */
   }
 
   .nav-zone {
