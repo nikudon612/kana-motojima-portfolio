@@ -86,6 +86,8 @@
 </script>
 
 <svelte:head>
+  <title>Kana Motojima</title>
+  <meta name="description" content="Kana Motojima New York City Tokyo Photographer" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
