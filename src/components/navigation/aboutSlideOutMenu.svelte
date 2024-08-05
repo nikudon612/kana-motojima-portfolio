@@ -61,9 +61,7 @@
     ></div>
   {/if}
   <div
-    class="bg-white h-full flex items-center justify-center w-full desktop:w-[50%] desktop:absolute desktop:right-0 transform transition-transform duration-300"
-    class:isOpen={isOpen}
-    class:isClosing={isFadingOut}
+    class={`bg-white h-full flex items-center justify-center w-full desktop:w-[50%] desktop:absolute desktop:right-0 transform transition-transform duration-300 ${isOpen || isFadingOut ? "isOpen" : "isClosing"}`}
     on:click={handleMenuContentClick}
   >
     <div class="text-left mobile:px-[1.5rem] px-[3rem] desktop:max-w-[60%]">
