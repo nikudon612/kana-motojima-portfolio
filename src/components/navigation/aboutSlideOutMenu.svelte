@@ -29,7 +29,7 @@
       showDarkLayer = false;
       toggleMenu();
       zIndexClass = "";
-    }, 600); // Ensure this duration matches the combined duration of all transitions
+    }, 300); // Reduce this duration to match the transition duration
   }
 
   onMount(async () => {
