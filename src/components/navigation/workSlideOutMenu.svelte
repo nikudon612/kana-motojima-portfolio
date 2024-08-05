@@ -142,7 +142,7 @@
     background-color: rgba(0, 0, 0, 0);
     transition: background-color 0.5s ease-in-out;
     z-index: 1000; /* Lower value to be behind the menu */
-    cursor: pointer;
+    /* cursor: pointer; */
   }
 
   .opacity-layer.fade-in {

@@ -101,6 +101,7 @@
     }
     .menu-right {
       width: 100%;
+      z-index: 999;
     }
   }
 
@@ -120,6 +121,7 @@
     left: 0;
     width: 100%;
     height: 100%;
+    /* z-index: 1000; */
   }
 
   .opacity-layer.fade-in {
@@ -159,7 +161,7 @@
   }
 
   .z-index-top {
-    z-index: 10001; /* Higher z-index to ensure it appears above other elements */
+    z-index: 1001; /* Higher z-index to ensure it appears above other elements */
   }
 
   @keyframes fadeIn {
