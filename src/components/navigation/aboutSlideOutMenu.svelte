@@ -1,15 +1,14 @@
 <script>
   import { onMount } from "svelte";
-  import { fetchAbout } from "../../lib/fetchSanityData"; // Adjust the path if necessary
+  import { fetchAbout } from "../../lib/fetchSanityData";
 
   export let isOpen = false;
-  export let isClosing = false;
   export let toggleMenu;
 
   let aboutData = null;
-  let isFadingOut = false; // New state for fading out
+  let isFadingOut = false;
   let showDarkLayer = false;
-  let zIndexClass = ""; // Dynamic class for z-index
+  let zIndexClass = "";
 
   function handleMenuLeftClick(event) {
     event.stopPropagation();
@@ -18,20 +17,19 @@
     }
   }
 
-  function handleMenuRightClick(event) {
+  function handleMenuContentClick(event) {
     event.stopPropagation();
   }
 
   function closeMenu() {
-    isFadingOut = true; // Trigger fade out
+    isFadingOut = true;
     setTimeout(() => {
       isFadingOut = false;
-      isClosing = false;
       isOpen = false;
       showDarkLayer = false;
       toggleMenu();
-      zIndexClass = ""; // Reset z-index class
-    }, 300); // Delay to match the fade out transition duration
+      zIndexClass = "";
+    }, 600); // Ensure this duration matches the combined duration of all transitions
   }
 
   onMount(async () => {
@@ -47,18 +45,16 @@
     document.body.style.overflow = "hidden";
     setTimeout(() => {
       showDarkLayer = true;
-      zIndexClass = "z-index-top"; // Apply z-index class when menu opens
-    }, 0); // Adjust delay as needed
-  } else if (typeof window !== "undefined" && !isOpen) {
+      zIndexClass = "z-index-top";
+    }, 0);
+  } else if (typeof window !== "undefined" && !isOpen && !isFadingOut) {
     document.body.style.overflow = "";
     showDarkLayer = false;
   }
 </script>
 
-<div
-  class={`fixed top-0 left-0 w-full h-full flex ${isOpen ? "" : "is-closing"} ${zIndexClass}`}
->
-  {#if showDarkLayer || isFadingOut}
+<div class={`fixed top-0 left-0 w-full h-full flex ${isOpen || isFadingOut ? "" : "is-closing"} ${zIndexClass}`}>
+  {#if isOpen || isFadingOut}
     <div
       class={`opacity-layer transition-opacity duration-300 cursor-pointer ${showDarkLayer && !isFadingOut ? "fade-in" : ""} ${isFadingOut ? "fade-out" : ""}`}
       on:click={handleMenuLeftClick}
@@ -67,8 +63,8 @@
   <div
     class="bg-white h-full flex items-center justify-center w-full desktop:w-[50%] desktop:absolute desktop:right-0 transform transition-transform duration-300"
     class:isOpen={isOpen}
-    class:isClosing={isClosing}
-    on:click|stopPropagation={handleMenuRightClick}
+    class:isClosing={isFadingOut}
+    on:click={handleMenuContentClick}
   >
     <div class="text-left mobile:px-[1.5rem] px-[3rem] desktop:max-w-[60%]">
       {#if aboutData}
@@ -121,23 +117,19 @@
     left: 0;
     width: 100%;
     height: 100%;
-    /* z-index: 1000; */
+    transition: background-color 0.3s ease-in-out;
   }
 
   .opacity-layer.fade-in {
-    animation: fadeIn 0.3s forwards; /* Synchronize with transition duration */
+    background-color: rgba(0, 0, 0, 0.6);
   }
 
   .opacity-layer.fade-out {
-    animation: fadeOut 0.3s forwards; /* Synchronize with transition duration */
+    background-color: rgba(0, 0, 0, 0);
   }
 
   .transition-opacity {
-    transition: background-color 0.3s ease-in-out; /* Ensure this matches the animation duration */
-  }
-
-  .is-closing .opacity-layer {
-    display: none;
+    transition: background-color 0.3s ease-in-out;
   }
 
   .isOpen {
@@ -161,7 +153,7 @@
   }
 
   .z-index-top {
-    z-index: 1001; /* Higher z-index to ensure it appears above other elements */
+    z-index: 1001; /* Ensure it is above other content */
   }
 
   @keyframes fadeIn {

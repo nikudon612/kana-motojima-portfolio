@@ -13,47 +13,47 @@
   console.log("web development by Nick Bechtel (https://nickbechtel.com)");
 
   function toggleAboutMenu(event) {
-    event?.stopPropagation(); // Ensure event is optional and handled
+    event?.stopPropagation();
     if (aboutIsOpen) {
       aboutIsClosing = true;
       setTimeout(() => {
         aboutIsOpen = false;
         aboutIsClosing = false;
-      }, 300); // Delay to match the left menu close animation duration
+      }, 300);
     } else {
       aboutIsOpen = true;
-      workIsOpen = false; // Close work menu if open
+      workIsOpen = false;
       workIsClosing = false;
     }
   }
 
   function toggleWorkMenu(event) {
-    event?.stopPropagation(); // Ensure event is optional and handled
+    event?.stopPropagation();
     if (workIsOpen) {
       closeMenu();
     } else {
       workIsOpen = true;
-      aboutIsOpen = false; // Close about menu if open
+      aboutIsOpen = false;
       aboutIsClosing = false;
     }
   }
 
   function closeMenu() {
-    isFadingOut = true; // Trigger fade out
+    isFadingOut = true;
     setTimeout(() => {
       isFadingOut = false;
       workIsOpen = false;
       workIsClosing = false;
-    }, 300); // Delay to match the fade out transition duration
+    }, 300);
   }
 
   function openAboutMenuFromContact(event) {
-    event?.stopPropagation(); // Ensure event is optional and handled
+    event?.stopPropagation();
     if (aboutIsOpen) {
-      toggleAboutMenu(event); // Close the about menu if it is open
+      toggleAboutMenu(event);
     }
     aboutIsOpen = true;
-    workIsOpen = false; // Close work menu if open
+    workIsOpen = false;
     workIsClosing = false;
   }
 
@@ -69,7 +69,7 @@
           setTimeout(() => {
             aboutIsOpen = false;
             aboutIsClosing = false;
-          }, 300); // Delay to match the left menu close animation duration
+          }, 300);
         }
         if (workIsOpen) {
           closeMenu();
@@ -149,7 +149,7 @@
     opacity: 0.5;
   }
   .kana-text a {
-    color: black; /* Set initial color to white */
+    color: black; /* Set initial color to black */
     mix-blend-mode: difference; /* This will invert the color based on the background */
     background: transparent; /* Ensure background is transparent */
     padding: 0.5rem; /* Optional: add padding for better visibility */

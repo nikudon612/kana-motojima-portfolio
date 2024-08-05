@@ -13,6 +13,7 @@
   let selectedWork = null;
   let isWhiteBackground = false;
   let isMobile = false;
+  let zIndexClass = "";
 
   onMount(() => {
     const checkScreenSize = () => {
@@ -59,28 +60,26 @@
       currentPhotos = [];
       isOpen = false;
       toggleMenu();
+      zIndexClass = "";
     }, 300);
   }
 
   $: if (isOpen) {
     loadProjects();
+    zIndexClass = "z-index-top";
+  } else if (!isOpen && !isFadingOut) {
+    zIndexClass = "";
   }
 </script>
 
-<div class="menu-container {isOpen ? 'open' : ''}">
+<div class={`menu-container ${isOpen ? 'open' : ''} ${zIndexClass}`}>
   {#if isOpen}
     <div
-      class="opacity-layer {isFadingOut
-        ? 'fade-out'
-        : 'fade-in'} {isWhiteBackground ? 'white-bg' : ''}"
+      class={`opacity-layer ${isFadingOut ? 'fade-out' : 'fade-in'} ${isWhiteBackground ? 'white-bg' : ''}`}
       on:click={closeMenu}
     ></div>
   {/if}
-  <div
-    class="menu {isOpen ? 'menu-open' : 'menu-close'} {galleryVisible
-      ? 'full-width'
-      : ''}"
-  >
+  <div class={`menu ${isOpen ? 'menu-open' : 'menu-close'} ${galleryVisible ? 'full-width' : ''}`}>
     <div class="menu-left">
       <div class="menu-content">
         {#each works as work}
@@ -130,7 +129,7 @@
     width: 100%;
     height: 100%;
     display: flex;
-    z-index: 2000; /* Higher value to sit above the homepage content */
+    z-index: 1000; /* Lower initial value */
   }
 
   .opacity-layer {
@@ -141,8 +140,7 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0);
     transition: background-color 0.5s ease-in-out;
-    z-index: 1000; /* Lower value to be behind the menu */
-    /* cursor: pointer; */
+    z-index: 1000; /* Ensure this is behind the menu */
   }
 
   .opacity-layer.fade-in {
@@ -167,7 +165,7 @@
     justify-content: center;
     padding-left: 3rem;
     transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
-    z-index: 2001; /* Ensure this is above the opacity layer */
+    z-index: 1000; /* Ensure this is above the opacity layer */
     transform: translateX(-100%); /* Initial position off-screen */
   }
 
@@ -221,5 +219,9 @@
     .mobile\:block {
       display: block;
     }
+  }
+
+  .z-index-top {
+    z-index: 2000; /* Ensure it is above other content */
   }
 </style>
