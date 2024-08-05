@@ -73,6 +73,7 @@
   /* Mobile Layout */
   @media (max-width: 768px) {
     .gallery-container {
+      padding-top: 50px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -81,9 +82,10 @@
 
     .image-container {
       position: static;
-      margin-bottom: 1rem;
+      /* margin-bottom: 1rem; */
       left: auto;
       top: auto;
+      z-index: 1001;
     }
 
     .image {

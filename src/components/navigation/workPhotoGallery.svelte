@@ -110,5 +110,6 @@
     pointer-events: auto;
     opacity: 0; /* Start with opacity 0 */
     transition: opacity 1s ease-in-out;
+    cursor: pointer;
   }
 </style>

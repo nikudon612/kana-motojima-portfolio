@@ -5,3 +5,35 @@
 body {
   font-family: "Space Mono", monospace;
 }
+
+@font-face {
+  font-family: 'Space Mono';
+  font-style: normal;
+  font-weight: 400;
+  src: url('https://fonts.gstatic.com/s/spacemono/v12/i7dMIFla6KezdB5YfonTT1cexl35AwF0.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Space Mono';
+  font-style: italic;
+  font-weight: 400;
+  src: url('https://fonts.gstatic.com/s/spacemono/v12/i7dHIFla6KezdB5YfonTT1ce_lh2VA.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Space Mono';
+  font-style: normal;
+  font-weight: 700;
+  src: url('https://fonts.gstatic.com/s/spacemono/v12/i7dLIFla6KezdB5YfonTT1ceyV1aAw8.woff2') format('woff2');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Space Mono';
+  font-style: italic;
+  font-weight: 700;
+  src: url('https://fonts.gstatic.com/s/spacemono/v12/i7dJIFla6KezdB5YfonTT1ce_lZ6WQ8.woff2') format('woff2');
+  font-display: swap;
+}
