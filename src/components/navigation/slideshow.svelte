@@ -9,7 +9,6 @@
   let cursorText;
 
   function close() {
-    // console.log("Closing slideshow modal");
     dispatch("close");
   }
 
@@ -98,6 +97,10 @@
 </div>
 
 <style>
+  .modal, .content {
+    cursor: none; /* Hide the default cursor */
+  }
+
   .modal {
     position: fixed;
     top: 0;
@@ -109,7 +112,6 @@
     align-items: center;
     justify-content: center;
     z-index: 2100; /* Lower z-index to make navbar visible */
-    cursor: none; /* Hide the default cursor */
   }
 
   .content {
@@ -161,6 +163,7 @@
     z-index: 2102;
     transition: opacity 0.3s ease; /* Smooth transition */
     padding: 0.5rem;
+    cursor: pointer; /* Show the default cursor */
   }
 
   .close-btn:hover {
@@ -172,7 +175,7 @@
     top: 0;
     bottom: 0;
     width: 50%;
-    cursor: pointer;
+    cursor: none;
   }
 
   .prev {
