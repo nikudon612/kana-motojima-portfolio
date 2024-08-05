@@ -13,7 +13,6 @@
   let selectedWork = null;
   let isWhiteBackground = false;
   let isMobile = false;
-  let fadeIn = false;
 
   onMount(() => {
     const checkScreenSize = () => {
@@ -64,63 +63,64 @@
   }
 
   $: if (isOpen) {
-    fadeIn = false; // Reset fade-in state
     loadProjects();
-    setTimeout(() => {
-      fadeIn = true; // Apply fade-in after a delay
-    }, 0);
   }
 </script>
 
-{#if isOpen || isFadingOut}
-  <div class="menu-container {isOpen ? 'open' : ''} {isFadingOut ? 'fade-out' : (fadeIn ? 'fade-in' : '')}">
+<div class="menu-container {isOpen ? 'open' : ''}">
+  {#if isOpen}
     <div
-      class="opacity-layer {isFadingOut ? 'fade-out' : (fadeIn ? 'fade-in' : '')} {isWhiteBackground ? 'white-bg' : ''}"
+      class="opacity-layer {isFadingOut
+        ? 'fade-out'
+        : 'fade-in'} {isWhiteBackground ? 'white-bg' : ''}"
       on:click={closeMenu}
     ></div>
-    <div
-      class="menu {isOpen ? 'menu-open' : 'menu-close'} {galleryVisible ? 'full-width' : ''}"
-    >
-      <div class="menu-left">
-        <div class="menu-content">
-          {#each works as work}
-            <p
-              class="hover:!text-black/100"
-              on:mouseover={!isMobile ? () => showPhotos(work) : null}
-              on:click={isMobile ? () => showPhotos(work) : null}
-              class:selected={selectedWork === work.title}
-            >
-              {work.title}
-            </p>
-          {/each}
-        </div>
+  {/if}
+  <div
+    class="menu {isOpen ? 'menu-open' : 'menu-close'} {galleryVisible
+      ? 'full-width'
+      : ''}"
+  >
+    <div class="menu-left">
+      <div class="menu-content">
+        {#each works as work}
+          <p
+            class="hover:!text-black/100"
+            on:mouseover={!isMobile ? () => showPhotos(work) : null}
+            on:click={isMobile ? () => showPhotos(work) : null}
+            class:selected={selectedWork === work.title}
+          >
+            {work.title}
+          </p>
+        {/each}
       </div>
-
-      {#if galleryVisible}
-        <div class="mobile:block desktop:hidden">
-          <MobilePhotoGalleryModal
-            {currentPhotos}
-            projectTitle={selectedWork}
-            close={() => {
-              galleryVisible = false;
-              isWhiteBackground = false;
-            }}
-          />
-        </div>
-        <div class="desktop:block mobile:hidden">
-          <PhotoGalleryModal
-            {currentPhotos}
-            projectTitle={selectedWork}
-            close={() => {
-              galleryVisible = false;
-              isWhiteBackground = false;
-            }}
-          />
-        </div>
-      {/if}
     </div>
+
+    {#if galleryVisible}
+      <!-- Use MobilePhotoGalleryModal on mobile, and PhotoGalleryModal on larger screens -->
+      <div class="mobile:block desktop:hidden">
+        <MobilePhotoGalleryModal
+          {currentPhotos}
+          projectTitle={selectedWork}
+          close={() => {
+            galleryVisible = false;
+            isWhiteBackground = false;
+          }}
+        />
+      </div>
+      <div class="desktop:block mobile:hidden">
+        <PhotoGalleryModal
+          {currentPhotos}
+          projectTitle={selectedWork}
+          close={() => {
+            galleryVisible = false;
+            isWhiteBackground = false;
+          }}
+        />
+      </div>
+    {/if}
   </div>
-{/if}
+</div>
 
 <style>
   .menu-container {
@@ -130,17 +130,7 @@
     width: 100%;
     height: 100%;
     display: flex;
-    z-index: 2000;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
-  }
-
-  .menu-container.fade-in {
-    opacity: 1;
-  }
-
-  .menu-container.fade-out {
-    opacity: 0;
+    z-index: 2000; /* Higher value to sit above the homepage content */
   }
 
   .opacity-layer {
@@ -150,7 +140,8 @@
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0);
-    z-index: 1999;
+    transition: background-color 0.5s ease-in-out;
+    z-index: 1000; /* Lower value to be behind the menu */
     cursor: pointer;
   }
 
@@ -176,9 +167,8 @@
     justify-content: center;
     padding-left: 3rem;
     transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
-    z-index: 2000;
+    z-index: 2001; /* Ensure this is above the opacity layer */
     transform: translateX(-100%); /* Initial position off-screen */
-    opacity: 0;
   }
 
   .menu.full-width {
@@ -186,14 +176,11 @@
   }
 
   .menu-open {
-    transform: translateX(0); /* Slide in from the left */
-    opacity: 1;
-    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    transform: translateX(0);
   }
 
   .menu-close {
-    transform: translateX(-100%); /* Slide out to the left */
-    opacity: 0;
+    transform: translateX(-100%);
   }
 
   .menu-content {
@@ -233,24 +220,6 @@
     }
     .mobile\:block {
       display: block;
-    }
-  }
-
-  @keyframes fadeIn {
-    from {
-      background-color: rgba(0, 0, 0, 0);
-    }
-    to {
-      background-color: rgba(0, 0, 0, 0.6);
-    }
-  }
-
-  @keyframes fadeOut {
-    from {
-      background-color: rgba(0, 0, 0, 0.6);
-    }
-    to {
-      background-color: rgba(0, 0, 0, 0);
     }
   }
 </style>
