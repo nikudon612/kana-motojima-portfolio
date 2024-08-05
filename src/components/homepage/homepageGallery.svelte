@@ -70,6 +70,28 @@
     }
   }
 
+  /* Mobile Layout */
+  @media (max-width: 768px) {
+    .gallery-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: static;
+    }
+
+    .image-container {
+      position: static;
+      margin-bottom: 1rem;
+      left: auto;
+      top: auto;
+    }
+
+    .image {
+      max-width: 100%;
+      width: auto;
+    }
+  }
+
   .kana-text a {
     color: black;
     mix-blend-mode: difference;

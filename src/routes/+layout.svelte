@@ -95,27 +95,27 @@
 </svelte:head>
 
 <nav
-  class="mobile:h-[100px] fixed bottom-0 left-0 w-full flex justify-between px-[3rem] py-10 text-black bg-transparent mobile:fixed mobile:top-0 mobile:left-0 mobile:w-full mobile:flex mobile:justify-between mobile:items-center mobile:px-[1.5rem] mobile:py-[4rem] mobile:bg-white"
+  class="mobile:h-[50px] fixed bottom-0 left-0 w-full flex justify-between px-[3rem] mobile:py-0 py-10 text-black bg-transparent mobile:fixed mobile:top-0 mobile:left-0 mobile:w-full mobile:flex mobile:justify-between mobile:items-center mobile:px-[1.5rem] mobile:py-[4rem] mobile:bg-white"
   style="z-index: 2001;"
 >
   <div
-    class="flex flex-col text-[1.125rem] mobile:flex-col mobile:ml-0 mobile:text-[1rem] mobile:gap-4"
+    class="flex flex-col items-start text-[1.125rem] mobile:flex-row mobile:ml-0 ml-0 mobile:text-[1rem] mobile:gap-4"
     style="z-index: 2001;"
   >
-    <p
+    <button
       class="mb-2 hover:cursor-pointer toggle-menu-btn desktop:mb-2 mobile:mb-0"
       on:click={toggleWorkMenu}
       class:opacity-50={aboutIsOpen}
     >
       work
-    </p>
-    <p
+    </button>
+    <button
       class="mb-2 hover:cursor-pointer toggle-menu-btn desktop:mb-2 mobile:mb-0"
       on:click={openAboutMenuFromContact}
       class:opacity-50={workIsOpen}
     >
       contact
-    </p>
+    </button>
   </div>
   <div
     class="mr-8 flex flex-col items-start justify-end mobile:flex-row mobile:items-center mobile:mr-0"
@@ -140,11 +140,7 @@
   isClosing={aboutIsClosing}
   toggleMenu={toggleAboutMenu}
 />
-<WorkSlideOutMenu
-  isOpen={workIsOpen}
-  toggleMenu={closeMenu}
-  isFadingOut={isFadingOut}
-/>
+<WorkSlideOutMenu isOpen={workIsOpen} toggleMenu={closeMenu} {isFadingOut} />
 
 <slot />
 
