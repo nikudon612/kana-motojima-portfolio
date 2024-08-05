@@ -4,6 +4,7 @@
 
   export let isOpen = false;
   export let toggleMenu;
+  export let isClosing;
 
   let aboutData = null;
   let isFadingOut = false;
@@ -53,7 +54,9 @@
   }
 </script>
 
-<div class={`fixed top-0 left-0 w-full h-full flex ${isOpen || isFadingOut ? "" : "is-closing"} ${zIndexClass}`}>
+<div
+  class={`fixed top-0 left-0 w-full h-full flex ${isOpen || isFadingOut ? "" : "is-closing"} ${zIndexClass}`}
+>
   {#if isOpen || isFadingOut}
     <div
       class={`opacity-layer transition-opacity duration-300 cursor-pointer ${showDarkLayer && !isFadingOut ? "fade-in" : ""} ${isFadingOut ? "fade-out" : ""}`}
