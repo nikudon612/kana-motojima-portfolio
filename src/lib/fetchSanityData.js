@@ -20,7 +20,7 @@ export async function fetchHomepageGallery() {
 }
 
 export async function fetchProjects() {
-  const query = `*[_type == "project"]{
+  const query = `*[_type == "project" && !(_id in path("drafts.**"))]{
     title,
     "photos": photos[]->{
       "url": image.asset->url,

@@ -31,6 +31,7 @@
   async function loadProjects() {
     try {
       works = await fetchProjects();
+      console.log("Projects fetched:", works);
     } catch (error) {
       console.error("Error fetching projects:", error);
     }
@@ -65,7 +66,9 @@
   }
 
   $: if (isOpen) {
-    loadProjects();
+    if (works.length === 0) {
+      loadProjects();
+    }
     zIndexClass = "z-index-top";
   } else if (!isOpen && !isFadingOut) {
     zIndexClass = "";
@@ -82,7 +85,7 @@
   <div class={`menu ${isOpen ? 'menu-open' : 'menu-close'} ${galleryVisible ? 'full-width' : ''}`}>
     <div class="menu-left">
       <div class="menu-content">
-        {#each works as work}
+        {#each works as work, index (work._id || index)}
           <p
             class="hover:!text-black/100"
             on:mouseover={!isMobile ? () => showPhotos(work) : null}
