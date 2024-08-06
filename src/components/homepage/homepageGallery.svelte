@@ -70,6 +70,18 @@
     }
   }
 
+  @media (min-width: 1700px) {
+    .image {
+      max-width: 400px;
+    }
+  }
+  
+  @media (min-width: 2000px) {
+    .image {
+      max-width: 500px;
+    }
+  }
+
   /* Mobile Layout */
   @media (max-width: 768px) {
     .gallery-container {
@@ -77,7 +89,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      position: static;
+      position: relative;
+
     }
 
     .image-container {
