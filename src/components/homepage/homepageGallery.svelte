@@ -70,7 +70,7 @@
     }
   }
 
-  @media (min-width: 1700px) {
+  /* @media (min-width: 1700px) {
     .image {
       max-width: 400px;
     }
@@ -80,7 +80,7 @@
     .image {
       max-width: 500px;
     }
-  }
+  } */
 
   /* Mobile Layout */
   @media (max-width: 768px) {
