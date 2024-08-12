@@ -125,7 +125,7 @@
     </button>
   </div>
   <div
-    class="mr-8 flex flex-col items-start justify-end mobile:flex-row mobile:items-center mobile:mr-0"
+    class="mr-4 flex flex-col items-start justify-end mobile:flex-row mobile:items-center mobile:mr-0"
     style="z-index: 2001;"
   >
     <a
