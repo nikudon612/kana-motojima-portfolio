@@ -111,7 +111,7 @@
           }}
         />
       </div>
-      <div class="desktop:block mobile:hidden">
+      <div class="mobile:hidden tablet:hidden desktop:block">
         <PhotoGalleryModal
           {currentPhotos}
           projectTitle={selectedWork}
