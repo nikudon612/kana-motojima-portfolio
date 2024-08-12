@@ -145,6 +145,7 @@
     background-color: rgba(0, 0, 0, 0);
     transition: background-color 0.5s ease-in-out;
     z-index: 1000; /* Ensure this is behind the menu */
+    cursor: pointer;
   }
 
   .opacity-layer.fade-in {
