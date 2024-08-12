@@ -75,21 +75,22 @@
   }
 </script>
 
-<div class={`menu-container ${isOpen ? 'open' : ''} ${zIndexClass}`}>
+<div class={`menu-container ${isOpen ? "open" : ""} ${zIndexClass}`}>
   {#if isOpen}
     <div
-      class={`opacity-layer ${isFadingOut ? 'fade-out' : 'fade-in'} ${isWhiteBackground ? 'white-bg' : ''}`}
+      class={`opacity-layer ${isFadingOut ? "fade-out" : "fade-in"} ${isWhiteBackground ? "white-bg" : ""}`}
       on:click={closeMenu}
     ></div>
   {/if}
-  <div class={`menu ${isOpen ? 'menu-open' : 'menu-close'} ${galleryVisible ? 'full-width' : ''}`}>
+  <div
+    class={`menu ${isOpen ? "menu-open" : "menu-close"} ${galleryVisible ? "full-width" : ""}`}
+  >
     <div class="menu-left">
       <div class="menu-content">
         {#each works as work, index (work._id || index)}
           <p
             class="hover:!text-black/100"
-            on:mouseover={!isMobile ? () => showPhotos(work) : null}
-            on:click={isMobile ? () => showPhotos(work) : null}
+            on:click={() => showPhotos(work)}
             class:selected={selectedWork === work.title}
           >
             {work.title}
@@ -167,7 +168,9 @@
     flex-direction: column;
     justify-content: center;
     padding-left: 3rem;
-    transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+    transition:
+      transform 0.3s ease-in-out,
+      width 0.3s ease-in-out;
     z-index: 1000; /* Ensure this is above the opacity layer */
     transform: translateX(-100%); /* Initial position off-screen */
   }
