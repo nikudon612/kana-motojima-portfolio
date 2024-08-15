@@ -9,6 +9,8 @@
   let aboutIsClosing = false;
   let workIsClosing = false;
   let isFadingOut = false;
+  let hoverOnWork = false;
+  let hoverOnContact = false;
 
   console.log("web development by Nick Bechtel (https://nickbechtel.com)");
 
@@ -85,22 +87,6 @@
   });
 </script>
 
-<svelte:head>
-  <title>Kana Motojima</title>
-  <meta
-    name="description"
-    content="Kana Motojima New York City Tokyo Photographer"
-  />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
-    rel="stylesheet"
-  />
-</svelte:head>
-
 <nav
   class="mobile:h-[50px] fixed bottom-0 left-0 w-full flex justify-between px-[3rem] mobile:py-0 py-10 text-black bg-transparent mobile:fixed mobile:top-0 mobile:left-0 mobile:w-full mobile:flex mobile:justify-between mobile:items-center mobile:px-[1.5rem] mobile:py-[4rem] mobile:bg-white"
   style="z-index: 2001;"
@@ -112,14 +98,18 @@
     <button
       class="mb-2 hover:cursor-pointer toggle-menu-btn desktop:mb-2 mobile:mb-0"
       on:click={toggleWorkMenu}
-      class:opacity-50={aboutIsOpen}
+      on:mouseenter={() => (hoverOnWork = true)}
+      on:mouseleave={() => (hoverOnWork = false)}
+      class:opacity-50={hoverOnContact || aboutIsOpen}
     >
       work
     </button>
     <button
       class="mb-2 hover:cursor-pointer toggle-menu-btn desktop:mb-2 mobile:mb-0"
       on:click={openAboutMenuFromContact}
-      class:opacity-50={workIsOpen}
+      on:mouseenter={() => (hoverOnContact = true)}
+      on:mouseleave={() => (hoverOnContact = false)}
+      class:opacity-50={hoverOnWork || workIsOpen}
     >
       contact
     </button>
@@ -154,6 +144,10 @@
 <style>
   .opacity-50 {
     opacity: 0.5;
+  }
+
+  .toggle-menu-btn {
+    transition: opacity 300ms ease-in-out; /* Add the transition property here */
   }
   .kana-text a {
     color: black; /* Set initial color to black */
