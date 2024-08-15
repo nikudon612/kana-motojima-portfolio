@@ -37,13 +37,13 @@
 </script>
 
 <div
-  class="fixed top-[6rem] inset-0 bg-white z-[2000] tablet:top-0 {isClosing
+  class="fixed top-[3rem] tablet:top-[1rem] inset-0 bg-white z-[2000] tablet:top-0 {isClosing
     ? 'opacity-0'
     : 'opacity-100'} transition-opacity duration-300"
   on:click={handleClose}
 >
   <div
-    class="relative w-full h-full max-h-full bg-white overflow-hidden px-[2rem] box-border pt-20 pb-20 tablet:pt-10 flex flex-col justify-between"
+    class="relative w-full h-full max-h-full bg-white overflow-hidden px-[1.5rem] tablet:px-[3rem] box-border pt-20 pb-20 tablet:pt-10 flex flex-col justify-between"
     on:click|stopPropagation
   >
     <div class="flex justify-between items-center mb-4">
