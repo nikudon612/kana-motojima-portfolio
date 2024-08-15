@@ -18,7 +18,8 @@
   }
 
   function previousImage() {
-    currentIndex = (currentIndex - 1 + slideshowImages.length) % slideshowImages.length;
+    currentIndex =
+      (currentIndex - 1 + slideshowImages.length) % slideshowImages.length;
     updateCursorText();
   }
 
@@ -44,26 +45,35 @@
   }
 
   function handleMouseEnterClose() {
-    cursor.style.display = 'none';
+    cursor.style.display = "none";
   }
 
   function handleMouseLeaveClose() {
-    cursor.style.display = 'flex';
+    cursor.style.display = "flex";
   }
 </script>
 
-<div class="modal z-[2100]" on:click={(e) => { e.stopPropagation(); close(); }}>
-  <button
-    class="close-btn z-[2102]"
-    on:mouseenter={handleMouseEnterClose}
-    on:mouseleave={handleMouseLeaveClose}
-    on:click={(e) => {
-      e.stopPropagation();
-      close();
-    }}>✕</button>
-  >
+<div
+  class="modal z-[2100]"
+  on:click={(e) => {
+    e.stopPropagation();
+    close();
+  }}
+>
   <div class="content z-[2101]" on:click|stopPropagation>
-    <div class="title-container px-[3rem]">{projectTitle}</div>
+    <div class="title-container px-[3rem]">
+      {projectTitle}
+      <button
+        class="close-btn z-[2102]"
+        on:mouseenter={handleMouseEnterClose}
+        on:mouseleave={handleMouseLeaveClose}
+        on:click={(e) => {
+          e.stopPropagation();
+          close();
+        }}>✕</button
+      >
+    </div>
+
     <div class="slideshow-container">
       <div class="slideshow">
         {#if slideshowImages.length > 0}
@@ -97,7 +107,8 @@
 </div>
 
 <style>
-  .modal, .content {
+  .modal,
+  .content {
     cursor: none; /* Hide the default cursor */
   }
 
@@ -126,6 +137,9 @@
     text-align: left;
     font-size: 1rem;
     padding-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
   }
 
   .slideshow-container {
@@ -152,10 +166,9 @@
   }
 
   .close-btn {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    margin-right: 2rem;
+    /* position: fixed; */
+    display: flex;
+    align-items: flex-start;
     background: none;
     border: none;
     font-size: 24px;
