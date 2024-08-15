@@ -51,6 +51,15 @@
     }
   }
 
+  function openPhotoGalleryModal(work) {
+    if (work.photos && work.photos.length > 0) {
+      selectedWork = work.title;
+      currentPhotos = work.photos;
+      galleryVisible = true;
+      isWhiteBackground = true;
+    }
+  }
+
   function closeMenu() {
     isFadingOut = true;
     setTimeout(() => {
@@ -90,7 +99,8 @@
         {#each works as work, index (work._id || index)}
           <p
             class="hover:!text-black/100"
-            on:click={() => showPhotos(work)}
+            on:mouseover={() => showPhotos(work)}
+            on:click={() => openPhotoGalleryModal(work)}
             class:selected={selectedWork === work.title}
           >
             {work.title}
@@ -105,6 +115,7 @@
         <MobilePhotoGalleryModal
           {currentPhotos}
           projectTitle={selectedWork}
+          initialPhotoIndex={0}
           close={() => {
             galleryVisible = false;
             isWhiteBackground = false;
@@ -115,6 +126,7 @@
         <PhotoGalleryModal
           {currentPhotos}
           projectTitle={selectedWork}
+          initialPhotoIndex={0}
           close={() => {
             galleryVisible = false;
             isWhiteBackground = false;
