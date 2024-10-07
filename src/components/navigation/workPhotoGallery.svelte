@@ -12,8 +12,6 @@
   let currentIndex = 0;
   let previousPhotos = [];
 
-  
-
   function handleClose(event) {
     event.stopPropagation(); // Prevent click from closing menu
     if (!slideshowVisible) {
@@ -29,6 +27,7 @@
     }));
     currentIndex = index;
     slideshowVisible = true;
+    console.log("work gallery opened slideshow")
   }
 
   function closeSlideshow() {
@@ -73,7 +72,7 @@
 {#if slideshowVisible}
   <SlideshowModal
     slideshowImages={currentPhotos}
-    currentIndex={initialPhotoIndex}
+    currentIndex={currentIndex}
     {projectTitle}
     on:close={closeSlideshow}
   />
