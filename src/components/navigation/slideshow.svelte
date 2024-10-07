@@ -64,35 +64,50 @@
   }
 </script>
 
-<div class="modal z-[2100]" on:click={close}>
+<div
+  class="modal z-[2100]"
+  on:click={(e) => {
+    e.stopPropagation();
+    close();
+  }}
+>
   <div class="content z-[2101]" on:click|stopPropagation>
-    <div class="title-container">
-      <h3>{projectTitle || "No Title"}</h3>
-      <button class="close-btn" on:click={close}>✕</button>
+    <div class="title-container px-[3rem]">
+      {projectTitle}
+      <button
+        class="close-btn z-[2102]"
+        on:mouseenter={handleMouseEnterClose}
+        on:mouseleave={handleMouseLeaveClose}
+        on:click={(e) => {
+          e.stopPropagation();
+          close();
+        }}>✕</button
+      >
     </div>
-
     <div class="slideshow-container">
       <div class="slideshow">
         {#if slideshowImages.length > 0}
-          <img src={slideshowImages[currentIndex].url} alt="Slideshow Image" />
+          <img
+            src={slideshowImages[currentIndex].url}
+            alt={slideshowImages[currentIndex].title}
+            class="slideshow-image"
+          />
         {/if}
       </div>
-
       <div class="nav-zone prev" on:click|stopPropagation={previousImage}></div>
       <div class="nav-zone next" on:click|stopPropagation={nextImage}></div>
     </div>
-  </div>
-
-  <div class="nav-dots">
-    {#each slideshowImages as _, index}
-      <div
-        class="nav-dot {index === currentIndex ? 'active' : ''}"
-        on:click={() => {
-          currentIndex = index;
-          updateCursorText();
-        }}
-      ></div>
-    {/each}
+    <div class="nav-dots">
+      {#each slideshowImages as _, index}
+        <div
+          class="nav-dot {index === currentIndex ? 'active' : ''}"
+          on:click={() => {
+            currentIndex = index;
+            updateCursorText();
+          }}
+        ></div>
+      {/each}
+    </div>
   </div>
 </div>
 
