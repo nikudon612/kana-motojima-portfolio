@@ -1,22 +1,26 @@
 <script>
-  import { createEventDispatcher, onMount } from "svelte";
+  export let slideshowImages = [];
+  export let currentIndex = 0; // Initial index for the slideshow
+  export let projectTitle; // The project title for the slideshow
+  export let firstImageOfProject; // The first image of the project
+  import { createEventDispatcher, onMount } from "svelte"; // Ensure it's imported
 
-  export let slideshowImages = []; // Ensure this is passed as a prop
-  export let currentIndex = 0;
-  export let projectTitle;
-  const dispatch = createEventDispatcher();
   let cursor;
   let cursorText;
+
+  const dispatch = createEventDispatcher();
 
   function close() {
     dispatch("close");
   }
 
+  // Move to the next image
   function nextImage() {
     currentIndex = (currentIndex + 1) % slideshowImages.length;
     updateCursorText();
   }
 
+  // Move to the previous image
   function previousImage() {
     currentIndex =
       (currentIndex - 1 + slideshowImages.length) % slideshowImages.length;
@@ -28,6 +32,13 @@
       cursorText.innerText = `${currentIndex + 1} / ${slideshowImages.length}`;
     }
   }
+
+  // On mount, if there's a first image, set it as the current image
+  onMount(() => {
+    if (firstImageOfProject) {
+      slideshowImages = [{ url: firstImageOfProject }, ...slideshowImages];
+    }
+  });
 
   onMount(() => {
     updateCursorText();
@@ -53,51 +64,35 @@
   }
 </script>
 
-<div
-  class="modal z-[2100]"
-  on:click={(e) => {
-    e.stopPropagation();
-    close();
-  }}
->
+<div class="modal z-[2100]" on:click={close}>
   <div class="content z-[2101]" on:click|stopPropagation>
-    <div class="title-container px-[3rem]">
-      {projectTitle}
-      <button
-        class="close-btn z-[2102]"
-        on:mouseenter={handleMouseEnterClose}
-        on:mouseleave={handleMouseLeaveClose}
-        on:click={(e) => {
-          e.stopPropagation();
-          close();
-        }}>✕</button
-      >
+    <div class="title-container">
+      <h3>{projectTitle || "No Title"}</h3>
+      <button class="close-btn" on:click={close}>✕</button>
     </div>
 
     <div class="slideshow-container">
       <div class="slideshow">
         {#if slideshowImages.length > 0}
-          <img
-            src={slideshowImages[currentIndex].imageUrl}
-            alt={slideshowImages[currentIndex].title}
-            class="slideshow-image"
-          />
+          <img src={slideshowImages[currentIndex].url} alt="Slideshow Image" />
         {/if}
       </div>
+
       <div class="nav-zone prev" on:click|stopPropagation={previousImage}></div>
       <div class="nav-zone next" on:click|stopPropagation={nextImage}></div>
     </div>
-    <div class="nav-dots">
-      {#each slideshowImages as _, index}
-        <div
-          class="nav-dot {index === currentIndex ? 'active' : ''}"
-          on:click={() => {
-            currentIndex = index;
-            updateCursorText();
-          }}
-        ></div>
-      {/each}
-    </div>
+  </div>
+
+  <div class="nav-dots">
+    {#each slideshowImages as _, index}
+      <div
+        class="nav-dot {index === currentIndex ? 'active' : ''}"
+        on:click={() => {
+          currentIndex = index;
+          updateCursorText();
+        }}
+      ></div>
+    {/each}
   </div>
 </div>
 

@@ -3,6 +3,7 @@
   import { fetchProjects } from "../../lib/fetchSanityData";
   import PhotoGalleryModal from "../navigation/workPhotoGallery.svelte";
   import MobilePhotoGalleryModal from "../navigation/mobileModalPhotoGallery.svelte";
+  import SlideshowModal from "./slideshow.svelte";
 
   export let isOpen = false;
   export let toggleMenu;
@@ -14,12 +15,14 @@
   let isWhiteBackground = false;
   let isMobile = false;
   let zIndexClass = "";
+  let initialPhotoIndex = 0; // Tracks the initial index for slideshow
+  let slideshowVisible = false; // Used to trigger the slideshow modal
+  let firstImageOfProject = "";
 
   onMount(() => {
     const checkScreenSize = () => {
       isMobile = window.innerWidth <= 768;
     };
-
     checkScreenSize();
     window.addEventListener("resize", checkScreenSize);
 
@@ -31,17 +34,17 @@
   async function loadProjects() {
     try {
       works = await fetchProjects();
-      console.log("Projects fetched:", works);
     } catch (error) {
       console.error("Error fetching projects:", error);
     }
   }
 
+  // Show photos on hover but don't trigger the modal
   function showPhotos(work) {
     if (work.photos && work.photos.length > 0) {
       selectedWork = work.title;
       currentPhotos = work.photos;
-      galleryVisible = true;
+      galleryVisible = true; // Show the gallery photos on hover
       isWhiteBackground = true;
     } else {
       galleryVisible = false;
@@ -51,13 +54,22 @@
     }
   }
 
+  // Show the first image in the slideshow when the project title is clicked
   function openPhotoGalleryModal(work) {
     if (work.photos && work.photos.length > 0) {
       selectedWork = work.title;
       currentPhotos = work.photos;
-      galleryVisible = true;
-      isWhiteBackground = true;
+      // initialPhotoIndex = 0; // Always start from the first photo
+      firstImageOfProject = currentPhotos[0].url;
+      slideshowVisible = true;
+      console.log("currentPhotos:", currentPhotos);
+      console.log("first url:", currentPhotos[0].url);
     }
+  }
+
+  // Close the slideshow modal
+  function closeSlideshowModal() {
+    slideshowVisible = false;
   }
 
   function closeMenu() {
@@ -109,13 +121,12 @@
       </div>
     </div>
 
-    {#if galleryVisible}
-      <!-- Use MobilePhotoGalleryModal on mobile, and PhotoGalleryModal on larger screens -->
+    {#if galleryVisible && !slideshowVisible}
       <div class="mobile:block desktop:hidden">
         <MobilePhotoGalleryModal
           {currentPhotos}
           projectTitle={selectedWork}
-          initialPhotoIndex={0}
+          {initialPhotoIndex}
           close={() => {
             galleryVisible = false;
             isWhiteBackground = false;
@@ -126,13 +137,23 @@
         <PhotoGalleryModal
           {currentPhotos}
           projectTitle={selectedWork}
-          initialPhotoIndex={0}
+          {initialPhotoIndex}
           close={() => {
             galleryVisible = false;
             isWhiteBackground = false;
           }}
         />
       </div>
+    {/if}
+
+    <!-- Slideshow modal will be shown only if slideshowVisible is true -->
+    {#if slideshowVisible}
+      <SlideshowModal
+        {currentPhotos}
+        currentIndex={initialPhotoIndex}
+        {firstImageOfProject}
+        on:close={closeSlideshowModal}
+      />
     {/if}
   </div>
 </div>
@@ -145,7 +166,7 @@
     width: 100%;
     height: 100%;
     display: flex;
-    z-index: 1000; /* Lower initial value */
+    z-index: 1000;
   }
 
   .opacity-layer {
@@ -156,7 +177,7 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0);
     transition: background-color 0.5s ease-in-out;
-    z-index: 1000; /* Ensure this is behind the menu */
+    z-index: 1000;
     cursor: pointer;
   }
 
@@ -184,8 +205,8 @@
     transition:
       transform 0.3s ease-in-out,
       width 0.3s ease-in-out;
-    z-index: 1000; /* Ensure this is above the opacity layer */
-    transform: translateX(-100%); /* Initial position off-screen */
+    z-index: 1000;
+    transform: translateX(-100%);
   }
 
   .menu.full-width {
@@ -241,6 +262,6 @@
   }
 
   .z-index-top {
-    z-index: 2000; /* Ensure it is above other content */
+    z-index: 2000;
   }
 </style>
