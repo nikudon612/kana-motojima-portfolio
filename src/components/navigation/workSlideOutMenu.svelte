@@ -126,7 +126,7 @@
         <MobilePhotoGalleryModal
           {currentPhotos}
           projectTitle={selectedWork}
-          {initialPhotoIndex}
+          initialPhotoIndex={0}
           close={() => {
             galleryVisible = false;
             isWhiteBackground = false;
@@ -137,7 +137,7 @@
         <PhotoGalleryModal
           {currentPhotos}
           projectTitle={selectedWork}
-          {initialPhotoIndex}
+          initialPhotoIndex={0}
           close={() => {
             galleryVisible = false;
             isWhiteBackground = false;

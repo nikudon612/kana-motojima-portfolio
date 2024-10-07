@@ -7,7 +7,7 @@
   export let isClosing = false;
   export let projectTitle;
   let slideshowVisible = false;
-  export let initialPhotoIndex = 0; // Define this to track the initial photo index
+  export let initialPhotoIndex; // Define this to track the initial photo index
   let slideshowImages = [];
   let currentIndex = 0;
   let previousPhotos = [];
