@@ -63,7 +63,7 @@
       firstImageOfProject = currentPhotos[0].url;
       slideshowVisible = true;
       console.log("currentPhotos:", currentPhotos);
-      console.log("first url:", currentPhotos[0].url);
+      console.log("title", selectedWork);
     }
   }
 
@@ -150,6 +150,7 @@
     {#if slideshowVisible}
       <SlideshowModal
         {currentPhotos}
+        projectTitle={selectedWork}
         currentIndex={initialPhotoIndex}
         {firstImageOfProject}
         on:close={closeSlideshowModal}
