@@ -46,7 +46,7 @@
       currentPhotos = work.photos;
       galleryVisible = true; // Show the gallery photos on hover
       isWhiteBackground = true;
-      console.log("openphoto")
+      console.log("openphoto");
     } else {
       galleryVisible = false;
       isWhiteBackground = false;
@@ -66,7 +66,7 @@
         slideshowVisible = true;
         console.log("currentPhotos:", currentPhotos);
         console.log("title", selectedWork);
-        console.log("showphotos")
+        console.log("showphotos");
       }
     } else {
       console.log("window is too small");
@@ -79,17 +79,16 @@
   }
 
   function closeMenu() {
-    isFadingOut = true;
+    isFadingOut = true; // Only the opacity layer should fade
     setTimeout(() => {
       isFadingOut = false;
-      isWhiteBackground = false;
+      isOpen = false;
       galleryVisible = false;
       selectedWork = null;
       currentPhotos = [];
-      isOpen = false;
       toggleMenu();
       zIndexClass = "";
-    }, 300);
+    }, 300); // Match the duration of the transform animation
   }
 
   $: if (isOpen) {
@@ -174,59 +173,68 @@
     width: 100%;
     height: 100%;
     display: flex;
-    z-index: 1000;
+    z-index: 2000;
+  }
+
+  .bg-white {
+    transform: translateX(100%);
+    transition:
+      transform 0.3s ease-in-out,
+      background-color 0.3s ease-in-out;
+  }
+
+  .bg-white.isOpen {
+    transform: translateX(0);
+  }
+
+  .bg-white.isClosing {
+    transform: translateX(100%);
   }
 
   .opacity-layer {
+    background-color: rgba(0, 0, 0, 0); /* Transparent initially */
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0);
-    transition: background-color 0.5s ease-in-out;
-    z-index: 1000;
-    cursor: pointer;
+    transition: background-color 0.3s ease-in-out; /* Opacity layer fades in and out */
+    z-index: 1000; /* Lower than the white background and text */
   }
 
   .opacity-layer.fade-in {
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.6); /* Fade in with dark overlay */
   }
 
   .opacity-layer.fade-out {
-    background-color: rgba(0, 0, 0, 0);
+    background-color: rgba(0, 0, 0, 0); /* Fade out */
   }
 
-  .opacity-layer.white-bg {
-    background-color: white;
-  }
-
+  /* The white background and text should only slide, no fade */
   .menu {
     position: relative;
     width: 50%;
     height: 100%;
-    background-color: white;
+    background-color: white; /* No opacity changes */
     display: flex;
     flex-direction: column;
     justify-content: center;
     padding-left: 3rem;
-    transition:
-      transform 0.3s ease-in-out,
-      width 0.3s ease-in-out;
-    z-index: 1000;
-    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out; /* Only slide, no fading */
+    z-index: 2000; /* Ensure it stays on top of opacity layer */
+    transform: translateX(-100%); /* Initially off-screen */
+  }
+
+  .menu-open {
+    transform: translateX(0); /* Slide into view */
+  }
+
+  .menu-close {
+    transform: translateX(-100%); /* Slide out of view */
   }
 
   .menu.full-width {
     width: 100%;
-  }
-
-  .menu-open {
-    transform: translateX(0);
-  }
-
-  .menu-close {
-    transform: translateX(-100%);
   }
 
   .menu-content {
