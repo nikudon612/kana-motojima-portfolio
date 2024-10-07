@@ -40,7 +40,7 @@
   }
 
   // Show photos on hover but don't trigger the modal
-  function showPhotos(work) {
+  function openPhotoGalleryModal(work) {
     if (work.photos && work.photos.length > 0) {
       selectedWork = work.title;
       currentPhotos = work.photos;
@@ -55,15 +55,19 @@
   }
 
   // Show the first image in the slideshow when the project title is clicked
-  function openPhotoGalleryModal(work) {
-    if (work.photos && work.photos.length > 0) {
-      selectedWork = work.title;
-      currentPhotos = work.photos;
-      // initialPhotoIndex = 0; // Always start from the first photo
-      firstImageOfProject = currentPhotos[0].url;
-      slideshowVisible = true;
-      console.log("currentPhotos:", currentPhotos);
-      console.log("title", selectedWork);
+  function showPhotos(work) {
+    if (window.innerWidth > 768) {
+      if (work.photos && work.photos.length > 0) {
+        selectedWork = work.title;
+        currentPhotos = work.photos;
+        // initialPhotoIndex = 0; // Always start from the first photo
+        firstImageOfProject = currentPhotos[0].url;
+        slideshowVisible = true;
+        console.log("currentPhotos:", currentPhotos);
+        console.log("title", selectedWork);
+      }
+    } else {
+      console.log("window is too small");
     }
   }
 
@@ -111,8 +115,8 @@
         {#each works as work, index (work._id || index)}
           <p
             class="hover:!text-black/100"
-            on:mouseover={() => showPhotos(work)}
-            on:click={() => openPhotoGalleryModal(work)}
+            on:mouseover={() => openPhotoGalleryModal(work)}
+            on:click={() => showPhotos(work)}
             class:selected={selectedWork === work.title}
           >
             {work.title}
@@ -148,12 +152,14 @@
 
     <!-- Slideshow modal will be shown only if slideshowVisible is true -->
     {#if slideshowVisible}
-      <SlideshowModal
-        slideshowImages={currentPhotos}
-        projectTitle={selectedWork}
-        currentIndex={initialPhotoIndex}
-        on:close={closeSlideshowModal}
-      />
+      <div class="mobile:hidden tablet:block">
+        <SlideshowModal
+          slideshowImages={currentPhotos}
+          projectTitle={selectedWork}
+          currentIndex={initialPhotoIndex}
+          on:close={closeSlideshowModal}
+        />
+      </div>
     {/if}
   </div>
 </div>

@@ -4,11 +4,10 @@
   export let projectTitle;
   // console.log(projectTitle);
   export let currentPhotos = [];
-
+  export let initialPhotoIndex = 0;
+  let currentIndex = initialPhotoIndex; // Define this to track the initial photo index
   export let close; // Ensure this is passed as a prop
   export let isClosing = false;
-
-  let currentIndex = 0;
 
   function handleClose(event) {
     event.stopPropagation(); // Prevent click from closing menu

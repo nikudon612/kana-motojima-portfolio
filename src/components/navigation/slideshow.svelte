@@ -132,7 +132,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 2100; /* Lower z-index to make navbar visible */
+    z-index: 2100;
+
+    @media (max-width: 768px) {
+      display: none;
+    }
   }
 
   .content {
