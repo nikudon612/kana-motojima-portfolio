@@ -2,7 +2,7 @@
   export let slideshowImages = [];
   export let currentIndex = 0; // Initial index for the slideshow
   export let projectTitle; // The project title for the slideshow
-  export let firstImageOfProject; // The first image of the project
+  // export let firstImageOfProject; // The first image of the project
   import { createEventDispatcher, onMount } from "svelte"; // Ensure it's imported
 
   let cursor;
@@ -34,11 +34,11 @@
   }
 
   // On mount, if there's a first image, set it as the current image
-  onMount(() => {
-    if (firstImageOfProject) {
-      slideshowImages = [{ url: firstImageOfProject }, ...slideshowImages];
-    }
-  });
+  // onMount(() => {
+  //   if (firstImageOfProject) {
+  //     slideshowImages = [{ url: firstImageOfProject }, ...slideshowImages];
+  //   }
+  // });
 
   onMount(() => {
     updateCursorText();

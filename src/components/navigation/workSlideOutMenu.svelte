@@ -149,10 +149,9 @@
     <!-- Slideshow modal will be shown only if slideshowVisible is true -->
     {#if slideshowVisible}
       <SlideshowModal
-        {currentPhotos}
+        slideshowImages={currentPhotos}
         projectTitle={selectedWork}
         currentIndex={initialPhotoIndex}
-        {firstImageOfProject}
         on:close={closeSlideshowModal}
       />
     {/if}
