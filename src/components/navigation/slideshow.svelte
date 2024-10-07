@@ -186,6 +186,7 @@
     z-index: 2102;
     transition: opacity 0.3s ease; /* Smooth transition */
     padding: 0.5rem;
+    padding-top: 0rem;
     cursor: pointer; /* Show the default cursor */
   }
 
