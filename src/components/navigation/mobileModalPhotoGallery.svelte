@@ -36,7 +36,7 @@
 </script>
 
 <div
-  class="fixed top-[3rem] tablet:top-[1rem] inset-0 bg-white z-[2000] tablet:top-0 {isClosing
+  class="fixed top-[3rem] tablet:top-[1rem] inset-0 bg-white z-[2000] tablet:top-0 tablet:hidden {isClosing
     ? 'opacity-0'
     : 'opacity-100'} transition-opacity duration-300"
   on:click={handleClose}
