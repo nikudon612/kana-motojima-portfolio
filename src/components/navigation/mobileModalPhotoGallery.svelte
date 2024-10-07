@@ -4,11 +4,10 @@
   export let projectTitle;
   // console.log(projectTitle);
   export let currentPhotos = [];
-
+  export let initialPhotoIndex = 0;
+  let currentIndex = initialPhotoIndex; // Define this to track the initial photo index
   export let close; // Ensure this is passed as a prop
   export let isClosing = false;
-
-  let currentIndex = 0;
 
   function handleClose(event) {
     event.stopPropagation(); // Prevent click from closing menu
@@ -37,7 +36,7 @@
 </script>
 
 <div
-  class="fixed top-[3rem] tablet:top-[1rem] inset-0 bg-white z-[2000] tablet:top-0 {isClosing
+  class="fixed top-[3rem] tablet:top-[1rem] inset-0 bg-white z-[2000] tablet:top-0 tablet:hidden {isClosing
     ? 'opacity-0'
     : 'opacity-100'} transition-opacity duration-300"
   on:click={handleClose}

@@ -3,6 +3,7 @@
   import { fetchProjects } from "../../lib/fetchSanityData";
   import PhotoGalleryModal from "../navigation/workPhotoGallery.svelte";
   import MobilePhotoGalleryModal from "../navigation/mobileModalPhotoGallery.svelte";
+  import SlideshowModal from "./slideshow.svelte";
 
   export let isOpen = false;
   export let toggleMenu;
@@ -14,12 +15,14 @@
   let isWhiteBackground = false;
   let isMobile = false;
   let zIndexClass = "";
+  let initialPhotoIndex = 0; // Tracks the initial index for slideshow
+  let slideshowVisible = false; // Used to trigger the slideshow modal
+  let firstImageOfProject = "";
 
   onMount(() => {
     const checkScreenSize = () => {
       isMobile = window.innerWidth <= 768;
     };
-
     checkScreenSize();
     window.addEventListener("resize", checkScreenSize);
 
@@ -31,18 +34,19 @@
   async function loadProjects() {
     try {
       works = await fetchProjects();
-      console.log("Projects fetched:", works);
     } catch (error) {
       console.error("Error fetching projects:", error);
     }
   }
 
-  function showPhotos(work) {
+  // Show photos on hover but don't trigger the modal
+  function openPhotoGalleryModal(work) {
     if (work.photos && work.photos.length > 0) {
       selectedWork = work.title;
       currentPhotos = work.photos;
-      galleryVisible = true;
+      galleryVisible = true; // Show the gallery photos on hover
       isWhiteBackground = true;
+      console.log("openphoto")
     } else {
       galleryVisible = false;
       isWhiteBackground = false;
@@ -51,13 +55,27 @@
     }
   }
 
-  function openPhotoGalleryModal(work) {
-    if (work.photos && work.photos.length > 0) {
-      selectedWork = work.title;
-      currentPhotos = work.photos;
-      galleryVisible = true;
-      isWhiteBackground = true;
+  // Show the first image in the slideshow when the project title is clicked
+  function showPhotos(work) {
+    if (!isMobile) {
+      if (work.photos && work.photos.length > 0) {
+        selectedWork = work.title;
+        currentPhotos = work.photos;
+        initialPhotoIndex = 0; // Always start from the first photo
+        firstImageOfProject = currentPhotos[0].url;
+        slideshowVisible = true;
+        console.log("currentPhotos:", currentPhotos);
+        console.log("title", selectedWork);
+        console.log("showphotos")
+      }
+    } else {
+      console.log("window is too small");
     }
+  }
+
+  // Close the slideshow modal
+  function closeSlideshowModal() {
+    slideshowVisible = false;
   }
 
   function closeMenu() {
@@ -99,8 +117,8 @@
         {#each works as work, index (work._id || index)}
           <p
             class="hover:!text-black/100"
-            on:mouseover={() => showPhotos(work)}
-            on:click={() => openPhotoGalleryModal(work)}
+            on:mouseover={() => openPhotoGalleryModal(work)}
+            on:click={() => showPhotos(work)}
             class:selected={selectedWork === work.title}
           >
             {work.title}
@@ -109,8 +127,7 @@
       </div>
     </div>
 
-    {#if galleryVisible}
-      <!-- Use MobilePhotoGalleryModal on mobile, and PhotoGalleryModal on larger screens -->
+    {#if galleryVisible && !slideshowVisible}
       <div class="mobile:block desktop:hidden">
         <MobilePhotoGalleryModal
           {currentPhotos}
@@ -134,6 +151,18 @@
         />
       </div>
     {/if}
+
+    <!-- Slideshow modal will be shown only if slideshowVisible is true -->
+    {#if slideshowVisible}
+      <div class="mobile:hidden tablet:block">
+        <SlideshowModal
+          slideshowImages={currentPhotos}
+          projectTitle={selectedWork}
+          currentIndex={initialPhotoIndex}
+          on:close={closeSlideshowModal}
+        />
+      </div>
+    {/if}
   </div>
 </div>
 
@@ -145,7 +174,7 @@
     width: 100%;
     height: 100%;
     display: flex;
-    z-index: 1000; /* Lower initial value */
+    z-index: 1000;
   }
 
   .opacity-layer {
@@ -156,7 +185,7 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0);
     transition: background-color 0.5s ease-in-out;
-    z-index: 1000; /* Ensure this is behind the menu */
+    z-index: 1000;
     cursor: pointer;
   }
 
@@ -184,8 +213,8 @@
     transition:
       transform 0.3s ease-in-out,
       width 0.3s ease-in-out;
-    z-index: 1000; /* Ensure this is above the opacity layer */
-    transform: translateX(-100%); /* Initial position off-screen */
+    z-index: 1000;
+    transform: translateX(-100%);
   }
 
   .menu.full-width {
@@ -241,6 +270,6 @@
   }
 
   .z-index-top {
-    z-index: 2000; /* Ensure it is above other content */
+    z-index: 2000;
   }
 </style>

@@ -1,22 +1,26 @@
 <script>
-  import { createEventDispatcher, onMount } from "svelte";
+  export let slideshowImages = [];
+  export let currentIndex = 0; // Initial index for the slideshow
+  export let projectTitle; // The project title for the slideshow
+  // export let firstImageOfProject; // The first image of the project
+  import { createEventDispatcher, onMount } from "svelte"; // Ensure it's imported
 
-  export let slideshowImages = []; // Ensure this is passed as a prop
-  export let currentIndex = 0;
-  export let projectTitle;
-  const dispatch = createEventDispatcher();
   let cursor;
   let cursorText;
+
+  const dispatch = createEventDispatcher();
 
   function close() {
     dispatch("close");
   }
 
+  // Move to the next image
   function nextImage() {
     currentIndex = (currentIndex + 1) % slideshowImages.length;
     updateCursorText();
   }
 
+  // Move to the previous image
   function previousImage() {
     currentIndex =
       (currentIndex - 1 + slideshowImages.length) % slideshowImages.length;
@@ -28,6 +32,13 @@
       cursorText.innerText = `${currentIndex + 1} / ${slideshowImages.length}`;
     }
   }
+
+  // On mount, if there's a first image, set it as the current image
+  // onMount(() => {
+  //   if (firstImageOfProject) {
+  //     slideshowImages = [{ url: firstImageOfProject }, ...slideshowImages];
+  //   }
+  // });
 
   onMount(() => {
     updateCursorText();
@@ -73,12 +84,11 @@
         }}>✕</button
       >
     </div>
-
     <div class="slideshow-container">
       <div class="slideshow">
         {#if slideshowImages.length > 0}
           <img
-            src={slideshowImages[currentIndex].imageUrl}
+            src={slideshowImages[currentIndex].url}
             alt={slideshowImages[currentIndex].title}
             class="slideshow-image"
           />
@@ -122,7 +132,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 2100; /* Lower z-index to make navbar visible */
+    z-index: 2100;
+
+    @media (max-width: 768px) {
+      display: none;
+    }
   }
 
   .content {
@@ -176,6 +190,7 @@
     z-index: 2102;
     transition: opacity 0.3s ease; /* Smooth transition */
     padding: 0.5rem;
+    padding-top: 0rem;
     cursor: pointer; /* Show the default cursor */
   }
 

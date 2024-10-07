@@ -7,6 +7,7 @@
   export let isClosing = false;
   export let projectTitle;
   let slideshowVisible = false;
+  export let initialPhotoIndex; // Define this to track the initial photo index
   let slideshowImages = [];
   let currentIndex = 0;
   let previousPhotos = [];
@@ -14,42 +15,39 @@
   function handleClose(event) {
     event.stopPropagation(); // Prevent click from closing menu
     if (!slideshowVisible) {
-      // console.log("Handle close called");
       close(); // Emit close event to parent
     }
   }
 
   function openSlideshow(index) {
-    // console.log("Opening slideshow");
+    // Prepare slideshow images from current photos
     slideshowImages = currentPhotos.map((photo) => ({
       imageUrl: photo.url,
       title: "",
     }));
     currentIndex = index;
     slideshowVisible = true;
-    // console.log("Slideshow opened:", slideshowVisible, currentIndex);
+    console.log("work gallery opened slideshow")
   }
 
   function closeSlideshow() {
-    // console.log("Closing slideshow");
     slideshowVisible = false;
-    // console.log("Slideshow closed:", slideshowVisible);
   }
 
   function fadeInPhotos() {
-    const photos = document.querySelectorAll('.gallery-photo');
-    if (previousPhotos !== currentPhotos) {
-      photos.forEach(photo => {
-        photo.style.opacity = '0'; // Ensure starting opacity is 0
+    const photos = document.querySelectorAll(".gallery-photo");
+    // Check if photos have changed by comparing their lengths
+    if (previousPhotos.length !== currentPhotos.length) {
+      photos.forEach((photo) => {
+        photo.style.opacity = "0"; // Ensure starting opacity is 0
       });
       setTimeout(() => {
-        photos.forEach(photo => {
-          // console.log('Changing opacity to 1 for:', photo);
-          photo.style.opacity = '1';
+        photos.forEach((photo) => {
+          photo.style.opacity = "1";
         });
       }, 300); // Delay before changing the opacity
+      previousPhotos = [...currentPhotos]; // Update the previousPhotos
     }
-    previousPhotos = currentPhotos;
   }
 
   // Run fadeInPhotos on mount and after each update
@@ -72,7 +70,12 @@
 </div>
 
 {#if slideshowVisible}
-  <SlideshowModal {slideshowImages} {projectTitle} {currentIndex} on:close={closeSlideshow} />
+  <SlideshowModal
+    slideshowImages={currentPhotos}
+    currentIndex={currentIndex}
+    {projectTitle}
+    on:close={closeSlideshow}
+  />
 {/if}
 
 <style>
@@ -112,6 +115,4 @@
     transition: opacity 1s ease-in-out;
     cursor: pointer;
   }
-
-
 </style>
