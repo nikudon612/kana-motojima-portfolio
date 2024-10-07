@@ -46,6 +46,7 @@
       currentPhotos = work.photos;
       galleryVisible = true; // Show the gallery photos on hover
       isWhiteBackground = true;
+      console.log("openphoto")
     } else {
       galleryVisible = false;
       isWhiteBackground = false;
@@ -56,15 +57,16 @@
 
   // Show the first image in the slideshow when the project title is clicked
   function showPhotos(work) {
-    if (window.innerWidth > 768) {
+    if (!isMobile) {
       if (work.photos && work.photos.length > 0) {
         selectedWork = work.title;
         currentPhotos = work.photos;
-        // initialPhotoIndex = 0; // Always start from the first photo
+        initialPhotoIndex = 0; // Always start from the first photo
         firstImageOfProject = currentPhotos[0].url;
         slideshowVisible = true;
         console.log("currentPhotos:", currentPhotos);
         console.log("title", selectedWork);
+        console.log("showphotos")
       }
     } else {
       console.log("window is too small");
