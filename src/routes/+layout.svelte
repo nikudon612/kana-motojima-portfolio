@@ -137,7 +137,7 @@
   isClosing={aboutIsClosing}
   toggleMenu={toggleAboutMenu}
 />
-<WorkSlideOutMenu isOpen={workIsOpen} toggleMenu={closeMenu} {isFadingOut} />
+<WorkSlideOutMenu isOpen={workIsOpen} toggleMenu={closeMenu}  {isFadingOut} />
 
 <slot />
 

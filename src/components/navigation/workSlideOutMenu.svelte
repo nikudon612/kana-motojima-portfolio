@@ -18,6 +18,9 @@
   let initialPhotoIndex = 0; // Tracks the initial index for slideshow
   let slideshowVisible = false; // Used to trigger the slideshow modal
   let firstImageOfProject = "";
+  $: galleryVisible = galleryVisible; // Force reactivity
+  $: slideshowVisible = slideshowVisible; // Force reactivity
+  $: isWhiteBackground = isWhiteBackground;
 
   onMount(() => {
     const checkScreenSize = () => {
@@ -79,16 +82,16 @@
   }
 
   function closeMenu() {
-    isFadingOut = true; // Only the opacity layer should fade
     setTimeout(() => {
       isFadingOut = false;
       isOpen = false;
       galleryVisible = false;
+      slideshowVisible = false;
       selectedWork = null;
       currentPhotos = [];
       toggleMenu();
       zIndexClass = "";
-    }, 300); // Match the duration of the transform animation
+    }, 300); // Duration of the fade-out animation
   }
 
   $: if (isOpen) {
@@ -192,22 +195,35 @@
   }
 
   .opacity-layer {
-    background-color: rgba(0, 0, 0, 0); /* Transparent initially */
+    background-color: rgba(0, 0, 0, 0); /* Start transparent */
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    transition: background-color 0.3s ease-in-out; /* Opacity layer fades in and out */
-    z-index: 1000; /* Lower than the white background and text */
+    transition: background-color 0.3s ease-in-out; /* Smooth transition for background color */
+    z-index: 1000; /* Below the menu */
   }
 
   .opacity-layer.fade-in {
-    background-color: rgba(0, 0, 0, 0.6); /* Fade in with dark overlay */
+    background-color: rgba(
+      0,
+      0,
+      0,
+      0.6
+    ); /* When the menu opens, fade to dark */
   }
 
   .opacity-layer.fade-out {
-    background-color: rgba(0, 0, 0, 0); /* Fade out */
+    background-color: rgba(0, 0, 0, 0); /* Fade out to transparent */
+  }
+
+  .opacity-layer.white-bg {
+    background-color: white; /* Turns white when the gallery is visible */
+  }
+
+  .opacity-layer.dark-bg {
+    background-color: rgba(0, 0, 0, 0.6); /* Dark background by default */
   }
 
   /* The white background and text should only slide, no fade */
