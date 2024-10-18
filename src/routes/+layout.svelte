@@ -21,7 +21,7 @@
       setTimeout(() => {
         aboutIsOpen = false;
         aboutIsClosing = false;
-      });
+      }, 200);
     } else {
       aboutIsOpen = true;
       workIsOpen = false;
@@ -46,7 +46,7 @@
       isFadingOut = false;
       workIsOpen = false;
       workIsClosing = false;
-    });
+    }, 200);
   }
 
   function openAboutMenuFromContact(event) {
