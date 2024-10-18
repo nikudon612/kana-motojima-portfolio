@@ -15,12 +15,26 @@
   let isWhiteBackground = false;
   let isMobile = false;
   let zIndexClass = "";
-  let initialPhotoIndex = 0; // Tracks the initial index for slideshow
-  let slideshowVisible = false; // Used to trigger the slideshow modal
+  let initialPhotoIndex = 0;
+  let slideshowVisible = false;
   let firstImageOfProject = "";
-  $: galleryVisible = galleryVisible; // Force reactivity
-  $: slideshowVisible = slideshowVisible; // Force reactivity
-  $: isWhiteBackground = isWhiteBackground;
+  let layerOpacity = 0;
+  let layerBackground = "rgba(0, 0, 0, 0)"; // Start with a transparent background
+
+  const transitionDuration = 1000; // Transition duration for both fade-out and slide
+
+  // Handle fade-in and fade-out logic
+  $: {
+    if (isOpen && !isFadingOut) {
+      setTimeout(() => {
+        layerOpacity = 1;
+        layerBackground = "rgba(0, 0, 0, 0.6)"; // Transition to dark background
+      }, 50);
+    } else if (isFadingOut) {
+      layerOpacity = 0; // Start fade-out immediately
+      layerBackground = "rgba(0, 0, 0, 0)"; // Reset background
+    }
+  }
 
   onMount(() => {
     const checkScreenSize = () => {
@@ -42,56 +56,20 @@
     }
   }
 
-  // Show photos on hover but don't trigger the modal
-  function openPhotoGalleryModal(work) {
-    if (work.photos && work.photos.length > 0) {
-      selectedWork = work.title;
-      currentPhotos = work.photos;
-      galleryVisible = true; // Show the gallery photos on hover
-      isWhiteBackground = true;
-      console.log("openphoto");
-    } else {
-      galleryVisible = false;
-      isWhiteBackground = false;
-      selectedWork = null;
-      currentPhotos = [];
-    }
-  }
-
-  // Show the first image in the slideshow when the project title is clicked
-  function showPhotos(work) {
-    if (!isMobile) {
-      if (work.photos && work.photos.length > 0) {
-        selectedWork = work.title;
-        currentPhotos = work.photos;
-        initialPhotoIndex = 0; // Always start from the first photo
-        firstImageOfProject = currentPhotos[0].url;
-        slideshowVisible = true;
-        console.log("currentPhotos:", currentPhotos);
-        console.log("title", selectedWork);
-        console.log("showphotos");
-      }
-    } else {
-      console.log("window is too small");
-    }
-  }
-
-  // Close the slideshow modal
   function closeSlideshowModal() {
     slideshowVisible = false;
   }
 
   function closeMenu() {
+    isFadingOut = true;
+    layerOpacity = 0; // Start fade-out immediately
+    layerBackground = "rgba(0, 0, 0, 0)"; // Reset background
+
+    // Start menu slide-out and opacity fade-out simultaneously
     setTimeout(() => {
       isFadingOut = false;
-      isOpen = false;
-      galleryVisible = false;
-      slideshowVisible = false;
-      selectedWork = null;
-      currentPhotos = [];
-      toggleMenu();
-      zIndexClass = "";
-    }, 300); // Duration of the fade-out animation
+      toggleMenu(); // Hide the menu at the end of the fade-out and slide-out
+    }, transitionDuration); // Match the fade-out duration
   }
 
   $: if (isOpen) {
@@ -107,12 +85,16 @@
 <div class={`menu-container ${isOpen ? "open" : ""} ${zIndexClass}`}>
   {#if isOpen}
     <div
-      class={`opacity-layer ${isFadingOut ? "fade-out" : "fade-in"} ${isWhiteBackground ? "white-bg" : ""}`}
+      class="opacity-layer {isWhiteBackground ? 'white-bg' : ''}"
+      style="opacity: {layerOpacity}; background-color: {layerBackground}; transition: opacity {transitionDuration}ms cubic-bezier(0.25, 1, 0.5, 1), background-color {transitionDuration}ms cubic-bezier(0.25, 1, 0.5, 1);"
       on:click={closeMenu}
     ></div>
   {/if}
+
+  <!-- Menu Content -->
   <div
     class={`menu ${isOpen ? "menu-open" : "menu-close"} ${galleryVisible ? "full-width" : ""}`}
+    style="transition: transform {transitionDuration}ms cubic-bezier(0.25, 1, 0.5, 1);"
   >
     <div class="menu-left">
       <div class="menu-content">
@@ -128,43 +110,6 @@
         {/each}
       </div>
     </div>
-
-    {#if galleryVisible && !slideshowVisible}
-      <div class="mobile:block desktop:hidden">
-        <MobilePhotoGalleryModal
-          {currentPhotos}
-          projectTitle={selectedWork}
-          initialPhotoIndex={0}
-          close={() => {
-            galleryVisible = false;
-            isWhiteBackground = false;
-          }}
-        />
-      </div>
-      <div class="mobile:hidden tablet:hidden desktop:block">
-        <PhotoGalleryModal
-          {currentPhotos}
-          projectTitle={selectedWork}
-          initialPhotoIndex={0}
-          close={() => {
-            galleryVisible = false;
-            isWhiteBackground = false;
-          }}
-        />
-      </div>
-    {/if}
-
-    <!-- Slideshow modal will be shown only if slideshowVisible is true -->
-    {#if slideshowVisible}
-      <div class="mobile:hidden tablet:block">
-        <SlideshowModal
-          slideshowImages={currentPhotos}
-          projectTitle={selectedWork}
-          currentIndex={initialPhotoIndex}
-          on:close={closeSlideshowModal}
-        />
-      </div>
-    {/if}
   </div>
 </div>
 
@@ -195,31 +140,17 @@
   }
 
   .opacity-layer {
-    background-color: rgba(0, 0, 0, 0); /* Start transparent */
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    transition: background-color 0.3s ease-in-out; /* Smooth transition for background color */
-    z-index: 1000; /* Below the menu */
-  }
-
-  .opacity-layer.fade-in {
-    background-color: rgba(
-      0,
-      0,
-      0,
-      0.6
-    ); /* When the menu opens, fade to dark */
-  }
-
-  .opacity-layer.fade-out {
-    background-color: rgba(0, 0, 0, 0); /* Fade out to transparent */
+    z-index: 1000;
+    opacity: 0; /* Start invisible */
   }
 
   .opacity-layer.white-bg {
-    background-color: white; /* Turns white when the gallery is visible */
+    background-color: rgba(255, 255, 255, 0.6); /* Semi-transparent white */
   }
 
   .opacity-layer.dark-bg {
@@ -227,7 +158,7 @@
   }
 
   /* The white background and text should only slide, no fade */
-  .menu {
+   .menu {
     position: relative;
     width: 50%;
     height: 100%;
@@ -236,17 +167,17 @@
     flex-direction: column;
     justify-content: center;
     padding-left: 3rem;
-    transition: transform 0.3s ease-in-out; /* Only slide, no fading */
-    z-index: 2000; /* Ensure it stays on top of opacity layer */
-    transform: translateX(-100%); /* Initially off-screen */
-  }
-
-  .menu-open {
-    transform: translateX(0); /* Slide into view */
+    z-index: 2000;
+    transform: translate3d(0, 0, 0); /* Start fully visible */
+    transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1);
   }
 
   .menu-close {
-    transform: translateX(-100%); /* Slide out of view */
+    transform: translate3d(-100%, 0, 0); /* Slide out of view */
+  }
+
+  .menu-open {
+    transform: translate3d(0, 0, 0); /* Slide into view */
   }
 
   .menu.full-width {
@@ -266,6 +197,16 @@
     margin-bottom: 1em;
     cursor: pointer;
     transition: color 0.3s ease-in-out;
+    opacity: 0; /* Start hidden */
+    transform: translate(50%, 0%) matrix(1, 0, 0, 1, 0, 0); /* Move back off-screen */
+    transition:
+      opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1),
+      transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .menu-open .menu-content p {
+    opacity: 1; /* Fade in */
+    transform: translate(0%, 0%) matrix(1, 0, 0, 1, 0, 0); /* Move into place */
   }
 
   .menu-content p.selected {

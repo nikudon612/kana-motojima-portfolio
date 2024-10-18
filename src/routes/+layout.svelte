@@ -21,7 +21,7 @@
       setTimeout(() => {
         aboutIsOpen = false;
         aboutIsClosing = false;
-      }, 300);
+      });
     } else {
       aboutIsOpen = true;
       workIsOpen = false;
@@ -46,7 +46,7 @@
       isFadingOut = false;
       workIsOpen = false;
       workIsClosing = false;
-    }, 300);
+    });
   }
 
   function openAboutMenuFromContact(event) {
@@ -71,7 +71,7 @@
           setTimeout(() => {
             aboutIsOpen = false;
             aboutIsClosing = false;
-          }, 300);
+          });
         }
         if (workIsOpen) {
           closeMenu();
@@ -137,7 +137,7 @@
   isClosing={aboutIsClosing}
   toggleMenu={toggleAboutMenu}
 />
-<WorkSlideOutMenu isOpen={workIsOpen} toggleMenu={closeMenu}  {isFadingOut} />
+<WorkSlideOutMenu isOpen={workIsOpen} toggleMenu={closeMenu} {isFadingOut} />
 
 <slot />
 
