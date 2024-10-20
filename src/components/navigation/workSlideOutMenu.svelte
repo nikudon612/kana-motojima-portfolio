@@ -3,25 +3,26 @@
 
   export let isWorkOpen = false;
   export let isClosing = false;
-  export let onClose;
-
   const dispatch = createEventDispatcher();
 
   function handleTransitionEnd(event) {
-    if (event.propertyName === "transform") {
+    console.log("Menu transition ended:", event.propertyName);
+    if (event.propertyName === "transform" && isClosing) {
       dispatch("transitionend");
+      console.log("Resetting isClosing state after slide-out transition");
     }
   }
 </script>
 
 <div
   class={`menu-content ${isWorkOpen ? "slide-in" : isClosing ? "slide-out" : ""}`}
-  style="z-index: {isWorkOpen || isClosing ? 2000 : 0}; pointer-events: {isWorkOpen || isClosing ? 'auto' : 'none'};"
+  style="z-index: {isWorkOpen || isClosing
+    ? 2000
+    : 0}; pointer-events: {isWorkOpen || isClosing ? 'auto' : 'none'};"
   on:click|stopPropagation
   on:transitionend={handleTransitionEnd}
 >
   <div class="content">
-    <!-- Work Menu Content -->
     <p>Work Menu Content</p>
   </div>
 </div>
@@ -35,7 +36,7 @@
     height: 100%;
     background-color: white;
     transform: translateX(-100%);
-    transition: transform 1s ease; /* Matches opacity layer duration */
+    transition: transform 1s ease;
   }
 
   .slide-in {

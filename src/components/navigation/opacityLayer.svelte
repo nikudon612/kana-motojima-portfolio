@@ -7,18 +7,20 @@
   const dispatch = createEventDispatcher();
 
   function handleClick() {
-    if (onClick) onClick(); // Ensure close function triggers
+    if (onClick) onClick();
   }
 
   function handleTransitionEnd(event) {
-    if (event.propertyName === "opacity") {
+    console.log("Opacity layer transition ended:", event?.propertyName, "Target:", event?.target);
+
+    if (event?.propertyName === "opacity") {
       dispatch("transitionend");
     }
   }
 </script>
 
 <div
-  class={`opacity-layer ${isVisible ? "visible" : "hidden"}`}
+  class={`opacity-layer ${isVisible ? "fade-in" : "fade-out"}`}
   on:click={handleClick}
   on:transitionend={handleTransitionEnd}
 ></div>
@@ -32,17 +34,17 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0.6);
     z-index: 2000;
-    transition: opacity 1s ease; /* Ensure smooth fade */
-    opacity: 0; /* Start as transparent */
-    pointer-events: none; /* Disable clicks when hidden */
+    transition: opacity 1s ease;
+    opacity: 0;  /* Start as transparent */
+    pointer-events: none;
   }
 
-  .visible {
+  .fade-in {
     opacity: 1;
-    pointer-events: auto; /* Enable clicks when visible */
+    pointer-events: auto;
   }
 
-  .hidden {
+  .fade-out {
     opacity: 0;
   }
 </style>

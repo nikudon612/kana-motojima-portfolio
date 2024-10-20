@@ -4,8 +4,10 @@
   export let onClose;
 
   function handleTransitionEnd(event) {
-    if (event.propertyName === "transform") {
+    console.log("Menu transition ended:", event.propertyName);
+    if (event.propertyName === "transform" && isClosing) {
       dispatch("transitionend");
+      console.log("Resetting isClosing state after slide-out transition");
     }
   }
 
@@ -16,7 +18,9 @@
 
 <div
   class={`menu-content ${isAboutOpen ? "slide-in" : "slide-out"}`}
-  style="z-index: {isAboutOpen || isClosing ? 2000 : 0}; pointer-events: {isAboutOpen ? 'auto' : 'none'};"
+  style="z-index: {isAboutOpen || isClosing
+    ? 2000
+    : 0}; pointer-events: {isAboutOpen ? 'auto' : 'none'};"
   on:click|stopPropagation
   on:transitionend={handleTransitionEnd}
 >
