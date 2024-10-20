@@ -3,6 +3,8 @@
 
   export let isWorkOpen = false;
   export let isClosing = false;
+  export let onClose;
+
   const dispatch = createEventDispatcher();
 
   function handleTransitionEnd(event) {
@@ -13,14 +15,13 @@
 </script>
 
 <div
-  class={`menu-content ${isWorkOpen || isClosing ? "slide-in" : "slide-out"}`}
-  style="z-index: {isWorkOpen || isClosing
-    ? 2000
-    : 0}; pointer-events: {isWorkOpen || isClosing ? 'auto' : 'none'};"
+  class={`menu-content ${isWorkOpen ? "slide-in" : isClosing ? "slide-out" : ""}`}
+  style="z-index: {isWorkOpen || isClosing ? 2000 : 0}; pointer-events: {isWorkOpen || isClosing ? 'auto' : 'none'};"
   on:click|stopPropagation
   on:transitionend={handleTransitionEnd}
 >
   <div class="content">
+    <!-- Work Menu Content -->
     <p>Work Menu Content</p>
   </div>
 </div>
@@ -34,7 +35,7 @@
     height: 100%;
     background-color: white;
     transform: translateX(-100%);
-    transition: transform 1s ease;
+    transition: transform 1s ease; /* Matches opacity layer duration */
   }
 
   .slide-in {

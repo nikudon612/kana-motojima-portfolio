@@ -3,7 +3,7 @@
   import AboutMenu from "../components/navigation/aboutSlideOutMenu.svelte";
   import OpacityLayer from "../components/navigation/opacityLayer.svelte";
 
-  let isWorkOpen = false;
+ let isWorkOpen = false;
   let isAboutOpen = false;
   let isClosing = false;
 
@@ -19,47 +19,32 @@
     if (isWorkOpen || isAboutOpen) {
       isClosing = true;
       isWorkOpen = false;
-      isAboutOpen = false;
+      isAboutOpen = false; // Start both transitions immediately
     }
   }
 
   function handleTransitionEnd() {
     if (isClosing) {
-      isClosing = false; // Reset state only after animations complete
+      isClosing = false; // Reset state after animations complete
     }
   }
 </script>
 
+<!-- Controls -->
 <button on:click={openWorkMenu}>Open Work Menu</button>
 <button on:click={openAboutMenu}>Open About Menu</button>
 
 <!-- Overlay Container -->
-<div
-  class="overlay-container"
-  style="z-index: {isWorkOpen || isAboutOpen || isClosing ? 2000 : 0};"
->
+<div class="overlay-container" style="z-index: {isWorkOpen || isAboutOpen || isClosing ? 2000 : 0};">
   <!-- Opacity Layer -->
-  <OpacityLayer
-    isVisible={isWorkOpen || isAboutOpen || isClosing}
-    onClick={closeAll}
-    on:transitionend={handleTransitionEnd}
-  />
+  <OpacityLayer isVisible={isWorkOpen || isAboutOpen || isClosing} onClick={closeAll} on:transitionend={handleTransitionEnd} />
 
   <!-- Menus -->
-  <WorkMenu
-    {isWorkOpen}
-    {isClosing}
-    onClose={closeAll}
-    on:transitionend={handleTransitionEnd}
-  />
-  <AboutMenu
-    {isAboutOpen}
-    {isClosing}
-    onClose={closeAll}
-    on:transitionend={handleTransitionEnd}
-  />
+  <WorkMenu {isWorkOpen} {isClosing} onClose={closeAll} on:transitionend={handleTransitionEnd} />
+  <AboutMenu {isAboutOpen} {isClosing} onClose={closeAll} on:transitionend={handleTransitionEnd} />
 </div>
 
+<!-- Slot for Homepage Content -->
 <slot />
 
 <style>

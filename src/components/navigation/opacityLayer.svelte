@@ -2,10 +2,12 @@
   import { createEventDispatcher } from "svelte";
 
   export let isVisible = false;
+  export let onClick;
+
   const dispatch = createEventDispatcher();
 
   function handleClick() {
-    dispatch("close"); // Dispatches 'close' event to trigger closing
+    if (onClick) onClick(); // Ensure close function triggers
   }
 
   function handleTransitionEnd(event) {
@@ -30,14 +32,14 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0.6);
     z-index: 2000;
-    transition: opacity 1s ease;
-    opacity: 0;
-    pointer-events: none;
+    transition: opacity 1s ease; /* Ensure smooth fade */
+    opacity: 0; /* Start as transparent */
+    pointer-events: none; /* Disable clicks when hidden */
   }
 
   .visible {
     opacity: 1;
-    pointer-events: auto;
+    pointer-events: auto; /* Enable clicks when visible */
   }
 
   .hidden {
