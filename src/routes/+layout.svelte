@@ -9,26 +9,51 @@
   let isVisible = false;
 
   function openWorkMenu() {
-    isVisible = true;  // Opacity layer needs to be visible
-    isWorkOpen = true;
+    if (isAboutOpen) {
+      // Close About Menu if it's open, then open Work Menu
+      closeAll(() => {
+        isWorkOpen = true;
+        isVisible = true;
+      });
+    } else {
+      isVisible = true; // Ensure opacity layer is visible
+      isWorkOpen = true;
+    }
   }
 
   function openAboutMenu() {
-    isVisible = true;  // Opacity layer needs to be visible
-    isAboutOpen = true;
+    if (isWorkOpen) {
+      // Close Work Menu if it's open, then open About Menu
+      closeAll(() => {
+        isAboutOpen = true;
+        isVisible = true;
+      });
+    } else {
+      isVisible = true; // Ensure opacity layer is visible
+      isAboutOpen = true;
+    }
   }
 
-  function closeAll() {
+  function closeAll(callback) {
     if (isWorkOpen || isAboutOpen) {
       isClosing = true; // Start closing animation
       isWorkOpen = false;
       isAboutOpen = false;
+
+      setTimeout(() => {
+        isClosing = false;
+        if (callback) {
+          callback(); // Open the other menu after closing
+        } else {
+          isVisible = false; // Hide the opacity layer if no other menu opens
+        }
+      }, 1000); // Wait for the closing animation to finish
     }
   }
 
   function handleTransitionEnd(event) {
     if (event?.propertyName === "opacity" && isClosing) {
-      // Once the fade-out is done, fully hide the layer
+      // Ensure the closing state is reset properly
       isClosing = false;
       isVisible = false;
     }
