@@ -2,6 +2,7 @@
   import { createEventDispatcher } from "svelte";
 
   export let isVisible = false;
+  export let isClosing = false;
   export let onClick;
 
   const dispatch = createEventDispatcher();
@@ -11,8 +12,6 @@
   }
 
   function handleTransitionEnd(event) {
-    console.log("Opacity layer transition ended:", event?.propertyName, "Target:", event?.target);
-
     if (event?.propertyName === "opacity") {
       dispatch("transitionend");
     }
@@ -20,7 +19,7 @@
 </script>
 
 <div
-  class={`opacity-layer ${isVisible ? "fade-in" : "fade-out"}`}
+  class={`opacity-layer ${isVisible ? (isClosing ? "fade-out" : "fade-in") : ""}`}
   on:click={handleClick}
   on:transitionend={handleTransitionEnd}
 ></div>
@@ -35,7 +34,7 @@
     background-color: rgba(0, 0, 0, 0.6);
     z-index: 2000;
     transition: opacity 1s ease;
-    opacity: 0;  /* Start as transparent */
+    opacity: 0; /* Start as transparent */
     pointer-events: none;
   }
 
@@ -46,5 +45,6 @@
 
   .fade-out {
     opacity: 0;
+    pointer-events: none;
   }
 </style>

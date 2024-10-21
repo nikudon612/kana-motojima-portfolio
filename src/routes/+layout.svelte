@@ -6,38 +6,31 @@
   let isWorkOpen = false;
   let isAboutOpen = false;
   let isClosing = false;
+  let isVisible = false;
 
   function openWorkMenu() {
+    isVisible = true;  // Opacity layer needs to be visible
     isWorkOpen = true;
   }
 
   function openAboutMenu() {
+    isVisible = true;  // Opacity layer needs to be visible
     isAboutOpen = true;
   }
 
   function closeAll() {
-    console.log("Closing all menus");
     if (isWorkOpen || isAboutOpen) {
-      isClosing = true; // Start closing immediately
+      isClosing = true; // Start closing animation
       isWorkOpen = false;
       isAboutOpen = false;
     }
   }
 
   function handleTransitionEnd(event) {
-    console.log(
-      "Transition ended:",
-      event?.propertyName,
-      "Target:",
-      event?.target
-    );
-
-    if (
-      isClosing &&
-      (event?.propertyName === "opacity" || event?.propertyName === "transform")
-    ) {
-      console.log("Resetting isClosing state");
-      isClosing = false; // Reset state after both transitions complete
+    if (event?.propertyName === "opacity" && isClosing) {
+      // Once the fade-out is done, fully hide the layer
+      isClosing = false;
+      isVisible = false;
     }
   }
 </script>
@@ -53,7 +46,8 @@
 >
   <!-- Opacity Layer -->
   <OpacityLayer
-    isVisible={isWorkOpen || isAboutOpen || isClosing}
+    {isVisible}
+    {isClosing}
     onClick={closeAll}
     on:transitionend={handleTransitionEnd}
   />
