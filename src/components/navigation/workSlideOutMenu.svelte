@@ -97,7 +97,7 @@
   }
 
   .work-title {
-    font-size: 1.2rem;
+    font-size: 1rem;
     margin-bottom: 1rem;
     cursor: pointer;
     opacity: 0; /* Start with no opacity */
