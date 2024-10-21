@@ -1,4 +1,5 @@
 <script>
+  import "../../app.css";
   import { createEventDispatcher } from "svelte";
   import { onMount } from "svelte";
   import { fetchProjects } from "../../lib/fetchSanityData";
@@ -46,7 +47,7 @@
   <!-- Menu Content -->
   <div class="menu">
     <div class="menu-left">
-      <div class="menu-content-list">
+      <div class={`menu-content-list ${isWorkOpen ? "menu-open" : ""}`}>
         {#each works as work, index (work._id || index)}
           <p
             class="work-title hover:text-black"
@@ -63,7 +64,7 @@
 <style>
   .menu {
     position: relative;
-    width: 50%;
+    width: 100%;
     height: 100%;
     background-color: white;
     display: flex;
@@ -80,7 +81,7 @@
     height: 100%;
     background-color: white;
     transform: translateX(-100%);
-    transition: transform 1s ease;
+    transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1);
   }
 
   .slide-in {
@@ -92,12 +93,26 @@
   }
 
   .menu-content-list {
-    padding: 2rem;
+    /* padding: 2rem; */
   }
 
   .work-title {
     font-size: 1.2rem;
     margin-bottom: 1rem;
     cursor: pointer;
+    opacity: 0; /* Start with no opacity */
+    transform: translate(50%, 0%); /* Start slightly offset */
+    transition:
+      opacity 1s cubic-bezier(0.25, 1, 0.5, 1),
+      transform 1s cubic-bezier(0.25, 1, 0.5, 1); /* Transition for opacity and transform */
+  }
+
+  .menu-open .work-title {
+    opacity: 1; /* Fade in */
+    transform: translate(0%, 0%); /* Slide into position */
+  }
+
+  .hover\:text-black:hover {
+    color: black;
   }
 </style>
