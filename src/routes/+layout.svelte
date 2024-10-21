@@ -12,7 +12,10 @@
   let hoverOnContact = false;
 
   function openWorkMenu() {
-    if (isAboutOpen) {
+    if (isWorkOpen) {
+      // Close Work Menu if it is already open
+      closeAll();
+    } else if (isAboutOpen) {
       // Close About Menu if it's open, then open Work Menu
       closeAll(() => {
         isWorkOpen = true;
@@ -25,7 +28,10 @@
   }
 
   function openAboutMenu() {
-    if (isWorkOpen) {
+    if (isAboutOpen) {
+      // Close About Menu if it is already open
+      closeAll();
+    } else if (isWorkOpen) {
       // Close Work Menu if it's open, then open About Menu
       closeAll(() => {
         isAboutOpen = true;
@@ -64,9 +70,6 @@
 </script>
 
 <!-- Controls -->
-<!-- <button on:click={openWorkMenu}>Open Work Menu</button>
-<button on:click={openAboutMenu}>Open About Menu</button> -->
-
 <nav
   class="mobile:h-[50px] fixed bottom-0 left-0 w-full flex justify-between px-[3rem] mobile:py-0 py-10 text-black bg-transparent mobile:fixed mobile:top-0 mobile:left-0 mobile:w-full mobile:flex mobile:justify-between mobile:items-center mobile:px-[1.5rem] mobile:py-[4rem] mobile:bg-white"
   style="z-index: 2001;"

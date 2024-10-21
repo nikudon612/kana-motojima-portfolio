@@ -2,6 +2,17 @@
   export let isAboutOpen = false;
   export let isClosing = false;
   export let onClose;
+  import { onMount } from "svelte";
+  import { fetchAbout } from "../../lib/fetchSanityData";
+  let aboutData = null;
+
+  onMount(async () => {
+    try {
+      aboutData = await fetchAbout();
+    } catch (error) {
+      console.error("Failed to fetch data from Sanity:", error);
+    }
+  });
 
   function handleTransitionEnd(event) {
     console.log("Menu transition ended:", event.propertyName);
@@ -24,9 +35,28 @@
   on:click|stopPropagation
   on:transitionend={handleTransitionEnd}
 >
-  <div class="content">
-    <!-- About Menu Content -->
-    <p>About Menu Content</p>
+  <div class="flex items-center h-full">
+    <div class="text-left mobile:px-[1.5rem] px-[3rem] desktop:max-w-[60%]">
+      {#if aboutData}
+        <div>
+          <p class="mb-4">{aboutData.bio}</p>
+          <p class="mb-4">Bilingual in Japanese and English.</p>
+          <p class="mb-4">
+            For all inquiries, please email {aboutData.contactInfo}
+          </p>
+        </div>
+        <div class="mt-16">
+          <h2 class="mobile:text-m desktop:text-lg">Select Clients:</h2>
+          <ul>
+            {#each aboutData.selectClients as client}
+              <li>{client}</li>
+            {/each}
+          </ul>
+        </div>
+      {:else}
+        <p>Loading...</p>
+      {/if}
+    </div>
   </div>
 </div>
 
