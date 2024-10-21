@@ -3,6 +3,7 @@
 
   export let isWorkOpen = false;
   export let isClosing = false;
+
   const dispatch = createEventDispatcher();
 
   function handleTransitionEnd(event) {
@@ -15,7 +16,7 @@
 </script>
 
 <div
-  class={`menu-content ${isWorkOpen ? "slide-in" : isClosing ? "slide-out" : ""}`}
+  class={`menu-content ${isWorkOpen ? (isClosing ? "slide-out" : "slide-in") : ""}`}
   style="z-index: {isWorkOpen || isClosing
     ? 2000
     : 0}; pointer-events: {isWorkOpen || isClosing ? 'auto' : 'none'};"
