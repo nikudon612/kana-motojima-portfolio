@@ -1,8 +1,10 @@
 <script>
-  import "../../app.css";
-  import { createEventDispatcher } from "svelte";
   import { onMount } from "svelte";
+  import { createEventDispatcher } from "svelte";
   import { fetchProjects } from "../../lib/fetchSanityData";
+  import PhotoGalleryModal from "../navigation/workPhotoGallery.svelte";
+  import MobilePhotoGalleryModal from "../navigation/mobileModalPhotoGallery.svelte";
+  import SlideshowModal from "./slideshow.svelte";
 
   export let isWorkOpen = false;
   export let isClosing = false;
@@ -11,8 +13,11 @@
 
   let works = [];
   let selectedWork = null;
+  let currentPhotos = [];
+  let galleryVisible = false;
+  let slideshowVisible = false;
+  let initialPhotoIndex = 0;
 
-  // Load projects when the component mounts
   onMount(async () => {
     await loadProjects();
   });
@@ -20,18 +25,25 @@
   async function loadProjects() {
     try {
       works = await fetchProjects();
-      console.log("Projects loaded:", works); // Debugging to see if projects are loaded
+      console.log("Projects loaded:", works);
     } catch (error) {
       console.error("Error fetching projects:", error);
     }
   }
 
-  function handleTransitionEnd(event) {
-    console.log("Menu transition ended:", event.propertyName);
-    if (event.propertyName === "transform" && isClosing) {
-      dispatch("transitionend");
-      console.log("Resetting isClosing state after slide-out transition");
+  // Show the first image in the slideshow when the project title is clicked
+  function showPhotos(work) {
+    if (work.photos && work.photos.length > 0) {
+      selectedWork = work.title;
+      currentPhotos = work.photos;
+      initialPhotoIndex = 0; // Start from the first photo
+      slideshowVisible = true; // Show the slideshow
     }
+  }
+
+  // Close the slideshow modal
+  function closeSlideshowModal() {
+    slideshowVisible = false;
   }
 </script>
 
@@ -42,7 +54,6 @@
     ? 2000
     : 0}; pointer-events: {isWorkOpen || isClosing ? 'auto' : 'none'};"
   on:click|stopPropagation
-  on:transitionend={handleTransitionEnd}
 >
   <!-- Menu Content -->
   <div class="menu">
@@ -51,6 +62,7 @@
         {#each works as work, index (work._id || index)}
           <p
             class="work-title hover:text-black"
+            on:click={() => showPhotos(work)}
             class:selected={selectedWork === work.title}
           >
             {work.title}
@@ -60,6 +72,18 @@
     </div>
   </div>
 </div>
+
+<!-- Slideshow Modal -->
+{#if slideshowVisible}
+  <div class="slideshow-modal">
+    <SlideshowModal
+      slideshowImages={currentPhotos}
+      projectTitle={selectedWork}
+      currentIndex={initialPhotoIndex}
+      on:close={closeSlideshowModal}
+    />
+  </div>
+{/if}
 
 <style>
   .menu {
@@ -93,26 +117,36 @@
   }
 
   .menu-content-list {
-    /* padding: 2rem; */
+    padding: 2rem;
   }
 
   .work-title {
     font-size: 1rem;
     margin-bottom: 1rem;
     cursor: pointer;
-    opacity: 0; /* Start with no opacity */
-    transform: translate(50%, 0%); /* Start slightly offset */
+    opacity: 0;
+    transform: translate(50%, 0%);
     transition:
       opacity 1s cubic-bezier(0.25, 1, 0.5, 1),
-      transform 1s cubic-bezier(0.25, 1, 0.5, 1); /* Transition for opacity and transform */
+      transform 1s cubic-bezier(0.25, 1, 0.5, 1);
   }
 
   .menu-open .work-title {
-    opacity: 1; /* Fade in */
-    transform: translate(0%, 0%); /* Slide into position */
+    opacity: 1;
+    transform: translate(0%, 0%);
   }
 
   .hover\:text-black:hover {
     color: black;
+  }
+
+  .slideshow-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3000;
+    pointer-events: auto;
   }
 </style>
