@@ -65,17 +65,17 @@
 </script>
 
 <div
-  class="modal z-[2100]"
+  class="modal z-[10000]"
   on:click={(e) => {
     e.stopPropagation();
     close();
   }}
 >
-  <div class="content z-[2101]" on:click|stopPropagation>
+  <div class="content z-[10000]" on:click|stopPropagation>
     <div class="title-container px-[3rem]">
       {projectTitle}
       <button
-        class="close-btn z-[2102]"
+        class="close-btn z-[10000]"
         on:mouseenter={handleMouseEnterClose}
         on:mouseleave={handleMouseLeaveClose}
         on:click={(e) => {
@@ -111,7 +111,7 @@
   </div>
 </div>
 
-<div class="custom-cursor z-[2102]" bind:this={cursor}>
+<div class="custom-cursor z-[10000]" bind:this={cursor}>
   <div class="cursor-circle"></div>
   <div class="cursor-text" bind:this={cursorText}></div>
 </div>
@@ -132,7 +132,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 2100;
+    z-index: 10000;
 
     @media (max-width: 768px) {
       display: none;
@@ -171,7 +171,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 2101; /* Ensure content is above modal background */
+    z-index: 10000; /* Ensure content is above modal background */
   }
 
   .slideshow-image {
@@ -187,7 +187,7 @@
     border: none;
     font-size: 24px;
     opacity: 0.5; /* Set initial opacity to 50% */
-    z-index: 2102;
+    z-index: 10000;
     transition: opacity 0.3s ease; /* Smooth transition */
     padding: 0.5rem;
     padding-top: 0rem;
@@ -251,7 +251,7 @@
     display: flex;
     align-items: center;
     pointer-events: none;
-    z-index: 2102;
+    z-index: 10000;
     transform: translate(-50%, -50%);
   }
 

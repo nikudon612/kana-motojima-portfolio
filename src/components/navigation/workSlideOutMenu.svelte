@@ -52,16 +52,29 @@
   // Show the first image in the slideshow when the project title is clicked
   function showPhotos(work) {
     if (work.photos && work.photos.length > 0) {
-      selectedWork = work.title;
-      currentPhotos = work.photos;
-      initialPhotoIndex = 0;
-      slideshowVisible = true;
+      dispatch("openSlideshow", {
+        images: work.photos,
+        index: 0,
+        title: work.title,
+      });
+      console.log("work photos clicked");
+      // selectedWork = work.title;
+      // currentPhotos = work.photos;
+      // initialPhotoIndex = 0;
+      // slideshowVisible = true;
     }
   }
 
   // Close the slideshow modal
   function closeSlideshowModal() {
     slideshowVisible = false;
+  }
+
+  function handleOpenSlideshow(event) {
+    event.stopPropagation(); // Prevent the event from being handled multiple times
+
+    // Re-dispatch the event to the layout
+    dispatch("openSlideshow", event.detail);
   }
 
   // Reset the menu state when it is closed
@@ -101,7 +114,7 @@
 
   <!-- Photo Gallery Modal -->
   {#if galleryVisible && hoveredWork}
-    <div class="gallery-container">
+    <div class="gallery-container" on:openSlideshow={handleOpenSlideshow}>
       <PhotoGalleryModal
         {currentPhotos}
         projectTitle={hoveredWork?.title}
@@ -125,6 +138,7 @@
 
   .menu-content {
     position: fixed;
+    z-index: 9999;
     top: 0;
     left: 0;
     width: 50%;
@@ -133,7 +147,7 @@
     transform: translateX(-100%);
     transition:
       transform 1s cubic-bezier(0.25, 1, 0.5, 1),
-      width 0.8s ease;
+      width 0.5s cubic-bezier(0.25, 1, 0.5, 1);
   }
 
   .slide-in {
@@ -176,22 +190,12 @@
   }
 
   .gallery-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 3000;
-    pointer-events: none;
-  }
-
-  .slideshow-modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 3000;
-    pointer-events: auto;
+    /* z-index: 3000; */
+    pointer-events: none;
   }
 </style>

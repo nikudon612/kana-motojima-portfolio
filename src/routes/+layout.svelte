@@ -3,6 +3,7 @@
   import WorkMenu from "../components/navigation/workSlideOutMenu.svelte";
   import AboutMenu from "../components/navigation/aboutSlideOutMenu.svelte";
   import OpacityLayer from "../components/navigation/opacityLayer.svelte";
+  import SlideshowModal from "../components/navigation/slideshow.svelte";
 
   let isWorkOpen = false;
   let isAboutOpen = false;
@@ -11,6 +12,11 @@
   let hoverOnWork = false;
   let hoverOnContact = false;
   let isWhiteBackground = false;
+
+  let slideshowVisible = false;
+  let slideshowImages = [];
+  let currentIndex = 0;
+  let projectTitle = "";
 
   function openWorkMenu() {
     if (isWorkOpen) {
@@ -71,6 +77,18 @@
       isVisible = false;
     }
   }
+
+  function openSlideshow(images, index, title) {
+    slideshowImages = images;
+    currentIndex = index; // Set the dynamic index from the event
+    projectTitle = title;
+    slideshowVisible = true;
+    console.log("Layout Opening slideshow at index:", currentIndex); // Debug
+  }
+
+  function closeSlideshow() {
+    slideshowVisible = false;
+  }
 </script>
 
 <!-- Controls -->
@@ -123,6 +141,9 @@
 <div
   class="overlay-container"
   style="z-index: {isWorkOpen || isAboutOpen || isClosing ? 2000 : 0};"
+  on:openSlideshow={(e) => {
+    openSlideshow(e.detail.images, e.detail.index, e.detail.title);
+  }}
 >
   <!-- Opacity Layer -->
   <OpacityLayer
@@ -140,6 +161,8 @@
     bind:isWhiteBackground
     onClose={closeAll}
     on:transitionend={handleTransitionEnd}
+    on:openSlideshow={(e) =>
+      openSlideshow(e.detail.images, e.detail.index, e.detail.title)}
   />
   <AboutMenu
     {isAboutOpen}
@@ -148,6 +171,18 @@
     on:transitionend={handleTransitionEnd}
   />
 </div>
+
+<!-- Slideshow Modal -->
+{#if slideshowVisible}
+  <div class="slideshow-wrapper">
+    <SlideshowModal
+      {slideshowImages}
+      {currentIndex}
+      {projectTitle}
+      on:close={closeSlideshow}
+    />
+  </div>
+{/if}
 
 <!-- Slot for Homepage Content -->
 <slot />
@@ -170,5 +205,18 @@
     padding: 0.5rem; /* Optional: add padding for better visibility */
     border-radius: 5px; /* Optional: add border radius for aesthetics */
     white-space: nowrap; /* Ensure the text doesn't wrap */
+  }
+
+  .slideshow-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
   }
 </style>

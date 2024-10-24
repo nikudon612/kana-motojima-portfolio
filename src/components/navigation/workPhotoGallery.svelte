@@ -1,6 +1,7 @@
 <script>
   import { onMount } from "svelte";
-  import SlideshowModal from "./slideshow.svelte";
+  import SlideshowModal from "../navigation/slideshow.svelte";
+  import { createEventDispatcher } from "svelte";
 
   export let currentPhotos = [];
   export let close;
@@ -10,6 +11,8 @@
   export let initialPhotoIndex;
   let slideshowImages = [];
   let currentIndex = 0;
+
+  const dispatch = createEventDispatcher();
 
   function handleClose(event) {
     event.stopPropagation(); // Prevent click from closing menu
@@ -49,12 +52,14 @@
 </div>
 
 {#if slideshowVisible}
-  <SlideshowModal
-    slideshowImages={currentPhotos}
-    {currentIndex}
-    {projectTitle}
-    on:close={closeSlideshow}
-  />
+  <div class="slideshow-modal">
+    <SlideshowModal
+      slideshowImages={currentPhotos}
+      {currentIndex}
+      {projectTitle}
+      on:close={closeSlideshow}
+    />
+  </div>
 {/if}
 
 <style>
@@ -84,7 +89,7 @@
   }
 
   .gallery-photo {
-    position: absolute;
+    position: fixed;
     object-fit: cover;
     transform: translate(-50%, -50%);
     max-width: 250px;
@@ -93,6 +98,19 @@
     opacity: 0; /* Start hidden */
     transition: opacity 0s 1s; /* 0.5s delay before becoming visible */
     cursor: pointer;
+  }
+
+  .slideshow-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99999; /* Highest z-index to sit above other elements */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto; /* Enable interaction */
   }
 
   .delay-appearance .gallery-photo {
