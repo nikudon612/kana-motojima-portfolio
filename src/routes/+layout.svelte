@@ -86,6 +86,11 @@
     console.log("Layout Opening slideshow at index:", currentIndex); // Debug
   }
 
+  function handleOpenSlideshow(event) {
+    // Open slideshow with event details
+    openSlideshow(event.detail.images, event.detail.index, event.detail.title);
+  }
+
   function closeSlideshow() {
     slideshowVisible = false;
   }
@@ -141,9 +146,7 @@
 <div
   class="overlay-container"
   style="z-index: {isWorkOpen || isAboutOpen || isClosing ? 2000 : 0};"
-  on:openSlideshow={(e) => {
-    openSlideshow(e.detail.images, e.detail.index, e.detail.title);
-  }}
+  on:openSlideshow={handleOpenSlideshow}
 >
   <!-- Opacity Layer -->
   <OpacityLayer
@@ -161,8 +164,7 @@
     bind:isWhiteBackground
     onClose={closeAll}
     on:transitionend={handleTransitionEnd}
-    on:openSlideshow={(e) =>
-      openSlideshow(e.detail.images, e.detail.index, e.detail.title)}
+    on:openSlideshow={handleOpenSlideshow}
   />
   <AboutMenu
     {isAboutOpen}

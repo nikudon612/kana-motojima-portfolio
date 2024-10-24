@@ -6,6 +6,7 @@
   import MobilePhotoGalleryModal from "../navigation/mobileModalPhotoGallery.svelte";
   import SlideshowModal from "./slideshow.svelte";
 
+  export let currentIndex = 0; // Declare currentIndex at the top
   export let isWorkOpen = false;
   export let isClosing = false;
   export let isWhiteBackground = false; // Bind this prop to detect menu close
@@ -71,11 +72,16 @@
   }
 
   function handleOpenSlideshow(event) {
-    event.stopPropagation(); // Prevent the event from being handled multiple times
-
-    // Re-dispatch the event to the layout
+    // Forward the event to the layout
     dispatch("openSlideshow", event.detail);
   }
+
+  // function handleUpdateCurrentIndex(event) {
+  //   currentIndex = event.detail.currentIndex;
+
+  //   // Re-dispatch to the layout
+  //   dispatch("updateLayoutIndex", { currentIndex });
+  // }
 
   // Reset the menu state when it is closed
   $: if (!isWorkOpen && isClosing) {
@@ -119,6 +125,7 @@
         {currentPhotos}
         projectTitle={hoveredWork?.title}
         initialPhotoIndex={0}
+        on:openSlideshow={handleOpenSlideshow}
         close={() => {
           galleryVisible = false;
           hoveredWork = null;

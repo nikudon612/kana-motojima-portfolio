@@ -4,13 +4,14 @@
   import { createEventDispatcher } from "svelte";
 
   export let currentPhotos = [];
+  export let initialPhotoIndex = 0;
   export let close;
   export let isClosing = false;
   export let projectTitle;
   let slideshowVisible = false;
-  export let initialPhotoIndex;
+  // export let initialPhotoIndex;
   let slideshowImages = [];
-  let currentIndex = 0;
+  let currentIndex = initialPhotoIndex || 0;
 
   const dispatch = createEventDispatcher();
 
@@ -21,15 +22,16 @@
     }
   }
 
-  function openSlideshow(index) {
-    // Prepare slideshow images from current photos
-    slideshowImages = currentPhotos.map((photo) => ({
-      imageUrl: photo.url,
-      title: "",
-    }));
+  // Function to handle image click
+  function handleImageClick(index) {
     currentIndex = index;
-    slideshowVisible = true;
-    console.log("work gallery opened slideshow");
+    console.log("Gallery Clicked image index:", index);
+    // Dispatch an event to open the slideshow with the current images and index
+    dispatch("openSlideshow", {
+      images: currentPhotos,
+      index: currentIndex,
+      title: "Project Title", // Replace with the actual project title if available
+    });
   }
 
   function closeSlideshow() {
@@ -45,13 +47,13 @@
         alt="Project photo"
         class="gallery-photo"
         style="top: {photo.Work_Y}%; left: {photo.Work_X}%;"
-        on:click={() => openSlideshow(index)}
+        on:click={() => handleImageClick(index)}
       />
     {/each}
   </div>
 </div>
 
-{#if slideshowVisible}
+<!-- {#if slideshowVisible}
   <div class="slideshow-modal">
     <SlideshowModal
       slideshowImages={currentPhotos}
@@ -60,7 +62,7 @@
       on:close={closeSlideshow}
     />
   </div>
-{/if}
+{/if} -->
 
 <style>
   .modal-overlay {
@@ -101,7 +103,7 @@
   }
 
   .slideshow-modal {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
