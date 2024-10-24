@@ -17,6 +17,7 @@
   let galleryVisible = false;
   let slideshowVisible = false;
   let initialPhotoIndex = 0;
+  let isFullWidth = false; // New variable to control full-width state
 
   onMount(async () => {
     await loadProjects();
@@ -31,13 +32,20 @@
     }
   }
 
+  // Expand menu to full width on hover
+  function handleHoverStart(work) {
+    if (work.photos && work.photos.length > 0) {
+      isFullWidth = true; // Expand to full width
+    }
+  }
+
   // Show the first image in the slideshow when the project title is clicked
   function showPhotos(work) {
     if (work.photos && work.photos.length > 0) {
       selectedWork = work.title;
       currentPhotos = work.photos;
-      initialPhotoIndex = 0; // Start from the first photo
-      slideshowVisible = true; // Show the slideshow
+      initialPhotoIndex = 0;
+      slideshowVisible = true;
     }
   }
 
@@ -49,7 +57,7 @@
 
 <!-- Menu Wrapper -->
 <div
-  class={`menu-content ${isWorkOpen ? (isClosing ? "slide-out" : "slide-in") : ""}`}
+  class={`menu-content ${isWorkOpen ? (isClosing ? "slide-out" : "slide-in") : ""} ${isFullWidth ? "full-width" : ""}`}
   style="z-index: {isWorkOpen || isClosing
     ? 2000
     : 0}; pointer-events: {isWorkOpen || isClosing ? 'auto' : 'none'};"
@@ -62,6 +70,7 @@
         {#each works as work, index (work._id || index)}
           <p
             class="work-title hover:text-black"
+            on:mouseover={() => handleHoverStart(work)}
             on:click={() => showPhotos(work)}
             class:selected={selectedWork === work.title}
           >
@@ -72,6 +81,21 @@
     </div>
   </div>
 </div>
+
+<!-- Photo Gallery Modal on Hover -->
+{#if galleryVisible && !slideshowVisible}
+  <div class="gallery-container">
+    <PhotoGalleryModal
+      {currentPhotos}
+      projectTitle={selectedWork}
+      initialPhotoIndex={0}
+      close={() => {
+        galleryVisible = false;
+        isWhiteBackground = false;
+      }}
+    />
+  </div>
+{/if}
 
 <!-- Slideshow Modal -->
 {#if slideshowVisible}
@@ -87,16 +111,11 @@
 
 <style>
   .menu {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    background-color: white;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-left: 3rem;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
   }
-
   .menu-content {
     position: fixed;
     top: 0;
@@ -105,7 +124,9 @@
     height: 100%;
     background-color: white;
     transform: translateX(-100%);
-    transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+    transition:
+      transform 1s cubic-bezier(0.25, 1, 0.5, 1),
+      width 0.5s ease; /* Add width transition */
   }
 
   .slide-in {
@@ -116,6 +137,10 @@
     transform: translateX(-100%);
   }
 
+  .full-width {
+    width: 100%; /* Expand to full width */
+  }
+
   .menu-content-list {
     padding: 2rem;
   }
@@ -123,6 +148,7 @@
   .work-title {
     font-size: 1rem;
     margin-bottom: 1rem;
+    width: fit-content;
     cursor: pointer;
     opacity: 0;
     transform: translate(50%, 0%);
@@ -138,6 +164,15 @@
 
   .hover\:text-black:hover {
     color: black;
+  }
+
+  .gallery-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2010;
   }
 
   .slideshow-modal {

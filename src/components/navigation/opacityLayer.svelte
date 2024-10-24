@@ -2,6 +2,7 @@
   import { createEventDispatcher } from "svelte";
 
   export let isVisible = false;
+  export let isWhiteBackground = false; // Prop to control white background
   export let isClosing = false;
   export let onClick;
 
@@ -12,14 +13,17 @@
   }
 
   function handleTransitionEnd(event) {
-    if (event?.propertyName === "opacity") {
+    if (
+      event?.propertyName === "opacity" ||
+      event?.propertyName === "background-color"
+    ) {
       dispatch("transitionend");
     }
   }
 </script>
 
 <div
-  class={`opacity-layer ${isVisible ? (isClosing ? "fade-out" : "fade-in") : ""}`}
+  class={`opacity-layer ${isVisible ? (isClosing ? "fade-out" : "fade-in") : ""} ${isWhiteBackground ? "white-bg" : ""}`}
   on:click={handleClick}
   on:transitionend={handleTransitionEnd}
 ></div>
@@ -31,9 +35,16 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(
+      0,
+      0,
+      0,
+      0.6
+    ); /* Default to semi-transparent black */
     z-index: 2000;
-    transition: opacity 1s ease;
+    transition:
+      background-color 0.5s ease,
+      opacity 0.5s ease; /* Smooth transition */
     opacity: 0; /* Start as transparent */
     pointer-events: none;
   }
@@ -46,5 +57,9 @@
   .fade-out {
     opacity: 0;
     pointer-events: none;
+  }
+
+  .white-bg {
+    background-color: rgba(255, 255, 255, 1); /* Full white */
   }
 </style>

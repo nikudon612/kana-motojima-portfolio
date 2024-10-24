@@ -86,7 +86,7 @@
     width: 100%;
     height: 100%;
     background-color: transparent;
-    z-index: 1000;
+    z-index: 2010;
     pointer-events: none;
     transition: opacity 0.3s ease-in-out;
     opacity: 1;
