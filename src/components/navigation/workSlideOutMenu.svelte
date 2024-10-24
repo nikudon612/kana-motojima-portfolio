@@ -154,7 +154,7 @@
     transform: translateX(-100%);
     transition:
       transform 1s cubic-bezier(0.25, 1, 0.5, 1),
-      width 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+      width 1s cubic-bezier(0.42, 0, 0.58, 1);
   }
 
   .slide-in {
