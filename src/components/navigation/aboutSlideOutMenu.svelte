@@ -88,7 +88,7 @@
 
   /* Animation for About Menu Titles */
   .about-title {
-    font-size: 1.2rem;
+    font-size: 1rem;
     margin-bottom: 1rem;
     cursor: default;
     opacity: 0; /* Start with no opacity */
