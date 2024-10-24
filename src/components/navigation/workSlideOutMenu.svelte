@@ -17,7 +17,8 @@
   let galleryVisible = false;
   let slideshowVisible = false;
   let initialPhotoIndex = 0;
-  let isFullWidth = false; // New variable to control full-width state
+  let isFullWidth = false;
+  let hoveredWork = null; // Tracks the currently hovered project
 
   onMount(async () => {
     await loadProjects();
@@ -32,11 +33,17 @@
     }
   }
 
-  // Expand menu to full width on hover
+  // Expand menu to full width on hover and set hovered project
   function handleHoverStart(work) {
     if (work.photos && work.photos.length > 0) {
-      isFullWidth = true; // Expand to full width
+      isFullWidth = true;
+      hoveredWork = work; // Set the hovered project
     }
+  }
+
+  // Reset hovered project on hover end
+  function handleHoverEnd() {
+    hoveredWork = null; // Reset the hovered project
   }
 
   // Show the first image in the slideshow when the project title is clicked
@@ -71,8 +78,10 @@
           <p
             class="work-title hover:text-black"
             on:mouseover={() => handleHoverStart(work)}
+            on:mouseleave={handleHoverEnd}
             on:click={() => showPhotos(work)}
             class:selected={selectedWork === work.title}
+            style="opacity: {hoveredWork && hoveredWork !== work ? 0.5 : 1};"
           >
             {work.title}
           </p>
@@ -126,7 +135,7 @@
     transform: translateX(-100%);
     transition:
       transform 1s cubic-bezier(0.25, 1, 0.5, 1),
-      width 0.5s ease; /* Add width transition */
+      width 0.8s ease; /* Add width transition */
   }
 
   .slide-in {
