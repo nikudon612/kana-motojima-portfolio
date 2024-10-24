@@ -33,17 +33,19 @@
     }
   }
 
-  // Expand menu to full width on hover and set hovered project
+  // Show photo gallery and set hovered project
   function handleHoverStart(work) {
     if (work.photos && work.photos.length > 0) {
       isFullWidth = true;
       hoveredWork = work; // Set the hovered project
+      currentPhotos = work.photos;
+      galleryVisible = true; // Show photo gallery modal
     }
   }
 
-  // Reset hovered project on hover end
+  // Keep gallery visible until another project title is hovered
   function handleHoverEnd() {
-    hoveredWork = null; // Reset the hovered project
+    // No action needed, keep the gallery visible until another title is hovered
   }
 
   // Show the first image in the slideshow when the project title is clicked
@@ -89,34 +91,22 @@
       </div>
     </div>
   </div>
+
+  <!-- Photo Gallery Modal -->
+  {#if galleryVisible && hoveredWork}
+    <div class="gallery-container">
+      <PhotoGalleryModal
+        {currentPhotos}
+        projectTitle={hoveredWork?.title}
+        initialPhotoIndex={0}
+        close={() => {
+          galleryVisible = false;
+          hoveredWork = null;
+        }}
+      />
+    </div>
+  {/if}
 </div>
-
-<!-- Photo Gallery Modal on Hover -->
-{#if galleryVisible && !slideshowVisible}
-  <div class="gallery-container">
-    <PhotoGalleryModal
-      {currentPhotos}
-      projectTitle={selectedWork}
-      initialPhotoIndex={0}
-      close={() => {
-        galleryVisible = false;
-        isWhiteBackground = false;
-      }}
-    />
-  </div>
-{/if}
-
-<!-- Slideshow Modal -->
-{#if slideshowVisible}
-  <div class="slideshow-modal">
-    <SlideshowModal
-      slideshowImages={currentPhotos}
-      projectTitle={selectedWork}
-      currentIndex={initialPhotoIndex}
-      on:close={closeSlideshowModal}
-    />
-  </div>
-{/if}
 
 <style>
   .menu {
@@ -125,6 +115,7 @@
     align-items: center;
     height: 100%;
   }
+
   .menu-content {
     position: fixed;
     top: 0;
@@ -135,7 +126,7 @@
     transform: translateX(-100%);
     transition:
       transform 1s cubic-bezier(0.25, 1, 0.5, 1),
-      width 0.8s ease; /* Add width transition */
+      width 0.8s ease;
   }
 
   .slide-in {
@@ -147,7 +138,7 @@
   }
 
   .full-width {
-    width: 100%; /* Expand to full width */
+    width: 100%;
   }
 
   .menu-content-list {
@@ -161,6 +152,8 @@
     cursor: pointer;
     opacity: 0;
     transform: translate(50%, 0%);
+    z-index: 3001;
+    position: relative;
     transition:
       opacity 1s cubic-bezier(0.25, 1, 0.5, 1),
       transform 1s cubic-bezier(0.25, 1, 0.5, 1);
@@ -176,12 +169,13 @@
   }
 
   .gallery-container {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 2010;
+    z-index: 3000;
+    pointer-events: none;
   }
 
   .slideshow-modal {
