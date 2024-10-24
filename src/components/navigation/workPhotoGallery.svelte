@@ -30,7 +30,7 @@
     dispatch("openSlideshow", {
       images: currentPhotos,
       index: currentIndex,
-      title: "Project Title", // Replace with the actual project title if available
+      title: projectTitle, // Replace with the actual project title if available
     });
   }
 
