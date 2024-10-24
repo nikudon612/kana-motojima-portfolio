@@ -1,78 +1,68 @@
 <script>
   import { onMount } from "svelte";
+  import { createEventDispatcher } from "svelte";
   import { fetchProjects } from "../../lib/fetchSanityData";
   import PhotoGalleryModal from "../navigation/workPhotoGallery.svelte";
   import MobilePhotoGalleryModal from "../navigation/mobileModalPhotoGallery.svelte";
   import SlideshowModal from "./slideshow.svelte";
 
-  export let isOpen = false;
-  export let toggleMenu;
-  export let isFadingOut = false;
+  export let currentIndex = 0; // Declare currentIndex at the top
+  export let isWorkOpen = false;
+  export let isClosing = false;
+  export let isWhiteBackground = false; // Bind this prop to detect menu close
+
+  const dispatch = createEventDispatcher();
+
   let works = [];
+  let selectedWork = null;
   let currentPhotos = [];
   let galleryVisible = false;
-  let selectedWork = null;
-  let isWhiteBackground = false;
-  let isMobile = false;
-  let zIndexClass = "";
-  let initialPhotoIndex = 0; // Tracks the initial index for slideshow
-  let slideshowVisible = false; // Used to trigger the slideshow modal
-  let firstImageOfProject = "";
-  $: galleryVisible = galleryVisible; // Force reactivity
-  $: slideshowVisible = slideshowVisible; // Force reactivity
-  $: isWhiteBackground = isWhiteBackground;
+  let slideshowVisible = false;
+  let initialPhotoIndex = 0;
+  let isFullWidth = false;
+  let hoveredWork = null; // Tracks the currently hovered project
 
-  onMount(() => {
-    const checkScreenSize = () => {
-      isMobile = window.innerWidth <= 768;
-    };
-    checkScreenSize();
-    window.addEventListener("resize", checkScreenSize);
-
-    return () => {
-      window.removeEventListener("resize", checkScreenSize);
-    };
+  onMount(async () => {
+    await loadProjects();
   });
 
   async function loadProjects() {
     try {
       works = await fetchProjects();
+      console.log("Projects loaded:", works);
     } catch (error) {
       console.error("Error fetching projects:", error);
     }
   }
 
-  // Show photos on hover but don't trigger the modal
-  function openPhotoGalleryModal(work) {
+  // Show photo gallery and set hovered project
+  function handleHoverStart(work) {
     if (work.photos && work.photos.length > 0) {
-      selectedWork = work.title;
+      isFullWidth = true;
+      hoveredWork = work; // Set the hovered project
       currentPhotos = work.photos;
-      galleryVisible = true; // Show the gallery photos on hover
-      isWhiteBackground = true;
-      console.log("openphoto");
-    } else {
-      galleryVisible = false;
-      isWhiteBackground = false;
-      selectedWork = null;
-      currentPhotos = [];
+      galleryVisible = true; // Show photo gallery modal
     }
+  }
+
+  // Keep gallery visible until another project title is hovered
+  function handleHoverEnd() {
+    // No action needed, keep the gallery visible until another title is hovered
   }
 
   // Show the first image in the slideshow when the project title is clicked
   function showPhotos(work) {
-    if (!isMobile) {
-      if (work.photos && work.photos.length > 0) {
-        selectedWork = work.title;
-        currentPhotos = work.photos;
-        initialPhotoIndex = 0; // Always start from the first photo
-        firstImageOfProject = currentPhotos[0].url;
-        slideshowVisible = true;
-        console.log("currentPhotos:", currentPhotos);
-        console.log("title", selectedWork);
-        console.log("showphotos");
-      }
-    } else {
-      console.log("window is too small");
+    if (work.photos && work.photos.length > 0) {
+      dispatch("openSlideshow", {
+        images: work.photos,
+        index: 0,
+        title: work.title,
+      });
+      console.log("work photos clicked");
+      // selectedWork = work.title;
+      // currentPhotos = work.photos;
+      // initialPhotoIndex = 0;
+      // slideshowVisible = true;
     }
   }
 
@@ -81,219 +71,138 @@
     slideshowVisible = false;
   }
 
-  function closeMenu() {
-    setTimeout(() => {
-      isFadingOut = false;
-      isOpen = false;
-      galleryVisible = false;
-      slideshowVisible = false;
-      selectedWork = null;
-      currentPhotos = [];
-      toggleMenu();
-      zIndexClass = "";
-    }, 300); // Duration of the fade-out animation
+  function handleOpenSlideshow(event) {
+    // Forward the event to the layout
+    dispatch("openSlideshow", event.detail);
   }
 
-  $: if (isOpen) {
-    if (works.length === 0) {
-      loadProjects();
-    }
-    zIndexClass = "z-index-top";
-  } else if (!isOpen && !isFadingOut) {
-    zIndexClass = "";
+  // function handleUpdateCurrentIndex(event) {
+  //   currentIndex = event.detail.currentIndex;
+
+  //   // Re-dispatch to the layout
+  //   dispatch("updateLayoutIndex", { currentIndex });
+  // }
+
+  // Reset the menu state when it is closed
+  $: if (!isWorkOpen && isClosing) {
+    isFullWidth = false; // Revert menu width to 50%
+    galleryVisible = false; // Close the photo gallery modal
   }
 </script>
 
-<div class={`menu-container ${isOpen ? "open" : ""} ${zIndexClass}`}>
-  {#if isOpen}
-    <div
-      class={`opacity-layer ${isFadingOut ? "fade-out" : "fade-in"} ${isWhiteBackground ? "white-bg" : ""}`}
-      on:click={closeMenu}
-    ></div>
-  {/if}
-  <div
-    class={`menu ${isOpen ? "menu-open" : "menu-close"} ${galleryVisible ? "full-width" : ""}`}
-  >
+<!-- Menu Wrapper -->
+<div
+  class={`menu-content ${isWorkOpen ? (isClosing ? "slide-out" : "slide-in") : ""} ${isFullWidth ? "full-width" : ""}`}
+  style="z-index: {isWorkOpen || isClosing
+    ? 2000
+    : 0}; pointer-events: {isWorkOpen || isClosing ? 'auto' : 'none'};"
+  on:click|stopPropagation
+>
+  <!-- Menu Content -->
+  <div class="menu">
     <div class="menu-left">
-      <div class="menu-content">
+      <div class={`menu-content-list ${isWorkOpen ? "menu-open" : ""}`}>
         {#each works as work, index (work._id || index)}
           <p
-            class="hover:!text-black/100"
-            on:mouseover={() => openPhotoGalleryModal(work)}
+            class="work-title hover:text-black"
+            on:mouseover={() => handleHoverStart(work)}
+            on:mouseleave={handleHoverEnd}
             on:click={() => showPhotos(work)}
             class:selected={selectedWork === work.title}
+            style="opacity: {hoveredWork && hoveredWork !== work ? 0.5 : 1};"
           >
             {work.title}
           </p>
         {/each}
       </div>
     </div>
-
-    {#if galleryVisible && !slideshowVisible}
-      <div class="mobile:block desktop:hidden">
-        <MobilePhotoGalleryModal
-          {currentPhotos}
-          projectTitle={selectedWork}
-          initialPhotoIndex={0}
-          close={() => {
-            galleryVisible = false;
-            isWhiteBackground = false;
-          }}
-        />
-      </div>
-      <div class="mobile:hidden tablet:hidden desktop:block">
-        <PhotoGalleryModal
-          {currentPhotos}
-          projectTitle={selectedWork}
-          initialPhotoIndex={0}
-          close={() => {
-            galleryVisible = false;
-            isWhiteBackground = false;
-          }}
-        />
-      </div>
-    {/if}
-
-    <!-- Slideshow modal will be shown only if slideshowVisible is true -->
-    {#if slideshowVisible}
-      <div class="mobile:hidden tablet:block">
-        <SlideshowModal
-          slideshowImages={currentPhotos}
-          projectTitle={selectedWork}
-          currentIndex={initialPhotoIndex}
-          on:close={closeSlideshowModal}
-        />
-      </div>
-    {/if}
   </div>
+
+  <!-- Photo Gallery Modal -->
+  {#if galleryVisible && hoveredWork}
+    <div class="gallery-container" on:openSlideshow={handleOpenSlideshow}>
+      <PhotoGalleryModal
+        {currentPhotos}
+        projectTitle={hoveredWork?.title}
+        initialPhotoIndex={0}
+        on:openSlideshow={handleOpenSlideshow}
+        close={() => {
+          galleryVisible = false;
+          hoveredWork = null;
+        }}
+      />
+    </div>
+  {/if}
 </div>
 
 <style>
-  .menu-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    z-index: 2000;
-  }
-
-  .bg-white {
-    transform: translateX(100%);
-    transition:
-      transform 0.3s ease-in-out,
-      background-color 0.3s ease-in-out;
-  }
-
-  .bg-white.isOpen {
-    transform: translateX(0);
-  }
-
-  .bg-white.isClosing {
-    transform: translateX(100%);
-  }
-
-  .opacity-layer {
-    background-color: rgba(0, 0, 0, 0); /* Start transparent */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    transition: background-color 0.3s ease-in-out; /* Smooth transition for background color */
-    z-index: 1000; /* Below the menu */
-  }
-
-  .opacity-layer.fade-in {
-    background-color: rgba(
-      0,
-      0,
-      0,
-      0.6
-    ); /* When the menu opens, fade to dark */
-  }
-
-  .opacity-layer.fade-out {
-    background-color: rgba(0, 0, 0, 0); /* Fade out to transparent */
-  }
-
-  .opacity-layer.white-bg {
-    background-color: white; /* Turns white when the gallery is visible */
-  }
-
-  .opacity-layer.dark-bg {
-    background-color: rgba(0, 0, 0, 0.6); /* Dark background by default */
-  }
-
-  /* The white background and text should only slide, no fade */
   .menu {
-    position: relative;
-    width: 50%;
-    height: 100%;
-    background-color: white; /* No opacity changes */
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-left: 3rem;
-    transition: transform 0.3s ease-in-out; /* Only slide, no fading */
-    z-index: 2000; /* Ensure it stays on top of opacity layer */
-    transform: translateX(-100%); /* Initially off-screen */
-  }
-
-  .menu-open {
-    transform: translateX(0); /* Slide into view */
-  }
-
-  .menu-close {
-    transform: translateX(-100%); /* Slide out of view */
-  }
-
-  .menu.full-width {
-    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
   }
 
   .menu-content {
-    text-align: left;
-    width: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background-color: white;
+    transform: translateX(-100%);
+    transition:
+      transform 1s cubic-bezier(0.25, 1, 0.5, 1),
+      width 1s cubic-bezier(0.42, 0, 0.58, 1);
   }
 
-  .menu-content p {
-    display: inline-block;
-    margin-bottom: 1em;
+  .slide-in {
+    transform: translateX(0);
+  }
+
+  .slide-out {
+    transform: translateX(-100%);
+  }
+
+  .full-width {
+    width: 100%;
+  }
+
+  .menu-content-list {
+    padding: 2rem;
+  }
+
+  .work-title {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    width: fit-content;
     cursor: pointer;
-    transition: color 0.3s ease-in-out;
+    opacity: 0;
+    transform: translate(50%, 0%);
+    z-index: 3001;
+    position: relative;
+    transition:
+      opacity 1s cubic-bezier(0.25, 1, 0.5, 1),
+      transform 1s cubic-bezier(0.25, 1, 0.5, 1);
   }
 
-  .menu-content p.selected {
+  .menu-open .work-title {
+    opacity: 1;
+    transform: translate(0%, 0%);
+  }
+
+  .hover\:text-black:hover {
     color: black;
-    font-weight: bold;
   }
 
-  .menu-content p:not(.selected) {
-    color: grey;
-  }
-
-  @media (max-width: 768px) {
-    .menu {
-      width: 100%;
-      padding: 0;
-    }
-    .menu-content {
-      padding: 1.5rem;
-    }
-    .mobile\:hidden {
-      display: none;
-    }
-    .mobile\:block {
-      display: block;
-    }
-  }
-
-  .z-index-top {
-    z-index: 2000;
+  .gallery-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* z-index: 3000; */
+    pointer-events: none;
   }
 </style>

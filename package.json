@@ -24,6 +24,7 @@
 	"type": "module",
 	"dependencies": {
 		"@portabletext/svelte": "^2.1.11",
-		"@sanity/client": "^6.21.0"
+		"@sanity/client": "^6.21.0",
+		"svelte-portal": "^2.2.1"
 	}
 }

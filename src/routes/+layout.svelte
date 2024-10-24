@@ -1,92 +1,102 @@
 <script>
   import "../app.css";
-  import { onMount } from "svelte";
-  import AboutSlideOutMenu from "../components/navigation/aboutSlideOutMenu.svelte";
-  import WorkSlideOutMenu from "../components/navigation/workSlideOutMenu.svelte";
+  import WorkMenu from "../components/navigation/workSlideOutMenu.svelte";
+  import AboutMenu from "../components/navigation/aboutSlideOutMenu.svelte";
+  import OpacityLayer from "../components/navigation/opacityLayer.svelte";
+  import SlideshowModal from "../components/navigation/slideshow.svelte";
 
-  let aboutIsOpen = false;
-  let workIsOpen = false;
-  let aboutIsClosing = false;
-  let workIsClosing = false;
-  let isFadingOut = false;
+  let isWorkOpen = false;
+  let isAboutOpen = false;
+  let isClosing = false;
+  let isVisible = false;
   let hoverOnWork = false;
   let hoverOnContact = false;
+  let isWhiteBackground = false;
 
-  console.log("web development by Nick Bechtel (https://nickbechtel.com)");
+  let slideshowVisible = false;
+  let slideshowImages = [];
+  let currentIndex = 0;
+  let projectTitle = "";
 
-  function toggleAboutMenu(event) {
-    event?.stopPropagation();
-    if (aboutIsOpen) {
-      aboutIsClosing = true;
-      setTimeout(() => {
-        aboutIsOpen = false;
-        aboutIsClosing = false;
-      }, 300);
+  function openWorkMenu() {
+    if (isWorkOpen) {
+      // If the Work menu is already open, close it
+      closeAll();
     } else {
-      aboutIsOpen = true;
-      workIsOpen = false;
-      workIsClosing = false;
-    }
-  }
-
-  function toggleWorkMenu(event) {
-    event?.stopPropagation();
-    if (workIsOpen) {
-      closeMenu();
-    } else {
-      workIsOpen = true;
-      aboutIsOpen = false;
-      aboutIsClosing = false;
-    }
-  }
-
-  function closeMenu() {
-    isFadingOut = true;
-    setTimeout(() => {
-      isFadingOut = false;
-      workIsOpen = false;
-      workIsClosing = false;
-    }, 300);
-  }
-
-  function openAboutMenuFromContact(event) {
-    event?.stopPropagation();
-    if (aboutIsOpen) {
-      toggleAboutMenu(event);
-    }
-    aboutIsOpen = true;
-    workIsOpen = false;
-    workIsClosing = false;
-  }
-
-  onMount(() => {
-    const handleClickOutside = (event) => {
-      if (
-        (aboutIsOpen || workIsOpen) &&
-        !event.target.closest(".menu") &&
-        !event.target.closest(".toggle-menu-btn")
-      ) {
-        if (aboutIsOpen) {
-          aboutIsClosing = true;
-          setTimeout(() => {
-            aboutIsOpen = false;
-            aboutIsClosing = false;
-          }, 300);
-        }
-        if (workIsOpen) {
-          closeMenu();
-        }
+      // Close About Menu if it's open, then open Work Menu
+      if (isAboutOpen) {
+        closeAll(() => {
+          isWorkOpen = true;
+          isVisible = true; // Ensure opacity layer is visible
+        });
+      } else {
+        isWorkOpen = true;
+        isVisible = true; // Ensure opacity layer is visible
       }
-    };
+    }
+  }
 
-    document.addEventListener("click", handleClickOutside);
+  function openAboutMenu() {
+    if (isAboutOpen) {
+      // If the About menu is already open, close it
+      closeAll();
+    } else {
+      // Close Work Menu if it's open, then open About Menu
+      if (isWorkOpen) {
+        closeAll(() => {
+          isAboutOpen = true;
+          isVisible = true; // Ensure opacity layer is visible
+        });
+      } else {
+        isAboutOpen = true;
+        isVisible = true; // Ensure opacity layer is visible
+      }
+    }
+  }
 
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  });
+  function closeAll(callback) {
+    if (isWorkOpen || isAboutOpen) {
+      isClosing = true; // Start closing animation
+      isWorkOpen = false;
+      isAboutOpen = false;
+      isWhiteBackground = false; // Reset background state for work menu
+
+      setTimeout(() => {
+        isClosing = false;
+        isVisible = false; // Hide the opacity layer
+        if (callback) {
+          callback(); // Open the other menu after closing
+        }
+      }, 1000); // Wait for the closing animation to finish
+    }
+  }
+
+  function handleTransitionEnd(event) {
+    if (event?.propertyName === "opacity" && isClosing) {
+      isClosing = false;
+      isVisible = false;
+    }
+  }
+
+  function openSlideshow(images, index, title) {
+    slideshowImages = images;
+    currentIndex = index; // Set the dynamic index from the event
+    projectTitle = title;
+    slideshowVisible = true;
+    console.log("Layout Opening slideshow at index:", currentIndex); // Debug
+  }
+
+  function handleOpenSlideshow(event) {
+    // Open slideshow with event details
+    openSlideshow(event.detail.images, event.detail.index, event.detail.title);
+  }
+
+  function closeSlideshow() {
+    slideshowVisible = false;
+  }
 </script>
 
+<!-- Controls -->
 <nav
   class="mobile:h-[50px] fixed bottom-0 left-0 w-full flex justify-between px-[3rem] mobile:py-0 py-10 text-black bg-transparent mobile:fixed mobile:top-0 mobile:left-0 mobile:w-full mobile:flex mobile:justify-between mobile:items-center mobile:px-[1.5rem] mobile:py-[4rem] mobile:bg-white"
   style="z-index: 2001;"
@@ -97,19 +107,19 @@
   >
     <button
       class="mb-2 hover:cursor-pointer toggle-menu-btn desktop:mb-2 mobile:mb-0"
-      on:click={toggleWorkMenu}
+      on:click={openWorkMenu}
       on:mouseenter={() => (hoverOnWork = true)}
       on:mouseleave={() => (hoverOnWork = false)}
-      class:opacity-50={hoverOnContact || aboutIsOpen}
+      class:opacity-50={hoverOnContact || isAboutOpen}
     >
       work
     </button>
     <button
       class="mb-2 hover:cursor-pointer toggle-menu-btn desktop:mb-2 mobile:mb-0"
-      on:click={openAboutMenuFromContact}
+      on:click={openAboutMenu}
       on:mouseenter={() => (hoverOnContact = true)}
       on:mouseleave={() => (hoverOnContact = false)}
-      class:opacity-50={hoverOnWork || workIsOpen}
+      class:opacity-50={hoverOnWork || isWorkOpen}
     >
       contact
     </button>
@@ -132,20 +142,61 @@
   </div>
 </nav>
 
-<AboutSlideOutMenu
-  isOpen={aboutIsOpen}
-  isClosing={aboutIsClosing}
-  toggleMenu={toggleAboutMenu}
-/>
-<WorkSlideOutMenu isOpen={workIsOpen} toggleMenu={closeMenu}  {isFadingOut} />
+<!-- Overlay Container -->
+<div
+  class="overlay-container"
+  style="z-index: {isWorkOpen || isAboutOpen || isClosing ? 2000 : 0};"
+  on:openSlideshow={handleOpenSlideshow}
+>
+  <!-- Opacity Layer -->
+  <OpacityLayer
+    {isVisible}
+    {isClosing}
+    {isWhiteBackground}
+    onClick={closeAll}
+    on:transitionend={handleTransitionEnd}
+  />
 
+  <!-- Menus -->
+  <WorkMenu
+    {isWorkOpen}
+    {isClosing}
+    bind:isWhiteBackground
+    onClose={closeAll}
+    on:transitionend={handleTransitionEnd}
+    on:openSlideshow={handleOpenSlideshow}
+  />
+  <AboutMenu
+    {isAboutOpen}
+    {isClosing}
+    onClose={closeAll}
+    on:transitionend={handleTransitionEnd}
+  />
+</div>
+
+<!-- Slideshow Modal -->
+{#if slideshowVisible}
+  <div class="slideshow-wrapper">
+    <SlideshowModal
+      {slideshowImages}
+      {currentIndex}
+      {projectTitle}
+      on:close={closeSlideshow}
+    />
+  </div>
+{/if}
+
+<!-- Slot for Homepage Content -->
 <slot />
 
 <style>
+  .overlay-container {
+    position: relative;
+  }
+
   .opacity-50 {
     opacity: 0.5;
   }
-
   .toggle-menu-btn {
     transition: opacity 300ms ease-in-out; /* Add the transition property here */
   }
@@ -156,5 +207,18 @@
     padding: 0.5rem; /* Optional: add padding for better visibility */
     border-radius: 5px; /* Optional: add border radius for aesthetics */
     white-space: nowrap; /* Ensure the text doesn't wrap */
+  }
+
+  .slideshow-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
   }
 </style>

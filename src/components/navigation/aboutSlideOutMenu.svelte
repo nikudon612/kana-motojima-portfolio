@@ -1,88 +1,59 @@
 <script>
+  export let isAboutOpen = false;
+  export let isClosing = false;
+  export let onClose;
   import { onMount } from "svelte";
   import { fetchAbout } from "../../lib/fetchSanityData";
-
-  export let isOpen = false;
-  export let toggleMenu;
-  export let isClosing;
-
   let aboutData = null;
-  let isFadingOut = false;
-  let showDarkLayer = false;
-  let zIndexClass = "";
-
-  function handleMenuLeftClick(event) {
-    event.stopPropagation();
-    if (isOpen) {
-      closeMenu();
-    }
-  }
-
-  function handleMenuContentClick(event) {
-    event.stopPropagation();
-  }
-
-  function closeMenu() {
-    isFadingOut = true;
-    setTimeout(() => {
-      isFadingOut = false;
-      isOpen = false;
-      showDarkLayer = false;
-      toggleMenu();
-      zIndexClass = "";
-    }, 300); // Reduce this duration to match the transition duration
-  }
 
   onMount(async () => {
     try {
-      const data = await fetchAbout();
-      aboutData = data;
+      aboutData = await fetchAbout();
     } catch (error) {
       console.error("Failed to fetch data from Sanity:", error);
     }
   });
 
-  $: if (typeof window !== "undefined" && isOpen) {
-    document.body.style.overflow = "hidden";
-    setTimeout(() => {
-      showDarkLayer = true;
-      zIndexClass = "z-index-top";
-    }, 0);
-  } else if (typeof window !== "undefined" && !isOpen && !isFadingOut) {
-    document.body.style.overflow = "";
-    showDarkLayer = false;
+  function handleTransitionEnd(event) {
+    console.log("Menu transition ended:", event.propertyName);
+    if (event.propertyName === "transform" && isClosing) {
+      dispatch("transitionend");
+      console.log("Resetting isClosing state after slide-out transition");
+    }
+  }
+
+  function closeMenu() {
+    if (onClose) onClose();
   }
 </script>
 
 <div
-  class={`fixed top-0 left-0 w-full h-full flex ${isOpen || isFadingOut ? "" : "is-closing"} ${zIndexClass}`}
+  class={`menu-content ${isAboutOpen ? "slide-in" : "slide-out"}`}
+  style="z-index: {isAboutOpen || isClosing
+    ? 2000
+    : 0}; pointer-events: {isAboutOpen ? 'auto' : 'none'};"
+  on:click|stopPropagation
+  on:transitionend={handleTransitionEnd}
 >
-  {#if isOpen || isFadingOut}
-    <div
-      class={`opacity-layer transition-opacity duration-300 cursor-pointer ${showDarkLayer && !isFadingOut ? "fade-in" : ""} ${isFadingOut ? "fade-out" : ""}`}
-      on:click={handleMenuLeftClick}
-    ></div>
-  {/if}
-  <div
-    class={`bg-white h-full flex items-center justify-center w-full desktop:w-[50%] desktop:absolute desktop:right-0 transform transition-transform duration-300 ${isOpen || isFadingOut ? "isOpen" : "isClosing"}`}
-    on:click={handleMenuContentClick}
-  >
+  <div class="flex items-center h-full w-full">
     <div class="text-left mobile:px-[1.5rem] px-[3rem] desktop:max-w-[60%]">
       {#if aboutData}
-        <div>
-          <p class="mb-4">{aboutData.bio}</p>
-          <p class="mb-4">Bilingual in Japanese and English.</p>
-          <p class="mb-4">
+        <div class={`about-content-list ${isAboutOpen ? "menu-open" : ""}`}>
+          <p class="about-title mb-4">{aboutData.bio}</p>
+          <p class="about-title mb-4">Bilingual in Japanese and English.</p>
+          <p class="about-title mb-4">
             For all inquiries, please email {aboutData.contactInfo}
           </p>
-        </div>
-        <div class="mt-16">
-          <h2 class="mobile:text-m desktop:text-lg">Select Clients:</h2>
-          <ul>
-            {#each aboutData.selectClients as client}
-              <li>{client}</li>
-            {/each}
-          </ul>
+          <div class="mt-16">
+            <h2 class="mobile:text-m desktop:text-lg about-title">
+              Select Clients:
+            </h2>
+            <ul>
+              {#each aboutData.selectClients as client}
+                <li class="about-title">{client}</li>
+              {/each}
+            </ul>
+          </div>
         </div>
       {:else}
         <p>Loading...</p>
@@ -92,89 +63,43 @@
 </div>
 
 <style>
-  @media (max-width: 767px) {
-    .menu-left {
-      display: none;
-    }
-    .menu-right {
-      width: 100%;
-      z-index: 999;
-    }
-  }
-
-  @media (min-width: 768px) {
-    .menu-left {
-      display: flex;
-    }
-    .menu-right {
-      width: auto;
-    }
-  }
-
-  .transition-opacity {
-    transition: background-color 0.3s ease-in-out;
-  }
-
-  .isOpen {
-    transform: translateX(0);
-  }
-
-  .isClosing {
-    transform: translateX(100%);
-  }
-
-  .z-index-top {
-    z-index: 1001; /* Ensure it is above other content */
-  }
-
-  .bg-white {
-    transform: translateX(100%);
-    transition:
-      transform 0.3s ease-in-out,
-      background-color 0.3s ease-in-out;
-  }
-
-  .bg-white.isOpen {
-    transform: translateX(0);
-  }
-
-  .bg-white.isClosing {
-    transform: translateX(100%);
-  }
-
-  .opacity-layer {
-    background-color: rgba(0, 0, 0, 0);
+  .menu-content {
     position: fixed;
     top: 0;
-    left: 0;
-    width: 100%;
+    right: 0;
+    width: 50%;
     height: 100%;
-    transition: background-color 0.3s ease-in-out;
+    background-color: white;
+    transform: translateX(100%);
+    transition: transform 1s ease;
   }
 
-  .opacity-layer.fade-in {
-    background-color: rgba(0, 0, 0, 0.6);
+  .slide-in {
+    transform: translateX(0);
   }
 
-  .opacity-layer.fade-out {
-    background-color: rgba(0, 0, 0, 0);
+  .slide-out {
+    transform: translateX(100%);
   }
 
-  @keyframes fadeIn {
-    from {
-      background-color: rgba(0, 0, 0, 0);
-    }
-    to {
-      background-color: rgba(0, 0, 0, 0.6);
-    }
+  .content {
+    padding: 2rem;
   }
 
-  @keyframes fadeOut {
-    from {
-      background-color: rgba(0, 0, 0, 0.6);
-    }
-    to {
-      background-color: rgba(0, 0, 0, 0);
-    }
+  /* Animation for About Menu Titles */
+  .about-title {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    cursor: default;
+    opacity: 0; /* Start with no opacity */
+    transform: translate(50%, 0%); /* Start slightly offset */
+    transition:
+      opacity 1.4s cubic-bezier(0.25, 1, 0.5, 1),
+      transform 1.4s cubic-bezier(0.25, 1, 0.5, 1); /* Transition for opacity and transform */
+  }
+
+  .menu-open .about-title {
+    opacity: 1; /* Fade in */
+    transform: translate(0%, 0%); /* Slide into position */
   }
 </style>
