@@ -205,4 +205,10 @@
     /* z-index: 3000; */
     pointer-events: none;
   }
+
+  @media (max-width: 768px) {
+    .menu-content {
+      width: 100%;
+    }
+  }
 </style>
