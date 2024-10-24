@@ -8,6 +8,7 @@
 
   export let isWorkOpen = false;
   export let isClosing = false;
+  export let isWhiteBackground = false; // Bind this prop to detect menu close
 
   const dispatch = createEventDispatcher();
 
@@ -61,6 +62,12 @@
   // Close the slideshow modal
   function closeSlideshowModal() {
     slideshowVisible = false;
+  }
+
+  // Reset the menu state when it is closed
+  $: if (!isWorkOpen && isClosing) {
+    isFullWidth = false; // Revert menu width to 50%
+    galleryVisible = false; // Close the photo gallery modal
   }
 </script>
 

@@ -13,28 +13,38 @@
   let isWhiteBackground = false;
 
   function openWorkMenu() {
-    if (isAboutOpen) {
-      // Close About Menu if it's open, then open Work Menu
-      closeAll(() => {
-        isWorkOpen = true;
-        isVisible = true;
-      });
+    if (isWorkOpen) {
+      // If the Work menu is already open, close it
+      closeAll();
     } else {
-      isVisible = true; // Ensure opacity layer is visible
-      isWorkOpen = true;
+      // Close About Menu if it's open, then open Work Menu
+      if (isAboutOpen) {
+        closeAll(() => {
+          isWorkOpen = true;
+          isVisible = true; // Ensure opacity layer is visible
+        });
+      } else {
+        isWorkOpen = true;
+        isVisible = true; // Ensure opacity layer is visible
+      }
     }
   }
 
   function openAboutMenu() {
-    if (isWorkOpen) {
-      // Close Work Menu if it's open, then open About Menu
-      closeAll(() => {
-        isAboutOpen = true;
-        isVisible = true;
-      });
+    if (isAboutOpen) {
+      // If the About menu is already open, close it
+      closeAll();
     } else {
-      isVisible = true; // Ensure opacity layer is visible
-      isAboutOpen = true;
+      // Close Work Menu if it's open, then open About Menu
+      if (isWorkOpen) {
+        closeAll(() => {
+          isAboutOpen = true;
+          isVisible = true; // Ensure opacity layer is visible
+        });
+      } else {
+        isAboutOpen = true;
+        isVisible = true; // Ensure opacity layer is visible
+      }
     }
   }
 
@@ -43,13 +53,13 @@
       isClosing = true; // Start closing animation
       isWorkOpen = false;
       isAboutOpen = false;
+      isWhiteBackground = false; // Reset background state for work menu
 
       setTimeout(() => {
         isClosing = false;
+        isVisible = false; // Hide the opacity layer
         if (callback) {
           callback(); // Open the other menu after closing
-        } else {
-          isVisible = false; // Hide the opacity layer if no other menu opens
         }
       }, 1000); // Wait for the closing animation to finish
     }
@@ -57,7 +67,6 @@
 
   function handleTransitionEnd(event) {
     if (event?.propertyName === "opacity" && isClosing) {
-      // Ensure the closing state is reset properly
       isClosing = false;
       isVisible = false;
     }
@@ -65,9 +74,6 @@
 </script>
 
 <!-- Controls -->
-<!-- <button on:click={openWorkMenu}>Open Work Menu</button>
-<button on:click={openAboutMenu}>Open About Menu</button> -->
-
 <nav
   class="mobile:h-[50px] fixed bottom-0 left-0 w-full flex justify-between px-[3rem] mobile:py-0 py-10 text-black bg-transparent mobile:fixed mobile:top-0 mobile:left-0 mobile:w-full mobile:flex mobile:justify-between mobile:items-center mobile:px-[1.5rem] mobile:py-[4rem] mobile:bg-white"
   style="z-index: 2001;"
