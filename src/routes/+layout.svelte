@@ -4,6 +4,40 @@
   import AboutMenu from "../components/navigation/aboutSlideOutMenu.svelte";
   import OpacityLayer from "../components/navigation/opacityLayer.svelte";
   import SlideshowModal from "../components/navigation/slideshow.svelte";
+  import { onMount } from "svelte";
+  // import Lenis from "lenis";
+
+  // let lenis;
+  // let scrollContainer;
+
+  // onMount(() => {
+  //   // Initialize Lenis
+  //   lenis = new Lenis({
+  //     lerp: 0.1,
+  //     smooth: true,
+  //     infinite: false, // Prevents infinite scroll effect
+  //   });
+
+  //   // Update Lenis on each animation frame
+  //   function raf(time) {
+  //     lenis.raf(time);
+  //     requestAnimationFrame(raf);
+  //   }
+
+  //   requestAnimationFrame(raf);
+
+  //   // Resize handling to maintain accurate scroll height
+  //   const resizeObserver = new ResizeObserver(() => {
+  //     lenis.resize(); // Recalculate scroll height on content changes
+  //   });
+
+  //   resizeObserver.observe(scrollContainer);
+
+  //   return () => {
+  //     lenis.destroy();
+  //     resizeObserver.disconnect();
+  //   };
+  // });
 
   let isWorkOpen = false;
   let isAboutOpen = false;
@@ -187,9 +221,22 @@
 {/if}
 
 <!-- Slot for Homepage Content -->
+<!-- <div
+  bind:this={scrollContainer}
+  id="scroll-container"
+  style="position: relative;"
+> -->
 <slot />
 
+<!-- </div> -->
+
 <style>
+  /* #scroll-container {
+    position: relative;
+    overflow: auto;
+    min-height: 100vh; /* Ensures container starts with full viewport height */
+  /* } */
+
   .overlay-container {
     position: relative;
   }
@@ -199,6 +246,8 @@
   }
   .toggle-menu-btn {
     transition: opacity 300ms ease-in-out; /* Add the transition property here */
+    mix-blend-mode: difference; /* Inverts the text color based on the background */
+    color: black; /* Default color; will blend to the opposite on darker backgrounds */
   }
   .kana-text a {
     color: black; /* Set initial color to black */
