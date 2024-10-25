@@ -212,7 +212,7 @@
     width: fit-content;
     cursor: pointer;
     opacity: 0;
-    transform: translate(50%, 0%);
+    transform: translate(25%, 0%);
     z-index: 3001;
     position: relative;
     transition:
