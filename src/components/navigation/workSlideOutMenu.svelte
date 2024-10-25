@@ -170,7 +170,7 @@
   }
 
   .menu-content-list {
-    padding: 2rem;
+    padding: 2.5rem;
   }
 
   .work-title {

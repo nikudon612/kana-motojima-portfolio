@@ -74,6 +74,12 @@
     transition: transform 1s ease;
   }
 
+  @media (max-width: 768px) {
+    .menu-content {
+      width: 100%;
+    }
+  }
+
   .slide-in {
     transform: translateX(0);
   }
