@@ -104,6 +104,12 @@
       transform 1.4s cubic-bezier(0.25, 1, 0.5, 1); /* Transition for opacity and transform */
   }
 
+  @media (max-width: 768px) {
+    .about-title {
+      font-size: 0.825rem;
+    }
+  }
+
   .menu-open .about-title {
     opacity: 1; /* Fade in */
     transform: translate(0%, 0%); /* Slide into position */
