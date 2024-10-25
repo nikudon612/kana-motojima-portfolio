@@ -33,13 +33,6 @@
     }
   }
 
-  // On mount, if there's a first image, set it as the current image
-  // onMount(() => {
-  //   if (firstImageOfProject) {
-  //     slideshowImages = [{ url: firstImageOfProject }, ...slideshowImages];
-  //   }
-  // });
-
   onMount(() => {
     updateCursorText();
     document.addEventListener("mousemove", moveCursor);
@@ -135,7 +128,7 @@
     z-index: 10000;
 
     @media (max-width: 768px) {
-      display: none;
+      /* display: none; */
     }
   }
 
@@ -183,6 +176,7 @@
     /* position: fixed; */
     display: flex;
     align-items: flex-start;
+    height: fit-content;
     background: none;
     border: none;
     font-size: 24px;

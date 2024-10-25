@@ -98,7 +98,7 @@
 
 <!-- Controls -->
 <nav
-  class="mobile:h-[50px] fixed bottom-0 left-0 w-full flex justify-between px-[3rem] mobile:py-0 py-10 text-black bg-transparent mobile:fixed mobile:top-0 mobile:left-0 mobile:w-full mobile:flex mobile:justify-between mobile:items-center mobile:px-[1.5rem] mobile:py-[4rem] mobile:bg-white"
+  class="mobile:h-[50px] fixed bottom-0 left-0 w-full flex justify-between px-[3rem] py-10 text-black bg-transparent mobile:fixed mobile:top-0 mobile:left-0 mobile:w-full mobile:flex mobile:justify-between mobile:items-center mobile:px-[1.5rem] mobile:py-[2.5rem] mobile:bg-white"
   style="z-index: 2001;"
 >
   <div

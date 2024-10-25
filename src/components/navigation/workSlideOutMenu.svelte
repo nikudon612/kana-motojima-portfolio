@@ -4,7 +4,7 @@
   import { fetchProjects } from "../../lib/fetchSanityData";
   import PhotoGalleryModal from "../navigation/workPhotoGallery.svelte";
   import MobilePhotoGalleryModal from "../navigation/mobileModalPhotoGallery.svelte";
-  import SlideshowModal from "./slideshow.svelte";
+  import { browser } from "$app/environment";
 
   export let currentIndex = 0; // Declare currentIndex at the top
   export let isWorkOpen = false;
@@ -37,7 +37,7 @@
 
   // Show photo gallery and set hovered project
   function handleHoverStart(work) {
-    if (work.photos && work.photos.length > 0) {
+    if (work.photos && work.photos.length > 0 && window.innerWidth > 768) {
       isFullWidth = true;
       hoveredWork = work; // Set the hovered project
       currentPhotos = work.photos;
@@ -76,18 +76,36 @@
     dispatch("openSlideshow", event.detail);
   }
 
-  // function handleUpdateCurrentIndex(event) {
-  //   currentIndex = event.detail.currentIndex;
-
-  //   // Re-dispatch to the layout
-  //   dispatch("updateLayoutIndex", { currentIndex });
-  // }
-
   // Reset the menu state when it is closed
   $: if (!isWorkOpen && isClosing) {
     isFullWidth = false; // Revert menu width to 50%
     galleryVisible = false; // Close the photo gallery modal
   }
+
+  let windowWidth = 0; // Initialize windowWidth
+
+  if (browser) {
+    windowWidth = window.innerWidth;
+  }
+
+  // Update window width on resize
+  function handleResize() {
+    if (browser) {
+      windowWidth = window.innerWidth;
+    }
+  }
+
+  // Set up event listener for window resizing
+  onMount(() => {
+    if (browser) {
+      window.addEventListener("resize", handleResize);
+    }
+    return () => {
+      if (browser) {
+        window.removeEventListener("resize", handleResize);
+      }
+    };
+  });
 </script>
 
 <!-- Menu Wrapper -->
@@ -120,8 +138,23 @@
 
   <!-- Photo Gallery Modal -->
   {#if galleryVisible && hoveredWork}
-    <div class="gallery-container" on:openSlideshow={handleOpenSlideshow}>
-      <PhotoGalleryModal
+    {#if windowWidth > 768}
+      <!-- Regular Photo Gallery -->
+      <div class="gallery-container" on:openSlideshow={handleOpenSlideshow}>
+        <PhotoGalleryModal
+          {currentPhotos}
+          projectTitle={hoveredWork?.title}
+          initialPhotoIndex={0}
+          on:openSlideshow={handleOpenSlideshow}
+          close={() => {
+            galleryVisible = false;
+            hoveredWork = null;
+          }}
+        />
+      </div>
+    {:else}
+      <!-- Mobile Photo Gallery -->
+      <MobilePhotoGalleryModal
         {currentPhotos}
         projectTitle={hoveredWork?.title}
         initialPhotoIndex={0}
@@ -131,7 +164,7 @@
           hoveredWork = null;
         }}
       />
-    </div>
+    {/if}
   {/if}
 </div>
 
@@ -170,7 +203,7 @@
   }
 
   .menu-content-list {
-    padding: 2rem;
+    padding: 2.5rem;
   }
 
   .work-title {
@@ -185,6 +218,21 @@
     transition:
       opacity 1s cubic-bezier(0.25, 1, 0.5, 1),
       transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  @media (max-width: 768px) {
+    .work-title {
+      font-size: 0.825rem;
+      transform: translate(-50%, 0%); /* Slide further to the left */
+    }
+    .menu-content-list {
+      padding: 1.5rem;
+    }
+    .menu-content {
+      width: 100%;
+    }
+    .menu-open .work-title {
+      transform: translate(-100%, 0%); /* Slide titles fully out of view */
+    }
   }
 
   .menu-open .work-title {
@@ -204,11 +252,5 @@
     height: 100%;
     /* z-index: 3000; */
     pointer-events: none;
-  }
-
-  @media (max-width: 768px) {
-    .menu-content {
-      width: 100%;
-    }
   }
 </style>
