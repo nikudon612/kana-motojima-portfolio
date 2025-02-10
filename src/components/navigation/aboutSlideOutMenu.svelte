@@ -50,7 +50,7 @@
             </h2>
             <ul>
               {#each aboutData.selectClients as client}
-                <li class="about-title">{client}</li>
+                <li class="about-title clients">{client}</li>
               {/each}
             </ul>
           </div>
@@ -94,14 +94,16 @@
 
   /* Animation for About Menu Titles */
   .about-title {
-    font-size: 0.5rem;
-    margin-bottom: 1rem;
+    font-size: 1rem;
     cursor: default;
     opacity: 0; /* Start with no opacity */
     transform: translate(50%, 0%); /* Start slightly offset */
     transition:
       opacity 1.4s cubic-bezier(0.25, 1, 0.5, 1),
       transform 1.4s cubic-bezier(0.25, 1, 0.5, 1); /* Transition for opacity and transform */
+  }
+  .clients {
+    font-size: 0.75rem;
   }
 
   @media (max-width: 768px) {
