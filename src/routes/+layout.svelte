@@ -164,7 +164,7 @@
   >
     <a
       href="/"
-      class="text-[1.5rem] hover:cursor-pointer toggle-menu-btn mobile:text-lg mobile:font-bold mobile:hidden"
+      class="text-[1.5rem] font-medium hover:cursor-pointer toggle-menu-btn mobile:text-lg mobile:font-bold mobile:hidden"
     >
       Kana Motojima
     </a>
@@ -172,7 +172,7 @@
   <div
     class="kana-text hidden mobile:block fixed right-[-3rem] bottom-[6rem] text-lg font-bold z-2005 -rotate-90"
   >
-    <a href="/" class="">Kana Motojima</a>
+    <a href="/" class="font-medium">Kana Motojima</a>
   </div>
 </nav>
 
@@ -256,6 +256,7 @@
     padding: 0.5rem; /* Optional: add padding for better visibility */
     border-radius: 5px; /* Optional: add border radius for aesthetics */
     white-space: nowrap; /* Ensure the text doesn't wrap */
+    font-weight: bold !important;
   }
 
   .slideshow-wrapper {

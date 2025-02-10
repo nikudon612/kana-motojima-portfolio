@@ -3,8 +3,16 @@
 @tailwind utilities;
 
 body {
-  font-family: "Space Mono", monospace;
+  font-family: "thonglor-soi-4", sans-serif;
+  font-weight: 300;
+  font-style: normal;
 }
+
+.thonglor-semi-bold {
+  font-family: "thonglor-soi-4", sans-serif;
+  font-weight: 500 !important; /* Semi-bold */
+}
+
 
 .space-mono-regular {
   font-family: "Space Mono", monospace;

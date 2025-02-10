@@ -6,6 +6,7 @@
 </script>
 
 <svelte:head>
+  <link rel="stylesheet" href="https://use.typekit.net/dpd3bwl.css">
   <title>Kana Motojima</title>
 </svelte:head>
 
