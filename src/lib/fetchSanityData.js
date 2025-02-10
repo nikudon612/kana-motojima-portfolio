@@ -7,6 +7,8 @@ export async function fetchHomepageGallery() {
     photos[]->{
       title,
       "imageUrl": image.asset->url,
+      height, 
+      width,
       x,
       y,
       Work_X,
@@ -22,6 +24,7 @@ export async function fetchHomepageGallery() {
 export async function fetchProjects() {
   const query = `*[_type == "project" && !(_id in path("drafts.**"))]{
     title,
+    order,
     "photos": photos[]->{
       "url": image.asset->url,
       Work_X,

@@ -29,7 +29,8 @@
   async function loadProjects() {
     try {
       works = await fetchProjects();
-      console.log("Projects loaded:", works);
+      works.sort((a, b) => a.order - b.order);
+      // console.log("Projects loaded:", works);
     } catch (error) {
       console.error("Error fetching projects:", error);
     }

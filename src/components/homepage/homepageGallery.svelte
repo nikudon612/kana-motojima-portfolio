@@ -5,6 +5,7 @@
   let showModal = false;
   let currentIndex = 0;
   let images = data.props.data.photos;
+  console.log("Images:", images);
   let delayIncrement = 0.1;
 
   function handleImageClick(index) {
@@ -22,14 +23,14 @@
     (prev, curr) => (curr.y > prev.y ? curr : prev),
     images[0]
   );
-  console.log("Last Image Y Position:", maxYImage.y);
+  // console.log("Last Image Y Position:", maxYImage.y);
 </script>
 
 <div class="gallery-container">
-  {#each images as { title, imageUrl, x, y }, index}
+  {#each images as { title, imageUrl, x, y, width }, index}
     <div
       class="image-container"
-      style="--delay: {index * delayIncrement}s; left: {x}px; top: {y}px;"
+      style="--delay: {index * delayIncrement}s; left: {x}px; top: {y}px; width: {width ? `${width}px` : '275px'};"
       on:click={() => handleImageClick(index)}
       class:last-image={y === maxYImage.y}
     >
@@ -66,7 +67,7 @@
   }
 
   .image {
-    max-width: 275px;
+    /* max-width: 275px; */
     width: 100%;
     height: auto;
     object-fit: contain;
