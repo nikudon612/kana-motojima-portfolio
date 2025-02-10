@@ -30,7 +30,7 @@
     try {
       works = await fetchProjects();
       works.sort((a, b) => a.order - b.order);
-      console.log("Projects loaded:", works);
+      // console.log("Projects loaded:", works);
     } catch (error) {
       console.error("Error fetching projects:", error);
     }
