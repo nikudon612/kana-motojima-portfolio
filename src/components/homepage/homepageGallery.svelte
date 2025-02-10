@@ -16,6 +16,13 @@
     console.log("Modal closed");
     showModal = false;
   }
+
+  // Find the image with the largest `y` value
+  let maxYImage = images.reduce(
+    (prev, curr) => (curr.y > prev.y ? curr : prev),
+    images[0]
+  );
+  console.log("Last Image Y Position:", maxYImage.y);
 </script>
 
 <div class="gallery-container">
@@ -24,6 +31,7 @@
       class="image-container"
       style="--delay: {index * delayIncrement}s; left: {x}px; top: {y}px;"
       on:click={() => handleImageClick(index)}
+      class:last-image={y === maxYImage.y}
     >
       <img
         src={imageUrl}
@@ -45,6 +53,11 @@
     height: 100%;
     position: relative;
     z-index: 1000;
+  }
+
+  /* 🚀 This ensures space at the bottom */
+  .image-container.last-image {
+    padding-bottom: 3rem;
   }
 
   .image-container {
@@ -90,7 +103,6 @@
       flex-direction: column;
       align-items: center;
       position: relative;
-
     }
 
     .image-container {
@@ -99,6 +111,10 @@
       left: auto;
       top: auto;
       z-index: 1001;
+    }
+    /* 🚀 This ensures space at the bottom */
+    .image-container.last-image {
+      padding-bottom: 0rem;
     }
 
     .image {
