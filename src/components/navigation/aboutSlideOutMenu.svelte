@@ -94,7 +94,7 @@
 
   /* Animation for About Menu Titles */
   .about-title {
-    font-size: 1rem;
+    font-size: 0.5rem;
     margin-bottom: 1rem;
     cursor: default;
     opacity: 0; /* Start with no opacity */
