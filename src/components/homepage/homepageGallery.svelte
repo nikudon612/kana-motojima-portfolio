@@ -22,7 +22,7 @@
     (prev, curr) => (curr.y > prev.y ? curr : prev),
     images[0]
   );
-  console.log("Last Image Y Position:", maxYImage.y);
+  // console.log("Last Image Y Position:", maxYImage.y);
 </script>
 
 <div class="gallery-container">
