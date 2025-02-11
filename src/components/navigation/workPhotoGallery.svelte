@@ -37,6 +37,12 @@
   function closeSlideshow() {
     slideshowVisible = false;
   }
+
+  // $: if (!slideshowVisible) {
+  //   setTimeout(() => {
+  //     slideshowImages = [...currentPhotos]; // Update images after fade-out
+  //   }, 300); // Delay matches transition duration
+  // }
 </script>
 
 <div class="modal-overlay {isClosing ? 'fade-out' : ''}" on:click={handleClose}>
@@ -45,7 +51,7 @@
       <img
         src={photo.url}
         alt="Project photo"
-        class="gallery-photo"
+        class="gallery-photo {imagesLoaded ? 'fade-in' : ''}"
         style="top: {photo.Work_Y}%; left: {photo.Work_X}%;"
         on:click={() => handleImageClick(index)}
       />
@@ -97,9 +103,21 @@
     max-width: 250px;
     width: 100%;
     pointer-events: auto;
-    opacity: 0; /* Start hidden */
-    transition: opacity 0s 1s; /* 0.5s delay before becoming visible */
-    cursor: pointer;
+    opacity: 0;
+    transition:
+      opacity 0.6s ease-in-out 0.3s,
+      /* 300ms delay for fade-in */ transform 0.6s ease-in-out;
+    transform: scale(0.95); /* Slight scale down effect */
+  }
+
+  .gallery-photo.fade-in {
+    opacity: 1;
+    transform: scale(1); /* Scale back to normal */
+  }
+
+  .gallery-photo.modal-overlay.fade-out {
+    opacity: 0;
+    transform: scale(1.05); /* Scale slightly up before disappearing */
   }
 
   .slideshow-modal {
