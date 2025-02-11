@@ -111,6 +111,7 @@
       left: auto;
       top: auto;
       z-index: 1001;
+      width: 100% !important;
     }
     /* 🚀 This ensures space at the bottom */
     .image-container.last-image {
