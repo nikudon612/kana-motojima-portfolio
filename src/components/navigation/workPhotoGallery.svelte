@@ -51,7 +51,7 @@
       <img
         src={photo.url}
         alt="Project photo"
-        class="gallery-photo {imagesLoaded ? 'fade-in' : ''}"
+        class="gallery-photo"
         style="top: {photo.Work_Y}%; left: {photo.Work_X}%;"
         on:click={() => handleImageClick(index)}
       />

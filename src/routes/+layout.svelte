@@ -5,6 +5,7 @@
   import OpacityLayer from "../components/navigation/opacityLayer.svelte";
   import SlideshowModal from "../components/navigation/slideshow.svelte";
   import { onMount } from "svelte";
+ 
 
   let isWorkOpen = false;
   let isAboutOpen = false;
