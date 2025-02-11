@@ -100,7 +100,7 @@
     position: fixed;
     object-fit: cover;
     transform: translate(-50%, -50%);
-    max-width: 250px;
+    max-width: 350px;
     width: 100%;
     pointer-events: auto;
     opacity: 0;
