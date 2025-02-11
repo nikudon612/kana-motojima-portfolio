@@ -5,7 +5,6 @@
   import OpacityLayer from "../components/navigation/opacityLayer.svelte";
   import SlideshowModal from "../components/navigation/slideshow.svelte";
   import { onMount } from "svelte";
- 
 
   let isWorkOpen = false;
   let isAboutOpen = false;
@@ -133,6 +132,7 @@
     <a
       href="/"
       class="text-[1.5rem] font-medium hover:cursor-pointer toggle-menu-btn mobile:text-lg mobile:font-bold mobile:hidden"
+      on:click={closeAll}
     >
       Kana Motojima
     </a>
@@ -140,7 +140,7 @@
   <div
     class="kana-text hidden mobile:block fixed right-[-3rem] bottom-[6rem] text-lg font-bold z-2005 -rotate-90"
   >
-    <a href="/" class="font-medium">Kana Motojima</a>
+    <a href="/" class="font-medium" on:click={closeAll}>Kana Motojima</a>
   </div>
 </nav>
 

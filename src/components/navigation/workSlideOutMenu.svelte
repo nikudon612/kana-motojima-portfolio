@@ -225,6 +225,13 @@
       opacity 1s cubic-bezier(0.25, 1, 0.5, 1),
       transform 1s cubic-bezier(0.25, 1, 0.5, 1);
   }
+  @media (max-width: 1105px) {
+    .work-title {
+      font-size: 0.875rem;
+      margin-right: 2.5rem;
+    }
+  }
+
   @media (max-width: 768px) {
     .work-title {
       font-size: 0.825rem;
