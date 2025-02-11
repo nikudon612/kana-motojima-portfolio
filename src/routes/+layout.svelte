@@ -5,39 +5,6 @@
   import OpacityLayer from "../components/navigation/opacityLayer.svelte";
   import SlideshowModal from "../components/navigation/slideshow.svelte";
   import { onMount } from "svelte";
-  // import Lenis from "lenis";
-
-  // let lenis;
-  // let scrollContainer;
-
-  // onMount(() => {
-  //   // Initialize Lenis
-  //   lenis = new Lenis({
-  //     lerp: 0.1,
-  //     smooth: true,
-  //     infinite: false, // Prevents infinite scroll effect
-  //   });
-
-  //   // Update Lenis on each animation frame
-  //   function raf(time) {
-  //     lenis.raf(time);
-  //     requestAnimationFrame(raf);
-  //   }
-
-  //   requestAnimationFrame(raf);
-
-  //   // Resize handling to maintain accurate scroll height
-  //   const resizeObserver = new ResizeObserver(() => {
-  //     lenis.resize(); // Recalculate scroll height on content changes
-  //   });
-
-  //   resizeObserver.observe(scrollContainer);
-
-  //   return () => {
-  //     lenis.destroy();
-  //     resizeObserver.disconnect();
-  //   };
-  // });
 
   let isWorkOpen = false;
   let isAboutOpen = false;
