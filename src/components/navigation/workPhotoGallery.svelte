@@ -38,11 +38,24 @@
     slideshowVisible = false;
   }
 
-  // $: if (!slideshowVisible) {
-  //   setTimeout(() => {
-  //     slideshowImages = [...currentPhotos]; // Update images after fade-out
-  //   }, 300); // Delay matches transition duration
-  // }
+  // Function to check image orientation and log it
+  function checkOrientation(event) {
+    const img = event.target;
+    const width = img.naturalWidth;
+    const height = img.naturalHeight;
+
+    if (width < height) {
+      img.classList.add("portrait");
+      console.log(
+        `Portrait Image: ${img.src} (Width: ${width}, Height: ${height})`
+      );
+    } else {
+      img.classList.add("landscape");
+      console.log(
+        `Landscape Image: ${img.src} (Width: ${width}, Height: ${height})`
+      );
+    }
+  }
 </script>
 
 <div class="modal-overlay {isClosing ? 'fade-out' : ''}" on:click={handleClose}>
@@ -52,6 +65,7 @@
         src={photo.url}
         alt="Project photo"
         class="gallery-photo"
+        on:load={checkOrientation}
         style="top: {photo.Work_Y}%; left: {photo.Work_X}%;"
         on:click={() => handleImageClick(index)}
       />
@@ -100,14 +114,29 @@
     position: fixed;
     object-fit: cover;
     transform: translate(-50%, -50%);
-    max-width: 350px;
-    width: 100%;
+    /* max-width: 350px; */
+    /* width: 100%; */
     pointer-events: auto;
     opacity: 0;
     transition:
       opacity 0.6s ease-in-out 0.3s,
       /* 300ms delay for fade-in */ transform 0.6s ease-in-out;
     transform: scale(0.95); /* Slight scale down effect */
+  }
+
+  /* Portrait Images: Set fixed height */
+  :global(.gallery-photo.portrait) {
+    height: 325px !important; /* Fixed height */
+    width: auto !important; /* Maintain aspect ratio */
+    max-height: 325px !important;
+    max-width: none !important; /* Allow width to scale freely */
+  }
+
+  :global(.gallery-photo.landscape) {
+    width: 325px !important; /* Fixed width */
+    height: auto !important; /* Maintain aspect ratio */
+    max-width: 325px !important;
+    max-height: none !important;
   }
 
   .gallery-photo.fade-in {
