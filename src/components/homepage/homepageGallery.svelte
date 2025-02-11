@@ -5,7 +5,6 @@
   let showModal = false;
   let currentIndex = 0;
   let images = data.props.data.photos;
-  console.log("Images:", images);
   let delayIncrement = 0.1;
 
   function handleImageClick(index) {
