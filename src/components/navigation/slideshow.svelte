@@ -269,4 +269,15 @@
     font-size: 12px;
     white-space: nowrap;
   }
+
+  @media (max-width: 768px) {
+    .nav-dots {
+      bottom: 14rem;
+    }
+  }
+  @media (max-width: 450px) {
+    .nav-dots {
+      bottom: 18rem;
+    }
+  }
 </style>

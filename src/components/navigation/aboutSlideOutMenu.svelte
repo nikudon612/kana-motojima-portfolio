@@ -42,8 +42,13 @@
           <p class="about-title mb-4">{aboutData.bio}</p>
           <p class="about-title mb-4">Bilingual in Japanese and English.</p>
           <p class="about-title mb-4">
-            For all inquiries, please email {aboutData.contactInfo}
+            For all inquiries, please email
+            <a href="mailto:{aboutData.contactInfo}" class="email-link">
+              {aboutData.contactInfo}
+              <span class="underline"></span>
+            </a>
           </p>
+
           <div class="mt-16">
             <h2 class="mobile:text-m desktop:text-lg about-title">
               Select Clients:
@@ -102,6 +107,33 @@
       opacity 1.4s cubic-bezier(0.25, 1, 0.5, 1),
       transform 1.4s cubic-bezier(0.25, 1, 0.5, 1); /* Transition for opacity and transform */
   }
+  .email-link {
+    position: relative;
+    /* text-decoration: underline; */
+    text-underline-offset: 2px;
+    color: inherit;
+    display: inline-block;
+    padding-bottom: 3px; /* Adjusts spacing below text */
+  }
+
+  .email-link:hover {
+    color: #6b6b6b; /* Change color on hover */
+  }
+
+  /* .underline {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px; 
+    background-color: black;
+    transition: width 0.3s ease-in-out; 
+  }
+
+  .email-link:hover .underline {
+    width: 100%; 
+  } */
+
   .clients {
     font-size: 0.75rem;
   }
