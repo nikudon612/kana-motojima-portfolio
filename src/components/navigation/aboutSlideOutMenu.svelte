@@ -41,9 +41,25 @@
         <div class={`about-content-list ${isAboutOpen ? "menu-open" : ""}`}>
           <p class="about-title mb-4">{aboutData.bio}</p>
           <p class="about-title mb-4">Bilingual in Japanese and English.</p>
-          <p class="about-title mb-4">
-            For all inquiries, please email {aboutData.contactInfo}
-          </p>
+          <div class="contact-section">
+            <p class="about-title">
+              For all inquiries, please email
+              <a href="mailto:{aboutData.contactInfo}" class="email-link">
+                {aboutData.contactInfo}
+              </a>
+            </p>
+
+            <p class="about-title instagram-link">
+              <a
+                href="https://www.instagram.com/kanamotojima/"
+                target="_blank"
+                class="social-link"
+              >
+                Instagram
+              </a>
+            </p>
+          </div>
+
           <div class="mt-16">
             <h2 class="mobile:text-m desktop:text-lg about-title">
               Select Clients:
@@ -102,6 +118,41 @@
       opacity 1.4s cubic-bezier(0.25, 1, 0.5, 1),
       transform 1.4s cubic-bezier(0.25, 1, 0.5, 1); /* Transition for opacity and transform */
   }
+  .email-link {
+    position: relative;
+    /* text-decoration: underline; */
+    color: inherit;
+    display: inline-block;
+  }
+  .contact-section {
+    display: flex;
+    justify-content: space-between; /* Pushes email and Instagram apart */
+    align-items: flex-end; /* Ensures both elements align vertically */
+    width: 100%;
+  }
+
+  .email-container,
+  .instagram-container {
+    display: flex;
+    align-items: center; /* Aligns both text elements properly */
+  }
+
+  .email-link,
+  .instagram-link {
+    white-space: nowrap; /* Prevents wrapping */
+  }
+
+  .email-link:hover,
+  .instagram-link:hover {
+    color: #6b6b6b; /* Matching hover effect */
+  }
+
+  .about-content-list {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
   .clients {
     font-size: 0.75rem;
   }
