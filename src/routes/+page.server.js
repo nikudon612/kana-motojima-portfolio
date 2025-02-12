@@ -1,21 +1,39 @@
-import { fetchHomepageGallery } from '$lib/fetchSanityData';
+import { fetchHomepageGallery, fetchSEO } from "$lib/fetchSanityData";
 
-export async function load() {
+// Function to fetch homepage gallery
+async function getHomepageGallery() {
   try {
     const data = await fetchHomepageGallery();
-    console.log("Fetched homepageGallery in load function:", data); // Debugging log
-    return {
-      props: {
-        data
-      }
-    };
+    console.log("✅ Fetched homepageGallery:", data);
+    return { data };
   } catch (error) {
-    console.error('Error fetching homepageGallery:', error);
-    return {
-      props: {
-        data: null,
-        error: 'Failed to fetch homepage gallery'
-      }
-    };
+    console.error("❌ Error fetching homepageGallery:", error);
+    return { data: null, error: "Failed to fetch homepage gallery" };
   }
+}
+
+// Function to fetch SEO data
+async function getSEO() {
+  try {
+    const seo = await fetchSEO();
+    console.log("✅ Fetched SEO Data:", seo);
+    console.log("SEO", seo);
+    return { seo };
+  } catch (error) {
+    console.error("❌ Error fetching SEO Data:", error);
+    return { seo: null, error: "Failed to fetch SEO data" };
+  }
+}
+
+// SvelteKit `load` function
+export async function load() {
+  const data = await getHomepageGallery();
+  const seo = await getSEO();
+
+  return {
+    props: {
+      ...data,
+      seo: seo,
+    },
+  };
 }

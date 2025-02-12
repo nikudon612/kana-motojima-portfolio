@@ -120,6 +120,10 @@
     transform: scale(0.95); /* Slight scale down effect */
   }
 
+  .gallery-photo:hover {
+    cursor: pointer;
+  }
+
   /* Portrait Images: Fixed height */
   .gallery-photo.portrait {
     height: 325px !important;
