@@ -40,42 +40,41 @@
   let hasExpanded = false; // ✅ Ensure delay happens only once
 
   function handleHoverStart(work) {
-  if (work.photos && work.photos.length > 0 && window.innerWidth > 768) {
-    if (hoveredWork === work) return;
+    if (work.photos && work.photos.length > 0 && window.innerWidth > 768) {
+      if (hoveredWork === work) return;
 
-    hoveredWork = work;
+      hoveredWork = work;
 
-    if (!hasExpanded) {
-      isFullWidth = true;
-      hasExpanded = true;
+      if (!hasExpanded) {
+        isFullWidth = true;
+        hasExpanded = true;
 
-      setTimeout(() => {
-        if (hoveredWork === work) {
-          galleryVisible = true; // ✅ Show the gallery first
-          
-          setTimeout(() => {
-            currentPhotos = work.photos; // ✅ THEN insert images
-            fadingOut = false;
-          }, 10); // ✅ Slight delay allows animation to trigger
-        }
-      }, 1000); // ✅ Wait for menu animation to finish
-    } else {
-      fadingOut = true;
+        setTimeout(() => {
+          if (hoveredWork === work) {
+            galleryVisible = true; // ✅ Show the gallery first
 
-      setTimeout(() => {
-        if (hoveredWork === work) {
-          galleryVisible = true; 
+            setTimeout(() => {
+              currentPhotos = work.photos; // ✅ THEN insert images
+              fadingOut = false;
+            }, 10); // ✅ Slight delay allows animation to trigger
+          }
+        }, 1000); // ✅ Wait for menu animation to finish
+      } else {
+        fadingOut = true;
 
-          setTimeout(() => {
-            currentPhotos = work.photos;
-            fadingOut = false;
-          }, 10);
-        }
-      }, 300);
+        setTimeout(() => {
+          if (hoveredWork === work) {
+            galleryVisible = true;
+
+            setTimeout(() => {
+              currentPhotos = work.photos;
+              fadingOut = false;
+            }, 10);
+          }
+        }, 300);
+      }
     }
   }
-}
-
 
   // Keep gallery visible until another project title is hovered
   function handleHoverEnd() {
@@ -138,6 +137,14 @@
       }
     };
   });
+
+  $: if (!isWorkOpen && isClosing) {
+    isFullWidth = false;
+    galleryVisible = false;
+    hasExpanded = false;
+    hoveredWork = null;
+    selectedWork = null; // ✅ Reset selected project title
+  }
 </script>
 
 <!-- Menu Wrapper -->
