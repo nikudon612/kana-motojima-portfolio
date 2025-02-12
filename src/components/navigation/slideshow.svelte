@@ -274,10 +274,27 @@
     .nav-dots {
       bottom: 14rem;
     }
+    .title-container {
+      left: 50%;
+      transform: translateX(-50%); /* ✅ Center container itself */
+      width: 100%; /* ✅ Make width dynamic */
+      justify-content: center; /* ✅ Center title & close button horizontally */
+      gap: 1rem; /* ✅ Adds spacing between title & close button */
+    }
+
+    .close-btn {
+      display: flex;
+      align-items: center; /* ✅ Aligns close button with title */
+      justify-content: center;
+      height: 100%; /* ✅ Ensures button height matches title */
+      padding: 0 0.5rem;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
   }
   @media (max-width: 450px) {
     .nav-dots {
-      bottom: 18rem;
+      bottom: 10rem;
     }
   }
 </style>
