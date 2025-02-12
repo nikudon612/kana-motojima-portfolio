@@ -1,5 +1,4 @@
 <script>
-  import { onMount, tick } from "svelte";
   import SlideshowModal from "../navigation/slideshow.svelte";
   import { createEventDispatcher } from "svelte";
 
@@ -36,29 +35,6 @@
 
   function closeSlideshow() {
     slideshowVisible = false;
-  }
-
-
-  // ✅ Reactive variable to store processed images
-  let processedPhotos = [];
-
-  // ✅ Ensure reactivity using $:
-  $: {
-    processedPhotos = currentPhotos.map((photo) => ({
-      ...photo,
-      orientation: null, // Default before checking
-    }));
-
-    // ✅ Use `tick()` to wait for DOM updates
-    tick().then(() => {
-      processedPhotos.forEach((photo, index) => {
-        let img = new Image();
-        img.src = photo.url;
-        img.onload = () => {
-          processedPhotos[index].orientation = img.naturalWidth < img.naturalHeight ? "portrait" : "landscape";
-        };
-      });
-    });
   }
 </script>
 
@@ -122,35 +98,36 @@
     pointer-events: auto;
     opacity: 1;
     transition:
-      opacity 0.6s ease-in-out 0.3s,
-      /* 300ms delay for fade-in */ transform 0.6s ease-in-out;
+      opacity 0.1s ease-in-out 0.1s,
+      /* 300ms delay for fade-in */ transform 0.1s ease-in-out;
     transform: scale(0.95); /* Slight scale down effect */
   }
 
-  /* Portrait Images: Set fixed height */
-  :global(.gallery-photo.portrait) {
-    height: 325px !important; /* Fixed height */
+  /* Portrait Images: Fixed height */
+  .gallery-photo.portrait {
+    height: 325px !important;
     width: auto !important; /* Maintain aspect ratio */
     max-height: 325px !important;
-    max-width: none !important; /* Allow width to scale freely */
+    max-width: none !important;
   }
 
-  :global(.gallery-photo.landscape) {
-    width: 325px !important; /* Fixed width */
+  /* Landscape Images: Fixed width */
+  .gallery-photo.landscape {
+    width: 325px !important;
     height: auto !important; /* Maintain aspect ratio */
     max-width: 325px !important;
     max-height: none !important;
   }
 
-  .gallery-photo.fade-in {
+  /* .gallery-photo.fade-in {
     opacity: 1;
-    transform: scale(1); /* Scale back to normal */
+    transform: scale(1); 
   }
 
   .gallery-photo.modal-overlay.fade-out {
     opacity: 0;
-    transform: scale(1.05); /* Scale slightly up before disappearing */
-  }
+    transform: scale(1.05);
+  } */
 
   .slideshow-modal {
     position: absolute;
@@ -164,6 +141,4 @@
     justify-content: center;
     pointer-events: auto; /* Enable interaction */
   }
-
-
 </style>
