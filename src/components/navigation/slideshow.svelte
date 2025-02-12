@@ -145,14 +145,26 @@
   .title-container {
     position: absolute;
     top: 0;
-    left: 0;
-    width: 100%;
-    padding: 2rem 3rem;
+    left: 50%;
+    transform: translateX(-50%); /* ✅ Center the container horizontally */
+    width: 100%; /* ✅ Allow dynamic width */
+    padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    background: white; /* Ensures it's visible over images */
+    align-items: center; /* ✅ Align title and close button vertically */
+    gap: 1rem; /* ✅ Add spacing between title & close button */
+    background: white;
     z-index: 10001;
+  }
+
+  .close-btn {
+    display: flex;
+    align-items: center; /* ✅ Ensures close button aligns with title */
+    justify-content: center;
+    height: 100%; /* ✅ Matches height of the title */
+    padding: 0 0.5rem;
+    font-size: 1.5rem;
+    cursor: pointer;
   }
 
   .slideshow-container {
@@ -177,22 +189,6 @@
   .slideshow-image {
     max-width: 60vw;
     max-height: 60vh;
-  }
-
-  .close-btn {
-    /* position: fixed; */
-    display: flex;
-    align-items: flex-start;
-    height: fit-content;
-    background: none;
-    border: none;
-    font-size: 24px;
-    opacity: 0.5; /* Set initial opacity to 50% */
-    z-index: 10000;
-    transition: opacity 0.3s ease; /* Smooth transition */
-    padding: 0.5rem;
-    padding-top: 0rem;
-    cursor: pointer; /* Show the default cursor */
   }
 
   .close-btn:hover {
