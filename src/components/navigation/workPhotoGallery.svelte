@@ -15,6 +15,7 @@
   let currentIndex = initialPhotoIndex || 0;
   let imagesLoaded = []; // ✅ Keep track of loaded images
   export let fadingOut = false; // ✅ Receive it from parent
+  let imageVisible = false;
 
   const dispatch = createEventDispatcher();
 
@@ -41,10 +42,13 @@
     slideshowVisible = false;
   }
 
-  $: if (galleryVisible && !fadingOut) {
-    setTimeout(() => {
-      imagesLoaded = [...currentPhotos]; // Force reactivity update
-    }, 10);
+  $: if (currentPhotos.length > 0) {
+    imageVisible = false;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        imageVisible = true;
+      });
+    });
   }
 </script>
 
@@ -111,8 +115,8 @@
     opacity: 0;
     will-change: transform, opacity;
     transition:
-      opacity 0.4s ease-in-out,
-      transform 0.4s ease-in-out;
+      opacity 0.3s ease-in-out,
+      transform 0.3s ease-in-out;
     transform: scale(0.95); /* Slight scale down effect */
   }
 
@@ -134,12 +138,12 @@
 
   .gallery-photo.fade-in {
     opacity: 1 !important;
-    transform: scale(1);
+    /* transform: scale(1); */
   }
 
   .gallery-photo.modal-overlay.fade-out {
     opacity: 0 !important;
-    transform: scale(1.05);
+    /* transform: scale(1.05); */
   }
 
   .slideshow-modal {

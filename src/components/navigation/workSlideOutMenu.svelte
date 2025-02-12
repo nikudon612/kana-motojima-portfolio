@@ -40,41 +40,42 @@
   let hasExpanded = false; // ✅ Ensure delay happens only once
 
   function handleHoverStart(work) {
-    if (work.photos && work.photos.length > 0 && window.innerWidth > 768) {
-      if (hoveredWork === work) return;
+  if (work.photos && work.photos.length > 0 && window.innerWidth > 768) {
+    if (hoveredWork === work) return;
 
-      hoveredWork = work;
+    hoveredWork = work;
 
-      if (!hasExpanded) {
-        isFullWidth = true;
-        hasExpanded = true;
+    if (!hasExpanded) {
+      isFullWidth = true;
+      hasExpanded = true;
 
-        setTimeout(() => {
-          if (hoveredWork === work) {
-            galleryVisible = true; // ✅ Show gallery first
+      setTimeout(() => {
+        if (hoveredWork === work) {
+          galleryVisible = true; // ✅ Show the gallery first
+          
+          setTimeout(() => {
+            currentPhotos = work.photos; // ✅ THEN insert images
+            fadingOut = false;
+          }, 10); // ✅ Slight delay allows animation to trigger
+        }
+      }, 1000); // ✅ Wait for menu animation to finish
+    } else {
+      fadingOut = true;
 
-            setTimeout(() => {
-              currentPhotos = work.photos; // ✅ Add slight delay before loading images
-              fadingOut = false;
-            }, 100); // ⏳ Delay ensures fade-in happens
-          }
-        }, 1000);
-      } else {
-        fadingOut = true;
+      setTimeout(() => {
+        if (hoveredWork === work) {
+          galleryVisible = true; 
 
-        setTimeout(() => {
-          if (hoveredWork === work) {
-            galleryVisible = true;
-
-            setTimeout(() => {
-              currentPhotos = work.photos;
-              fadingOut = false;
-            }, 100);
-          }
-        }, 300);
-      }
+          setTimeout(() => {
+            currentPhotos = work.photos;
+            fadingOut = false;
+          }, 10);
+        }
+      }, 300);
     }
   }
+}
+
 
   // Keep gallery visible until another project title is hovered
   function handleHoverEnd() {
