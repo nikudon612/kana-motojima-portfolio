@@ -15,10 +15,10 @@
   });
 
   function handleTransitionEnd(event) {
-    console.log("Menu transition ended:", event.propertyName);
+    // console.log("Menu transition ended:", event.propertyName);
     if (event.propertyName === "transform" && isClosing) {
       dispatch("transitionend");
-      console.log("Resetting isClosing state after slide-out transition");
+      // console.log("Resetting isClosing state after slide-out transition");
     }
   }
 
