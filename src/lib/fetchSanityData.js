@@ -26,7 +26,8 @@ export async function fetchProjects() {
     title,
     order,
     "photos": photos[]->{
-      "url": image.asset->url,
+      "thumbnailUrl": image.asset->url + "?w=800&h=800&fit=max&fm=webp",  
+      "url": image.asset->url + "?w=2000&h=2000&fit=max&fm=webp",
       Work_X,
       Work_Y,
       orientation,

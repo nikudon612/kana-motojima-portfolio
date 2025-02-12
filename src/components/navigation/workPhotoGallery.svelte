@@ -1,4 +1,5 @@
 <script>
+  import { onMount } from "svelte";
   import SlideshowModal from "../navigation/slideshow.svelte";
   import { createEventDispatcher } from "svelte";
 
@@ -7,10 +8,13 @@
   export let close;
   export let isClosing = false;
   export let projectTitle;
+  export let galleryVisible = false;
   let slideshowVisible = false;
   // export let initialPhotoIndex;
   let slideshowImages = [];
   let currentIndex = initialPhotoIndex || 0;
+  let imagesLoaded = []; // ✅ Keep track of loaded images
+  export let fadingOut = false; // ✅ Receive it from parent
 
   const dispatch = createEventDispatcher();
 
@@ -36,15 +40,23 @@
   function closeSlideshow() {
     slideshowVisible = false;
   }
+
+  $: if (galleryVisible && !fadingOut) {
+    setTimeout(() => {
+      imagesLoaded = [...currentPhotos]; // Force reactivity update
+    }, 10);
+  }
 </script>
 
 <div class="modal-overlay {isClosing ? 'fade-out' : ''}" on:click={handleClose}>
   <div class="modal-content">
     {#each currentPhotos as photo, index}
       <img
-        src={photo.url}
+        src={photo.thumbnailUrl}
         alt="Project photo"
-        class="gallery-photo {photo.orientation}"
+        class="gallery-photo {photo.orientation} {index === 0
+          ? 'first-photo'
+          : ''} {fadingOut ? 'fade-out' : 'fade-in'}"
         style="top: {photo.Work_Y}%; left: {photo.Work_X}%;"
         on:click={() => handleImageClick(index)}
       />
@@ -87,19 +99,20 @@
     height: 100%;
     background-color: transparent;
     pointer-events: none;
+    contain: layout;
   }
 
   .gallery-photo {
     position: fixed;
     object-fit: cover;
-    transform: translate(-50%, -50%);
-    /* max-width: 350px; */
-    /* width: 100%; */
+    /* transform: translate(-50%, -50%); */
+    transform: translate3d(-50%, -50%, 0); /* ✅ Uses GPU acceleration */
     pointer-events: auto;
-    opacity: 1;
+    opacity: 0;
+    will-change: transform, opacity;
     transition:
-      opacity 0.1s ease-in-out 0.1s,
-      /* 300ms delay for fade-in */ transform 0.1s ease-in-out;
+      opacity 0.4s ease-in-out,
+      transform 0.4s ease-in-out;
     transform: scale(0.95); /* Slight scale down effect */
   }
 
@@ -119,15 +132,15 @@
     max-height: none !important;
   }
 
-  /* .gallery-photo.fade-in {
-    opacity: 1;
-    transform: scale(1); 
+  .gallery-photo.fade-in {
+    opacity: 1 !important;
+    transform: scale(1);
   }
 
   .gallery-photo.modal-overlay.fade-out {
-    opacity: 0;
+    opacity: 0 !important;
     transform: scale(1.05);
-  } */
+  }
 
   .slideshow-modal {
     position: absolute;

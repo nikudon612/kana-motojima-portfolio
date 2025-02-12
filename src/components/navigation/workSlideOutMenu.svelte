@@ -36,18 +36,43 @@
     }
   }
 
-  // Show photo gallery and set hovered project
+  let fadingOut = false; // ✅ Track fade-out state
+  let hasExpanded = false; // ✅ Ensure delay happens only once
+
   function handleHoverStart(work) {
     if (work.photos && work.photos.length > 0 && window.innerWidth > 768) {
-      isFullWidth = true;
-      hoveredWork = work; // Set the hovered project
+      if (hoveredWork === work) return;
 
-      setTimeout(() => {
-        if (hoveredWork === work) {
-          currentPhotos = work.photos;
-          galleryVisible = true; // Show photo gallery modal after delay
-        }
-      }, 1000); // 1000ms delay to allow menu to expand
+      hoveredWork = work;
+
+      if (!hasExpanded) {
+        isFullWidth = true;
+        hasExpanded = true;
+
+        setTimeout(() => {
+          if (hoveredWork === work) {
+            galleryVisible = true; // ✅ Show gallery first
+
+            setTimeout(() => {
+              currentPhotos = work.photos; // ✅ Add slight delay before loading images
+              fadingOut = false;
+            }, 100); // ⏳ Delay ensures fade-in happens
+          }
+        }, 1000);
+      } else {
+        fadingOut = true;
+
+        setTimeout(() => {
+          if (hoveredWork === work) {
+            galleryVisible = true;
+
+            setTimeout(() => {
+              currentPhotos = work.photos;
+              fadingOut = false;
+            }, 100);
+          }
+        }, 300);
+      }
     }
   }
 
@@ -149,6 +174,7 @@
       <div class="gallery-container" on:openSlideshow={handleOpenSlideshow}>
         <PhotoGalleryModal
           {currentPhotos}
+          {fadingOut}
           projectTitle={hoveredWork?.title}
           initialPhotoIndex={0}
           on:openSlideshow={handleOpenSlideshow}
