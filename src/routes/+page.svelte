@@ -12,6 +12,19 @@
 
 <svelte:head>
   <link rel="stylesheet" href="https://use.typekit.net/dpd3bwl.css" />
+  <!-- Google Analytics 4 -->
+  <script
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-DC8G46H6DH"
+  ></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+    gtag("config", "G-DC8G46H6DH");
+  </script>
 
   <!-- Title & Description -->
   <title>{seoData?.title || "Kana Motojima"}</title>
