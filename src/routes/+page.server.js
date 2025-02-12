@@ -17,7 +17,6 @@ async function getSEO() {
   try {
     const seo = await fetchSEO();
     console.log("✅ Fetched SEO Data:", seo);
-    console.log("SEO", seo);
     return { seo };
   } catch (error) {
     console.error("❌ Error fetching SEO Data:", error);
@@ -31,9 +30,9 @@ export async function load() {
   const seo = await getSEO();
 
   return {
+    SEO: seo,
     props: {
       ...data,
-      seo: seo,
     },
   };
 }

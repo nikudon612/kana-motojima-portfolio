@@ -54,7 +54,7 @@ export async function fetchAbout() {
 }
 
 export async function fetchSEO() {
-  const query = `*[_type == "seo"][0] { 
+  const query = `*[_type == "seo"] {
     "title": title,
     "description": description,
     "ogImage": ogImage.asset->url,
@@ -69,7 +69,7 @@ export async function fetchSEO() {
       return null;
     }
 
-    return seoData; // ✅ Returns a single object (not an array)
+    return seoData;
   } catch (error) {
     console.error("❌ Error fetching SEO data from Sanity:", error);
     return null;
