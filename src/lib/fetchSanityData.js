@@ -52,3 +52,26 @@ export async function fetchAbout() {
   const data = await sanityClient.fetch(query);
   return data[0]; // Ensure it returns a single object if that's expected
 }
+
+export async function fetchSEO() {
+  const query = `*[_type == "seo"][0] { 
+    "title": title,
+    "description": description,
+    "ogImage": ogImage.asset->url,
+    "canonicalUrl": canonicalUrl
+  }`;
+
+  try {
+    const seoData = await sanityClient.fetch(query);
+
+    if (!seoData) {
+      console.warn("⚠️ No SEO data found in Sanity.");
+      return null;
+    }
+
+    return seoData; // ✅ Returns a single object (not an array)
+  } catch (error) {
+    console.error("❌ Error fetching SEO data from Sanity:", error);
+    return null;
+  }
+}

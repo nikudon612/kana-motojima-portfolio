@@ -3,10 +3,13 @@
   console.log("Built by Nick Bechtel - https://www.nickbechtel.com");
 
   export let data;
+  export let seo;
+
+  console.log(seo);
 </script>
 
 <svelte:head>
-  <link rel="stylesheet" href="https://use.typekit.net/dpd3bwl.css">
+  <link rel="stylesheet" href="https://use.typekit.net/dpd3bwl.css" />
   <title>Kana Motojima</title>
 </svelte:head>
 
@@ -15,5 +18,3 @@
 {:else}
   <HomepageGallery {data} />
 {/if}
-
-
