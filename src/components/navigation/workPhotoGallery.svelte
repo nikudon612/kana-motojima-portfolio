@@ -1,5 +1,5 @@
 <script>
-  import { onMount } from "svelte";
+  import { onMount, tick } from "svelte";
   import SlideshowModal from "../navigation/slideshow.svelte";
   import { createEventDispatcher } from "svelte";
 
@@ -38,34 +38,37 @@
     slideshowVisible = false;
   }
 
-  // Function to check image orientation and log it
-  function checkOrientation(event) {
-    const img = event.target;
-    const width = img.naturalWidth;
-    const height = img.naturalHeight;
 
-    if (width < height) {
-      img.classList.add("portrait");
-      console.log(
-        `Portrait Image: ${img.src} (Width: ${width}, Height: ${height})`
-      );
-    } else {
-      img.classList.add("landscape");
-      console.log(
-        `Landscape Image: ${img.src} (Width: ${width}, Height: ${height})`
-      );
-    }
+  // ✅ Reactive variable to store processed images
+  let processedPhotos = [];
+
+  // ✅ Ensure reactivity using $:
+  $: {
+    processedPhotos = currentPhotos.map((photo) => ({
+      ...photo,
+      orientation: null, // Default before checking
+    }));
+
+    // ✅ Use `tick()` to wait for DOM updates
+    tick().then(() => {
+      processedPhotos.forEach((photo, index) => {
+        let img = new Image();
+        img.src = photo.url;
+        img.onload = () => {
+          processedPhotos[index].orientation = img.naturalWidth < img.naturalHeight ? "portrait" : "landscape";
+        };
+      });
+    });
   }
 </script>
 
 <div class="modal-overlay {isClosing ? 'fade-out' : ''}" on:click={handleClose}>
-  <div class="modal-content delay-appearance">
+  <div class="modal-content">
     {#each currentPhotos as photo, index}
       <img
         src={photo.url}
         alt="Project photo"
-        class="gallery-photo"
-        on:load={checkOrientation}
+        class="gallery-photo {photo.orientation}"
         style="top: {photo.Work_Y}%; left: {photo.Work_X}%;"
         on:click={() => handleImageClick(index)}
       />
@@ -117,7 +120,7 @@
     /* max-width: 350px; */
     /* width: 100%; */
     pointer-events: auto;
-    opacity: 0;
+    opacity: 1;
     transition:
       opacity 0.6s ease-in-out 0.3s,
       /* 300ms delay for fade-in */ transform 0.6s ease-in-out;
@@ -162,7 +165,5 @@
     pointer-events: auto; /* Enable interaction */
   }
 
-  .delay-appearance .gallery-photo {
-    opacity: 1; /* Set to visible after delay */
-  }
+
 </style>

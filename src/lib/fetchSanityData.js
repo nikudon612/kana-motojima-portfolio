@@ -29,6 +29,7 @@ export async function fetchProjects() {
       "url": image.asset->url,
       Work_X,
       Work_Y,
+      orientation,
     }
   }`;
 
