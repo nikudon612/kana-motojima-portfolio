@@ -121,7 +121,7 @@
   <link rel="preload" href="https://use.typekit.net/dpd3bwl.css" as="style" />
   <link rel="preconnect" href="https://use.typekit.net" />
   <link rel="dns-prefetch" href="https://use.typekit.net" />
-  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <!-- <link rel="icon" href="/favicon.ico" type="image/x-icon" /> -->
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <meta name="theme-color" content="#ffffff" />
 </svelte:head>
