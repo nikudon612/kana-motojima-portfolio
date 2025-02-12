@@ -8,10 +8,14 @@
   export let close;
   export let isClosing = false;
   export let projectTitle;
+  export let galleryVisible = false;
   let slideshowVisible = false;
   // export let initialPhotoIndex;
   let slideshowImages = [];
   let currentIndex = initialPhotoIndex || 0;
+  let imagesLoaded = []; // ✅ Keep track of loaded images
+  export let fadingOut = false; // ✅ Receive it from parent
+  let imageVisible = false;
 
   const dispatch = createEventDispatcher();
 
@@ -38,34 +42,25 @@
     slideshowVisible = false;
   }
 
-  // Function to check image orientation and log it
-  function checkOrientation(event) {
-    const img = event.target;
-    const width = img.naturalWidth;
-    const height = img.naturalHeight;
-
-    if (width < height) {
-      img.classList.add("portrait");
-      console.log(
-        `Portrait Image: ${img.src} (Width: ${width}, Height: ${height})`
-      );
-    } else {
-      img.classList.add("landscape");
-      console.log(
-        `Landscape Image: ${img.src} (Width: ${width}, Height: ${height})`
-      );
-    }
+  $: if (currentPhotos.length > 0) {
+    imageVisible = false;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        imageVisible = true;
+      });
+    });
   }
 </script>
 
 <div class="modal-overlay {isClosing ? 'fade-out' : ''}" on:click={handleClose}>
-  <div class="modal-content delay-appearance">
+  <div class="modal-content">
     {#each currentPhotos as photo, index}
       <img
-        src={photo.url}
+        src={photo.thumbnailUrl}
         alt="Project photo"
-        class="gallery-photo"
-        on:load={checkOrientation}
+        class="gallery-photo {photo.orientation} {index === 0
+          ? 'first-photo'
+          : ''} {fadingOut ? 'fade-out' : 'fade-in'}"
         style="top: {photo.Work_Y}%; left: {photo.Work_X}%;"
         on:click={() => handleImageClick(index)}
       />
@@ -108,45 +103,47 @@
     height: 100%;
     background-color: transparent;
     pointer-events: none;
+    contain: layout;
   }
 
   .gallery-photo {
     position: fixed;
     object-fit: cover;
-    transform: translate(-50%, -50%);
-    /* max-width: 350px; */
-    /* width: 100%; */
+    /* transform: translate(-50%, -50%); */
+    transform: translate3d(-50%, -50%, 0); /* ✅ Uses GPU acceleration */
     pointer-events: auto;
     opacity: 0;
+    will-change: transform, opacity;
     transition:
-      opacity 0.6s ease-in-out 0.3s,
-      /* 300ms delay for fade-in */ transform 0.6s ease-in-out;
+      opacity 0.3s ease-in-out,
+      transform 0.3s ease-in-out;
     transform: scale(0.95); /* Slight scale down effect */
   }
 
-  /* Portrait Images: Set fixed height */
-  :global(.gallery-photo.portrait) {
-    height: 325px !important; /* Fixed height */
+  /* Portrait Images: Fixed height */
+  .gallery-photo.portrait {
+    height: 325px !important;
     width: auto !important; /* Maintain aspect ratio */
     max-height: 325px !important;
-    max-width: none !important; /* Allow width to scale freely */
+    max-width: none !important;
   }
 
-  :global(.gallery-photo.landscape) {
-    width: 325px !important; /* Fixed width */
+  /* Landscape Images: Fixed width */
+  .gallery-photo.landscape {
+    width: 325px !important;
     height: auto !important; /* Maintain aspect ratio */
     max-width: 325px !important;
     max-height: none !important;
   }
 
   .gallery-photo.fade-in {
-    opacity: 1;
-    transform: scale(1); /* Scale back to normal */
+    opacity: 1 !important;
+    /* transform: scale(1); */
   }
 
   .gallery-photo.modal-overlay.fade-out {
-    opacity: 0;
-    transform: scale(1.05); /* Scale slightly up before disappearing */
+    opacity: 0 !important;
+    /* transform: scale(1.05); */
   }
 
   .slideshow-modal {
@@ -160,9 +157,5 @@
     align-items: center;
     justify-content: center;
     pointer-events: auto; /* Enable interaction */
-  }
-
-  .delay-appearance .gallery-photo {
-    opacity: 1; /* Set to visible after delay */
   }
 </style>

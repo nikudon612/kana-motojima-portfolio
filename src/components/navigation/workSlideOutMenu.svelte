@@ -36,20 +36,46 @@
     }
   }
 
-  // Show photo gallery and set hovered project
+  let fadingOut = false; // ✅ Track fade-out state
+  let hasExpanded = false; // ✅ Ensure delay happens only once
+
   function handleHoverStart(work) {
-    if (work.photos && work.photos.length > 0 && window.innerWidth > 768) {
+  if (work.photos && work.photos.length > 0 && window.innerWidth > 768) {
+    if (hoveredWork === work) return;
+
+    hoveredWork = work;
+
+    if (!hasExpanded) {
       isFullWidth = true;
-      hoveredWork = work; // Set the hovered project
+      hasExpanded = true;
 
       setTimeout(() => {
         if (hoveredWork === work) {
-          currentPhotos = work.photos;
-          galleryVisible = true; // Show photo gallery modal after delay
+          galleryVisible = true; // ✅ Show the gallery first
+          
+          setTimeout(() => {
+            currentPhotos = work.photos; // ✅ THEN insert images
+            fadingOut = false;
+          }, 10); // ✅ Slight delay allows animation to trigger
         }
-      }, 1000); // 1000ms delay to allow menu to expand
+      }, 1000); // ✅ Wait for menu animation to finish
+    } else {
+      fadingOut = true;
+
+      setTimeout(() => {
+        if (hoveredWork === work) {
+          galleryVisible = true; 
+
+          setTimeout(() => {
+            currentPhotos = work.photos;
+            fadingOut = false;
+          }, 10);
+        }
+      }, 300);
     }
   }
+}
+
 
   // Keep gallery visible until another project title is hovered
   function handleHoverEnd() {
@@ -149,6 +175,7 @@
       <div class="gallery-container" on:openSlideshow={handleOpenSlideshow}>
         <PhotoGalleryModal
           {currentPhotos}
+          {fadingOut}
           projectTitle={hoveredWork?.title}
           initialPhotoIndex={0}
           on:openSlideshow={handleOpenSlideshow}
