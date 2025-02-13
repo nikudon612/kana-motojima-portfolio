@@ -121,7 +121,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: white; /* Semi-transparent background */
+    background-color: rgba(217, 217, 217, 0.9);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -153,7 +153,6 @@
     justify-content: space-between;
     align-items: center; /* ✅ Align title and close button vertically */
     gap: 1rem; /* ✅ Add spacing between title & close button */
-    background: white;
     z-index: 10001;
   }
 

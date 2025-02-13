@@ -5,9 +5,6 @@
   export let data;
   let seo = data.SEO;
   let seoData = data?.SEO?.seo?.[0] || {};
-
-  console.log("SEO", seo);
-  console.log("SEO Data", seoData);
 </script>
 
 <svelte:head>

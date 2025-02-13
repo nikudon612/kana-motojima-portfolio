@@ -84,7 +84,7 @@
     currentIndex = index; // Set the dynamic index from the event
     projectTitle = title;
     slideshowVisible = true;
-    console.log("Layout Opening slideshow at index:", currentIndex); // Debug
+    // console.log("Layout Opening slideshow at index:", currentIndex); // Debug
   }
 
   function handleOpenSlideshow(event) {

@@ -13,7 +13,7 @@
   }
 
   function closeModal() {
-    console.log("Modal closed");
+    // console.log("Modal closed");
     showModal = false;
   }
 
