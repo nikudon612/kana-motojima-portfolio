@@ -274,7 +274,6 @@
       left: 50%;
       transform: translateX(-50%); /* ✅ Center container itself */
       width: 100%; /* ✅ Make width dynamic */
-      justify-content: center; /* ✅ Center title & close button horizontally */
       gap: 1rem; /* ✅ Adds spacing between title & close button */
     }
 
