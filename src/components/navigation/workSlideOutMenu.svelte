@@ -84,16 +84,15 @@
   // Show the first image in the slideshow when the project title is clicked
   function showPhotos(work) {
     if (work.photos && work.photos.length > 0) {
+      galleryVisible = true;
+      slideshowVisible = true;
+      hoveredWork = work; // Always set hovered project, no conditional check
+      currentPhotos = work.photos;
       dispatch("openSlideshow", {
         images: work.photos,
         index: 0,
         title: work.title,
       });
-      console.log("work photos clicked");
-      // selectedWork = work.title;
-      // currentPhotos = work.photos;
-      // initialPhotoIndex = 0;
-      // slideshowVisible = true;
     }
   }
 
@@ -104,6 +103,7 @@
 
   function handleOpenSlideshow(event) {
     // Forward the event to the layout
+    galleryVisible = true; // Ensure the gallery is visible
     dispatch("openSlideshow", event.detail);
   }
 
@@ -142,8 +142,8 @@
     isFullWidth = false;
     galleryVisible = false;
     hasExpanded = false;
-    hoveredWork = null;
     selectedWork = null; // ✅ Reset selected project title
+    if (!slideshowVisible) hoveredWork = null; // ✅ Only reset when slideshow is NOT open
   }
 </script>
 

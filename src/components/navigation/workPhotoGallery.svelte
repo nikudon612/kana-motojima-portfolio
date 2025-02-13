@@ -30,11 +30,17 @@
   function handleImageClick(index) {
     currentIndex = index;
     console.log("Gallery Clicked image index:", index);
-    // Dispatch an event to open the slideshow with the current images and index
+
+    // ✅ Ensure gallery and slideshow stay open
+    galleryVisible = true;
+    slideshowVisible = true;
+
+    // ✅ Dispatch event to parent to keep the hovered project active
     dispatch("openSlideshow", {
       images: currentPhotos,
       index: currentIndex,
-      title: projectTitle, // Replace with the actual project title if available
+      title: projectTitle,
+      hoveredWork: { title: projectTitle, photos: currentPhotos }, // Preserve hovered project
     });
   }
 
