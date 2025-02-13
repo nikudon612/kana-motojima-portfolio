@@ -188,8 +188,8 @@
   }
 
   .slideshow-image {
-    max-width: 60vw;
-    max-height: 60vh;
+    max-width: 80vw;
+    max-height: 80vh;
   }
 
   .close-btn:hover {
@@ -225,7 +225,7 @@
 
   .nav-dots {
     position: absolute;
-    bottom: 6rem; /* Adjusted to match centered layout */
+    bottom: 4rem; /* Adjusted to match centered layout */
     left: 50%;
     transform: translateX(-50%);
     display: flex;

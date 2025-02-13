@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
   import { fade } from "svelte/transition";
 
   export let projectTitle;
@@ -74,4 +74,4 @@
       {/each}
     </div>
   </div>
-</div>
+</div> -->
