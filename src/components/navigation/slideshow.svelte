@@ -163,6 +163,8 @@
     height: 100%; /* ✅ Matches height of the title */
     padding: 0 0.5rem;
     font-size: 1.5rem;
+    opacity: 0.5; /* Semi-transparent */;
+    transition: opacity 0.3s ease; /* Smooth transition */
     cursor: pointer;
   }
 
