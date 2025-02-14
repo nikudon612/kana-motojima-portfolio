@@ -122,7 +122,7 @@
       on:mouseleave={() => (hoverOnContact = false)}
       class:opacity-50={hoverOnWork || isWorkOpen}
     >
-      contact
+      info
     </button>
   </div>
   <div
