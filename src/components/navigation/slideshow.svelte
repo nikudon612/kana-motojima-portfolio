@@ -2,8 +2,8 @@
   export let slideshowImages = [];
   export let currentIndex = 0; // Initial index for the slideshow
   export let projectTitle; // The project title for the slideshow
-  // export let firstImageOfProject; // The first image of the project
-  import { createEventDispatcher, onMount } from "svelte"; // Ensure it's imported
+
+  import { createEventDispatcher, onMount } from "svelte";
 
   let cursor;
   let cursorText;
@@ -14,13 +14,11 @@
     dispatch("close");
   }
 
-  // Move to the next image
   function nextImage() {
     currentIndex = (currentIndex + 1) % slideshowImages.length;
     updateCursorText();
   }
 
-  // Move to the previous image
   function previousImage() {
     currentIndex =
       (currentIndex - 1 + slideshowImages.length) % slideshowImages.length;
@@ -64,7 +62,16 @@
     close();
   }}
 >
-  <div class="content z-[10000]" on:click|stopPropagation>
+  <div 
+    class="content z-[10000]" 
+    on:click|stopPropagation={(e) => {
+      if (e.clientX < window.innerWidth / 2) {
+        previousImage();
+      } else {
+        nextImage();
+      }
+    }}
+  >
     <div class="title-container px-[3rem]">
       {projectTitle}
       <button
@@ -77,6 +84,7 @@
         }}>✕</button
       >
     </div>
+    
     <div class="slideshow-container">
       <div class="slideshow">
         {#if slideshowImages.length > 0}
@@ -87,9 +95,8 @@
           />
         {/if}
       </div>
-      <div class="nav-zone prev" on:click|stopPropagation={previousImage}></div>
-      <div class="nav-zone next" on:click|stopPropagation={nextImage}></div>
     </div>
+
     <div class="nav-dots">
       {#each slideshowImages as _, index}
         <div
@@ -126,10 +133,6 @@
     align-items: center;
     justify-content: center;
     z-index: 10000;
-
-    @media (max-width: 768px) {
-      /* display: none; */
-    }
   }
 
   .content {
@@ -146,25 +149,25 @@
     position: absolute;
     top: 0;
     left: 50%;
-    transform: translateX(-50%); /* ✅ Center the container horizontally */
-    width: 100%; /* ✅ Allow dynamic width */
+    transform: translateX(-50%);
+    width: 100%;
     padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
-    align-items: center; /* ✅ Align title and close button vertically */
-    gap: 1rem; /* ✅ Add spacing between title & close button */
+    align-items: center;
+    gap: 1rem;
     z-index: 10001;
   }
 
   .close-btn {
     display: flex;
-    align-items: center; /* ✅ Ensures close button aligns with title */
+    align-items: center;
     justify-content: center;
-    height: 100%; /* ✅ Matches height of the title */
+    height: 100%;
     padding: 0 0.5rem;
     font-size: 1.5rem;
-    opacity: 0.5; /* Semi-transparent */;
-    transition: opacity 0.3s ease; /* Smooth transition */
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
     cursor: pointer;
   }
 
@@ -175,7 +178,7 @@
     justify-content: center;
     flex-grow: 1;
     width: 100%;
-    padding-top: 4rem; /* Ensures spacing from title */
+    padding-top: 4rem;
     padding-bottom: 6rem;
   }
 
@@ -184,7 +187,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 10000; /* Ensure content is above modal background */
+    z-index: 10000;
   }
 
   .slideshow-image {
@@ -193,39 +196,12 @@
   }
 
   .close-btn:hover {
-    opacity: 1; /* Fully visible on hover */
-  }
-
-  .nav-zone {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 50%;
-    cursor: none;
-  }
-
-  .prev {
-    left: 0;
-  }
-
-  .next {
-    right: 0;
-  }
-
-  .image-count {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    color: black;
-    font-size: 16px;
-    background: rgba(255, 255, 255, 0.8);
-    padding: 5px 10px;
-    border-radius: 3px;
+    opacity: 1;
   }
 
   .nav-dots {
     position: absolute;
-    bottom: 4rem; /* Adjusted to match centered layout */
+    bottom: 4rem;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -261,36 +237,28 @@
   }
 
   .cursor-text {
-    margin-left: 8px; /* Space between the circle and the text */
+    margin-left: 8px;
     color: black;
     font-size: 12px;
     white-space: nowrap;
   }
 
   @media (max-width: 768px) {
-    .nav-dots {
-      bottom: 4rem;
-    }
     .title-container {
       left: 50%;
-      transform: translateX(-50%); /* ✅ Center container itself */
-      width: 100%; /* ✅ Make width dynamic */
-      gap: 1rem; /* ✅ Adds spacing between title & close button */
+      transform: translateX(-50%);
+      width: 100%;
+      gap: 1rem;
     }
 
     .close-btn {
       display: flex;
-      align-items: center; /* ✅ Aligns close button with title */
+      align-items: center;
       justify-content: center;
-      height: 100%; /* ✅ Ensures button height matches title */
+      height: 100%;
       padding: 0 0.5rem;
       font-size: 1.5rem;
       cursor: pointer;
-    }
-  }
-  @media (max-width: 450px) {
-    .nav-dots {
-      bottom: 4rem;
     }
   }
 </style>
