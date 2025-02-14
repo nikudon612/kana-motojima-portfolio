@@ -42,13 +42,12 @@
           <p class="about-title mb-4">{aboutData.bio}</p>
           <p class="about-title mb-4">Bilingual in Japanese and English.</p>
           <div class="contact-section">
-            <p class="about-title">
-              For all inquiries, please email
+            <div class="left-side">
+              <p class="about-title w-full">For all inquiries, please email:</p>
               <a href="mailto:{aboutData.contactInfo}" class="email-link">
                 {aboutData.contactInfo}
               </a>
-            </p>
-
+            </div>
             <p class="about-title instagram-link">
               <a
                 href="https://www.instagram.com/kanamotojima/"
@@ -108,6 +107,12 @@
     padding: 2rem;
   }
 
+  .left-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+  }
   /* Animation for About Menu Titles */
   .about-title {
     font-size: 1rem;
@@ -129,6 +134,7 @@
     justify-content: space-between; /* Pushes email and Instagram apart */
     align-items: flex-end; /* Ensures both elements align vertically */
     width: 100%;
+    gap: 2rem; /* Space between email and Instagram */
   }
 
   .email-container,
@@ -158,6 +164,9 @@
   }
 
   @media (max-width: 768px) {
+    .contact-section {
+      gap: 1rem;
+    }
     .about-title {
       font-size: 0.825rem;
     }

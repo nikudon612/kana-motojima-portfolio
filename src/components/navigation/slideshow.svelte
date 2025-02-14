@@ -269,7 +269,7 @@
 
   @media (max-width: 768px) {
     .nav-dots {
-      bottom: 8rem;
+      bottom: 4rem;
     }
     .title-container {
       left: 50%;
@@ -290,7 +290,7 @@
   }
   @media (max-width: 450px) {
     .nav-dots {
-      bottom: 8rem;
+      bottom: 4rem;
     }
   }
 </style>
