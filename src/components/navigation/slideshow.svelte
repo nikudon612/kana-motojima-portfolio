@@ -1,4 +1,5 @@
 <script>
+  import { tick } from "svelte";
   export let slideshowImages = [];
   export let currentIndex = 0; // Initial index for the slideshow
   export let projectTitle; // The project title for the slideshow
@@ -16,13 +17,13 @@
 
   function nextImage() {
     currentIndex = (currentIndex + 1) % slideshowImages.length;
-    updateCursorText();
+    tick().then(updateCursorText); // Ensure state update before modifying cursorText
   }
 
   function previousImage() {
     currentIndex =
       (currentIndex - 1 + slideshowImages.length) % slideshowImages.length;
-    updateCursorText();
+    tick().then(updateCursorText);
   }
 
   function updateCursorText() {
@@ -62,8 +63,8 @@
     close();
   }}
 >
-  <div 
-    class="content z-[10000]" 
+  <div
+    class="content z-[10000]"
     on:click|stopPropagation={(e) => {
       if (e.clientX < window.innerWidth / 2) {
         previousImage();
@@ -84,7 +85,7 @@
         }}>✕</button
       >
     </div>
-    
+
     <div class="slideshow-container">
       <div class="slideshow">
         {#if slideshowImages.length > 0}
@@ -92,6 +93,8 @@
             src={slideshowImages[currentIndex].url}
             alt={slideshowImages[currentIndex].title}
             class="slideshow-image"
+            on:load={() =>
+              console.log("Image loaded:", slideshowImages[currentIndex].url)}
           />
         {/if}
       </div>
@@ -99,13 +102,7 @@
 
     <div class="nav-dots">
       {#each slideshowImages as _, index}
-        <div
-          class="nav-dot {index === currentIndex ? 'active' : ''}"
-          on:click={() => {
-            currentIndex = index;
-            updateCursorText();
-          }}
-        ></div>
+        <div class="nav-dot" class:active={index === currentIndex}></div>
       {/each}
     </div>
   </div>
@@ -193,6 +190,8 @@
   .slideshow-image {
     max-width: 80vw;
     max-height: 80vh;
+    user-select: none; /* Prevent accidental text/image selection */
+    -webkit-user-drag: none; /* Prevent dragging behavior */
   }
 
   .close-btn:hover {
