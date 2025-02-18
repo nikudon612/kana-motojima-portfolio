@@ -215,10 +215,10 @@
   .toggle-menu-btn {
     transition: opacity 300ms ease-in-out; /* Add the transition property here */
     mix-blend-mode: difference; /* Inverts the text color based on the background */
-    color: black; /* Default color; will blend to the opposite on darker backgrounds */
+    color: #4c4c4c; /* Default color; will blend to the opposite on darker backgrounds */
   }
   .kana-text a {
-    color: black; /* Set initial color to black */
+    color: #4c4c4c; /* Set initial color to black */
     mix-blend-mode: difference; /* This will invert the color based on the background */
     background: transparent; /* Ensure background is transparent */
     padding: 0.5rem; /* Optional: add padding for better visibility */
