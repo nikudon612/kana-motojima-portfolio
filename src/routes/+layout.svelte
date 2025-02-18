@@ -131,7 +131,7 @@
   >
     <a
       href="/"
-      class="text-[1.5rem] font-medium hover:cursor-pointer toggle-menu-btn mobile:text-lg mobile:font-bold mobile:hidden"
+      class="kana-text-desktop text-[1.5rem] font-medium hover:cursor-pointer transition-colors duration-2000 ease-in-out hover:text-black toggle-menu-btn mobile:text-lg mobile:font-bold mobile:hidden"
       on:click={closeAll}
     >
       Kana Motojima
@@ -217,6 +217,11 @@
     mix-blend-mode: difference; /* Inverts the text color based on the background */
     color: #4c4c4c; /* Default color; will blend to the opposite on darker backgrounds */
   }
+
+  .toggle-menu-btn:hover {
+    color: black; /* Change color on hover */
+    transition: opacity 300ms ease-in-out; /* Add the transition property here */
+  }
   .kana-text a {
     color: #4c4c4c; /* Set initial color to black */
     mix-blend-mode: difference; /* This will invert the color based on the background */
@@ -225,6 +230,20 @@
     border-radius: 5px; /* Optional: add border radius for aesthetics */
     white-space: nowrap; /* Ensure the text doesn't wrap */
     font-weight: bold !important;
+    transition: color 300ms ease-in-out; /* Move transition to the default state */
+  }
+
+  .kana-text a:hover {
+    color: black; /* Set hover color to black */
+  }
+
+  .kana-text-desktop {
+    color: #4c4c4c;
+    transition: color 300ms ease-in-out;
+  }
+
+  .kana-text-desktop:hover {
+    color: black;
   }
 
   .slideshow-wrapper {
