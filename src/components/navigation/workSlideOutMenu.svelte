@@ -14,6 +14,8 @@
   const dispatch = createEventDispatcher();
 
   let works = [];
+  let personalProjects = [];
+  let professionalProjects = [];
   let selectedWork = null;
   let currentPhotos = [];
   let galleryVisible = false;
@@ -31,6 +33,14 @@
       works = await fetchProjects();
       works.sort((a, b) => a.order - b.order);
       // console.log("Projects loaded:", works);
+
+      // Separate into personal and professional projects
+      personalProjects = works.filter(
+        (work) => work.projectType === "personal"
+      );
+      professionalProjects = works.filter(
+        (work) => work.projectType === "professional"
+      );
     } catch (error) {
       console.error("Error fetching projects:", error);
     }
@@ -159,18 +169,45 @@
   <div class="menu">
     <div class="menu-left">
       <div class={`menu-content-list ${isWorkOpen ? "menu-open" : ""}`}>
-        {#each works as work, index (work._id || index)}
-          <p
-            class="work-title hover:text-black"
-            on:mouseover={() => handleHoverStart(work)}
-            on:mouseleave={handleHoverEnd}
-            on:click={() => showPhotos(work)}
-            class:selected={selectedWork === work.title}
-            style="opacity: {hoveredWork && hoveredWork !== work ? 0.5 : 1};"
-          >
-            {work.title}
-          </p>
-        {/each}
+        <!-- Personal Projects Section -->
+        {#if personalProjects.length > 0}
+          <div class="project-section">
+            {#each personalProjects as project, index (project._id || index)}
+              <p
+                class="work-title hover:text-black"
+                on:mouseover={() => handleHoverStart(project)}
+                on:mouseleave={handleHoverEnd}
+                on:click={() => showPhotos(project)}
+                class:selected={selectedWork === project.title}
+                style="opacity: {hoveredWork && hoveredWork !== project
+                  ? 0.5
+                  : 1};"
+              >
+                {project.title}
+              </p>
+            {/each}
+          </div>
+        {/if}
+
+        <!-- Professional Projects Section -->
+        {#if professionalProjects.length > 0}
+          <div class="project-section">
+            {#each professionalProjects as work, index (work._id || index)}
+              <p
+                class="work-title hover:text-black"
+                on:mouseover={() => handleHoverStart(work)}
+                on:mouseleave={handleHoverEnd}
+                on:click={() => showPhotos(work)}
+                class:selected={selectedWork === work.title}
+                style="opacity: {hoveredWork && hoveredWork !== work
+                  ? 0.5
+                  : 1};"
+              >
+                {work.title}
+              </p>
+            {/each}
+          </div>
+        {/if}
       </div>
     </div>
   </div>
@@ -244,11 +281,14 @@
 
   .menu-content-list {
     padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
   }
 
   .work-title {
     font-size: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.33rem;
     width: fit-content;
     cursor: pointer;
     opacity: 0;

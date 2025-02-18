@@ -24,6 +24,7 @@ export async function fetchHomepageGallery() {
 export async function fetchProjects() {
   const query = `*[_type == "project" && !(_id in path("drafts.**"))]{
     title,
+    projectType,
     order,
     "photos": photos[]->{
       "thumbnailUrl": image.asset->url + "?w=800&h=800&fit=max&fm=webp",  
