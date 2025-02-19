@@ -113,7 +113,7 @@
       on:mouseleave={() => (hoverOnWork = false)}
       class:opacity-50={hoverOnContact || isAboutOpen}
     >
-      work
+      index
     </button>
     <button
       class="mb-2 hover:cursor-pointer toggle-menu-btn desktop:mb-2 mobile:mb-0"
