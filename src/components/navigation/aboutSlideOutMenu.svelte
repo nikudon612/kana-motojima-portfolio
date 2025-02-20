@@ -170,6 +170,9 @@
     .about-title {
       font-size: 0.825rem;
     }
+    .email-link {
+      font-size: 0.825rem;
+    }
   }
 
   .menu-open .about-title {
