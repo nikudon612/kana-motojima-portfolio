@@ -19,6 +19,9 @@
   let currentIndex = 0;
   let projectTitle = "";
 
+  // Override console.warn to suppress warnings
+  console.warn = () => {};
+
   function openWorkMenu() {
     if (isWorkOpen) {
       // If the Work menu is already open, close it

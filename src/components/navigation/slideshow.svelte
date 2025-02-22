@@ -93,8 +93,6 @@
             src={slideshowImages[currentIndex].url}
             alt={slideshowImages[currentIndex].title}
             class="slideshow-image"
-            on:load={() =>
-              console.log("Image loaded:", slideshowImages[currentIndex].url)}
           />
         {/if}
       </div>
