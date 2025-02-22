@@ -29,7 +29,7 @@
   // Function to handle image click
   function handleImageClick(index) {
     currentIndex = index;
-    console.log("Gallery Clicked image index:", index);
+    // console.log("Gallery Clicked image index:", index);
 
     // ✅ Ensure gallery and slideshow stay open
     galleryVisible = true;
